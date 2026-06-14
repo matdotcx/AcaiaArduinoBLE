@@ -9,7 +9,7 @@ device name and live data). Shot data here is from the built-in demo simulator.
 | --- | --- | --- |
 | `ios-1-live-idle.png` | iPhone · Live (idle) | Connection status, Weight/Time/Flow/Target readouts, empty chart, Live/History tabs. |
 | `ios-2-live-pour.png` | iPhone · Live (recording) | Mid-pour: live readouts, red REC indicator, weight curve building toward the dashed target line. |
-| `ios-3-history.png` | iPhone · History | List of saved shots (date · final weight · duration · target). Toolbar: Export (share) + DEBUG "Add Samples". |
+| `ios-3-history.png` | iPhone · History | Saved shots tagged with the recipe (preset) used; filter by recipe. Toolbar: Filter, Export (share) + DEBUG "Add Samples". |
 | `ios-4-detail-export.png` | iPhone · Shot detail | Weight-vs-time curve with dashed target line, summary grid, Export CSV / Export JSON buttons. |
 | `ios-5-settings.png` | iPhone · Settings | Named presets (dial-in), then read/write machine config over BLE: target weight, toggles, durations. (Disabled until connected on hardware.) |
 | `ios-6-ota.png` | iPhone · Firmware OTA | Send WiFi + start OTA mode, then pick a .bin from Files / iCloud Drive and upload it to the device in-app (web-uploader fallback also shown). |

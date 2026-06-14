@@ -16,6 +16,7 @@ public extension ShotExport {
             setpointG: shot.setpointG,
             durationS: shot.durationS,
             machineName: shot.machineName,
+            presetName: shot.presetName,
             samples: (shot.samples ?? [])
                 .sorted { $0.tMs < $1.tMs }
                 .map { Sample(tMs: $0.tMs, weightG: r3($0.weightG), flowGps: r3($0.flowGps), stateRaw: $0.stateRaw) }

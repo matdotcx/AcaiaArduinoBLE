@@ -9,10 +9,21 @@ struct ShotHistoryView: View {
 
     @State private var allCSVURL: URL?
     @State private var allJSONURL: URL?
+    @State private var recipeFilter: String?   // nil = all recipes
+
+    /// Distinct recipe names present in the saved shots, for the filter menu.
+    private var recipeNames: [String] {
+        Array(Set(shots.compactMap(\.presetName))).sorted()
+    }
+
+    private var filteredShots: [Shot] {
+        guard let recipeFilter else { return shots }
+        return shots.filter { $0.presetName == recipeFilter }
+    }
 
     var body: some View {
         List {
-            ForEach(shots) { shot in
+            ForEach(filteredShots) { shot in
                 NavigationLink {
                     ShotDetailView(shot: shot)
                 } label: {
@@ -21,7 +32,8 @@ struct ShotHistoryView: View {
             }
             .onDelete(perform: delete)
         }
-        .navigationTitle("Shots")
+        .navigationTitle(recipeFilter ?? "Shots")
+        .navigationBarTitleDisplayMode(recipeFilter == nil ? .large : .inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
@@ -31,6 +43,22 @@ struct ShotHistoryView: View {
                     Label("Export", systemImage: "square.and.arrow.up")
                 }
                 .disabled(shots.isEmpty)
+            }
+            if !recipeNames.isEmpty {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Picker("Recipe", selection: $recipeFilter) {
+                            Text("All shots").tag(String?.none)
+                            ForEach(recipeNames, id: \.self) { name in
+                                Text(name).tag(String?.some(name))
+                            }
+                        }
+                    } label: {
+                        Label("Filter", systemImage: recipeFilter == nil
+                              ? "line.3.horizontal.decrease.circle"
+                              : "line.3.horizontal.decrease.circle.fill")
+                    }
+                }
             }
 #if DEBUG
             ToolbarItem(placement: .topBarLeading) {
@@ -53,9 +81,18 @@ struct ShotHistoryView: View {
     }
 
     private func row(_ shot: Shot) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(shot.startedAt, format: .dateTime.month().day().hour().minute())
-                .font(.headline)
+        VStack(alignment: .leading, spacing: 3) {
+            HStack {
+                Text(shot.startedAt, format: .dateTime.month().day().hour().minute())
+                    .font(.headline)
+                if let recipe = shot.presetName {
+                    Text(recipe)
+                        .font(.caption2.weight(.medium))
+                        .padding(.horizontal, 8).padding(.vertical, 2)
+                        .background(.tint.opacity(0.15), in: Capsule())
+                        .foregroundStyle(.tint)
+                }
+            }
             Text(String(format: "%.1f g · %.0f s · target %.0f g",
                         shot.finalWeightG, shot.durationS, shot.setpointG))
                 .font(.caption)
@@ -65,7 +102,7 @@ struct ShotHistoryView: View {
 
     private func delete(_ offsets: IndexSet) {
         for index in offsets {
-            context.delete(shots[index])
+            context.delete(filteredShots[index])
         }
     }
 

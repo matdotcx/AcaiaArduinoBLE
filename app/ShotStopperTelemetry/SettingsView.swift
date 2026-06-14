@@ -106,13 +106,22 @@ struct SettingsView: View {
     }
 #endif
 
-    /// Write a preset's values to the device.
+    /// Write a preset's values to the device and mark it active so following
+    /// shots get tagged with it.
     private func apply(_ preset: Preset) {
         client.setGoalWeight(UInt8(clamping: preset.goalWeightG))
         client.setAutoTare(preset.autoTare)
         client.setMinShotDuration(UInt8(clamping: preset.minShotDurationS))
         client.setMaxShotDuration(UInt8(clamping: preset.maxShotDurationS))
         client.setDripDelay(UInt8(clamping: preset.dripDelayS))
+        model.recorder.activePresetID = preset.id
+        model.recorder.activePresetName = preset.name
+    }
+
+    /// A manual settings change means the live config no longer matches a preset.
+    private func clearActivePreset() {
+        model.recorder.activePresetID = nil
+        model.recorder.activePresetName = nil
     }
 
     private func savePreset() {
@@ -146,10 +155,11 @@ struct SettingsView: View {
     }
 
     // Custom bindings that read from settings and write through the client.
+    // A manual change also clears the active preset (the shot is no longer "that recipe").
     private func bind(_ kp: KeyPath<DeviceSettings, UInt8>, set: @escaping (UInt8) -> Void) -> Binding<UInt8> {
-        Binding(get: { client.settings[keyPath: kp] }, set: { set($0) })
+        Binding(get: { client.settings[keyPath: kp] }, set: { set($0); clearActivePreset() })
     }
     private func boolBind(_ kp: KeyPath<DeviceSettings, Bool>, set: @escaping (Bool) -> Void) -> Binding<Bool> {
-        Binding(get: { client.settings[keyPath: kp] }, set: { set($0) })
+        Binding(get: { client.settings[keyPath: kp] }, set: { set($0); clearActivePreset() })
     }
 }

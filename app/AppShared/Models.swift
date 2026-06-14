@@ -22,6 +22,9 @@ public final class Shot {
     /// Raw `state` byte of the final sample (e.g. 4 = done).
     public var endStateRaw: Int = 0
     public var machineName: String?
+    /// The preset that was active when this shot was pulled (nil = none / manual).
+    public var presetName: String?
+    public var presetID: UUID?
 
     @Relationship(deleteRule: .cascade, inverse: \ShotSample.shot)
     public var samples: [ShotSample]? = []

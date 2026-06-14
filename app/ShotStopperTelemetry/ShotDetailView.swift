@@ -52,6 +52,9 @@ struct ShotDetailView: View {
 
     private var summary: some View {
         Grid(alignment: .leading, horizontalSpacing: 24, verticalSpacing: 6) {
+            if let recipe = shot.presetName {
+                GridRow { Text("Recipe").foregroundStyle(.secondary); Text(recipe) }
+            }
             GridRow { Text("Final weight").foregroundStyle(.secondary); Text(String(format: "%.1f g", shot.finalWeightG)) }
             GridRow { Text("Peak weight").foregroundStyle(.secondary); Text(String(format: "%.1f g", shot.peakWeightG)) }
             GridRow { Text("Duration").foregroundStyle(.secondary); Text(String(format: "%.1f s", shot.durationS)) }

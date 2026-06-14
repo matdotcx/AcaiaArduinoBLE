@@ -17,6 +17,11 @@ public final class ShotRecorder {
 
     public var machineName: String?
 
+    /// The preset currently applied to the device, stamped onto each shot that
+    /// follows. Set when a preset is applied; cleared on a manual setting change.
+    public var activePresetID: UUID?
+    public var activePresetName: String?
+
     @ObservationIgnored private let context: ModelContext
     @ObservationIgnored private var segmenter = ShotSegmenter()
     @ObservationIgnored private var startedAt: Date?
@@ -59,6 +64,8 @@ public final class ShotRecorder {
         shot.finalWeightG = liveFrames.last?.weightG ?? 0
         shot.durationS = Double(liveFrames.last?.tMs ?? 0) / 1000
         shot.endStateRaw = Int(liveFrames.last?.rawState ?? 0)
+        shot.presetName = activePresetName
+        shot.presetID = activePresetID
 
         context.insert(shot) // cascades to samples via the relationship
         try? context.save()

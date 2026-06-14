@@ -22,6 +22,7 @@ public struct ShotExport: Codable, Sendable, Equatable {
     public let setpointG: Float
     public let durationS: Double
     public let machineName: String?
+    public let presetName: String?
     public let samples: [Sample]
 
     public init(
@@ -30,6 +31,7 @@ public struct ShotExport: Codable, Sendable, Equatable {
         setpointG: Float,
         durationS: Double,
         machineName: String?,
+        presetName: String? = nil,
         samples: [Sample]
     ) {
         self.id = id
@@ -37,6 +39,7 @@ public struct ShotExport: Codable, Sendable, Equatable {
         self.setpointG = setpointG
         self.durationS = durationS
         self.machineName = machineName
+        self.presetName = presetName
         self.samples = samples
     }
 }

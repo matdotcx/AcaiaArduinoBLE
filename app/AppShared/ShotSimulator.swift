@@ -45,11 +45,14 @@ enum ShotSimulator {
     /// History / detail / export screens have data to show.
     static func seedHistory(into context: ModelContext, count: Int = 6) {
         let setpoints: [Float] = [36, 40, 18, 30, 36, 22]
+        // Loosely pair setpoints with recipe names (some shots have no recipe).
+        let recipes: [String?] = ["House Espresso", "Ethiopia Light", "Ristretto", nil, "House Espresso", "Ristretto"]
         for i in 0..<count {
             let goal = setpoints[i % setpoints.count]
             let dur = Double.random(in: 22...32)
             let started = Date().addingTimeInterval(-(Double(i) * 86_400 + Double.random(in: 0...40_000)))
             let shot = Shot(startedAt: started, setpointG: goal)
+            shot.presetName = recipes[i % recipes.count]
 
             let dt = 0.2
             let steps = Int(dur / dt)
