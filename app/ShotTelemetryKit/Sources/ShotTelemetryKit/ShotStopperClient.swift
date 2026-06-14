@@ -102,7 +102,8 @@ public final class ShotStopperClient: NSObject {
         var s = DeviceSettings()
         s.enabled = true; s.goalWeightG = 36; s.autoTare = true; s.momentary = false
         s.minShotDurationS = 5; s.maxShotDurationS = 50; s.dripDelayS = 3
-        s.firmwareVersion = 2; s.wifiSSID = "Kitchen"; s.wifiIP = ""
+        s.firmwareVersion = 2; s.wifiSSID = "Kitchen"
+        s.otaRequested = true; s.wifiIP = "192.168.1.42" // show the OTA upload UI in the Simulator
         settings = s
     }
 #endif

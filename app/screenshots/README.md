@@ -12,7 +12,7 @@ device name and live data). Shot data here is from the built-in demo simulator.
 | `ios-3-history.png` | iPhone · History | List of saved shots (date · final weight · duration · target). Toolbar: Export (share) + DEBUG "Add Samples". |
 | `ios-4-detail-export.png` | iPhone · Shot detail | Weight-vs-time curve with dashed target line, summary grid, Export CSV / Export JSON buttons. |
 | `ios-5-settings.png` | iPhone · Settings | Read/write machine config over BLE: target weight, toggles, durations. (Disabled until connected on hardware.) |
-| `ios-6-ota.png` | iPhone · Firmware OTA | Send WiFi + start OTA mode, then open the device's web uploader to flash a new .bin. |
+| `ios-6-ota.png` | iPhone · Firmware OTA | Send WiFi + start OTA mode, then pick a .bin from Files / iCloud Drive and upload it to the device in-app (web-uploader fallback also shown). |
 | `watch-1-idle.png` | Watch · Kiosk (idle) | Big weight readout, compact time/flow/target row, chart. Strapless on the machine as an always-on display. |
 | `watch-2-pour.png` | Watch · Kiosk (recording) | Live pour: big weight, stats row, curve building to the target line. |
 

@@ -108,5 +108,17 @@ do {
     check(back == shots, "bulk JSON array round-trips")
 }
 
+print("FirmwareUploader")
+do {
+    let payload = Data([0xDE, 0xAD, 0xBE, 0xEF])
+    let body = FirmwareUploader.multipartBody(boundary: "B", fieldName: "update", fileName: "fw.bin", fileData: payload)
+    let text = String(decoding: body, as: UTF8.self)
+    check(text.hasPrefix("--B\r\n"), "multipart starts with boundary")
+    check(text.contains("name=\"update\"; filename=\"fw.bin\""), "multipart has field + filename")
+    check(text.contains("Content-Type: application/octet-stream"), "multipart declares octet-stream")
+    check(text.hasSuffix("\r\n--B--\r\n"), "multipart ends with closing boundary")
+    check(body.contains(0xDE) && body.contains(0xEF), "multipart embeds the file bytes")
+}
+
 print(failures == 0 ? "\nALL PASSED" : "\n\(failures) FAILED")
 exit(failures == 0 ? 0 : 1)

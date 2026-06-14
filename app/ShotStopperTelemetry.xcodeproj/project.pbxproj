@@ -46,6 +46,7 @@
 		F0000000000000000000006 /* ShotDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotDetailView.swift; sourceTree = "<group>"; };
 		F0000000000000000000050 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F0000000000000000000051 /* OTAView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTAView.swift; sourceTree = "<group>"; };
+		F0000000000000000000052 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F0000000000000000000007 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		F0000000000000000000008 /* ShotRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotRecorder.swift; sourceTree = "<group>"; };
 		F0000000000000000000009 /* ShotExport+Shot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShotExport+Shot.swift"; sourceTree = "<group>"; };
@@ -110,6 +111,7 @@
 				F0000000000000000000006 /* ShotDetailView.swift */,
 				F0000000000000000000050 /* SettingsView.swift */,
 				F0000000000000000000051 /* OTAView.swift */,
+				F0000000000000000000052 /* Info.plist */,
 				F0000000000000000000020 /* ShotStopperTelemetry.entitlements */,
 				F0000000000000000000030 /* Assets.xcassets */,
 			);
@@ -332,6 +334,7 @@
 				DEVELOPMENT_TEAM = C5J48X2AMG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ShotStopperTelemetry/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "ShotStopper telemetry needs Bluetooth to read live shot data from the machine.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -363,6 +366,7 @@
 				DEVELOPMENT_TEAM = C5J48X2AMG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ShotStopperTelemetry/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "ShotStopper telemetry needs Bluetooth to read live shot data from the machine.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
