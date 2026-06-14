@@ -1,0 +1,91 @@
+import Foundation
+
+/// One decoded 16-byte telemetry frame. See `docs/GATT_DESIGN.md` for the wire layout.
+///
+/// Bytes are assembled explicitly (not `load(as:)`) so decoding is correct
+/// regardless of host alignment, and independent of `Data` slice indices.
+public struct TelemetryFrame: Equatable, Sendable {
+
+    public enum State: UInt8, Sendable, Equatable {
+        case idle = 0
+        case preinfuse = 1   // reserved — firmware does not emit yet
+        case brew = 2
+        case settle = 3      // reserved — firmware does not emit yet
+        case done = 4
+        case unknown = 255
+
+        init(raw: UInt8) { self = State(rawValue: raw) ?? .unknown }
+    }
+
+    public let tMs: UInt32
+    public let weightG: Float
+    public let flowGps: Float
+    public let state: State
+    /// The raw state byte, preserved even when `state == .unknown`.
+    public let rawState: UInt8
+    public let flags: UInt8
+    public let setpointCg: UInt16
+
+    // Derived conveniences.
+    public var elapsed: TimeInterval { Double(tMs) / 1000 }
+    public var setpointG: Float { Float(setpointCg) / 100 }
+    public var scaleConnected: Bool { flags & 0x01 != 0 }
+    public var setpointReached: Bool { flags & 0x02 != 0 }
+
+    /// Decode a notify payload. Returns `nil` if it is shorter than 16 bytes.
+    public init?(_ data: Data) {
+        guard data.count >= 16 else { return nil }
+        let b = [UInt8](data) // reindexes any slice to 0-based
+
+        func u32(_ i: Int) -> UInt32 {
+            UInt32(b[i]) | UInt32(b[i + 1]) << 8 | UInt32(b[i + 2]) << 16 | UInt32(b[i + 3]) << 24
+        }
+        func u16(_ i: Int) -> UInt16 {
+            UInt16(b[i]) | UInt16(b[i + 1]) << 8
+        }
+
+        self.tMs = u32(0)
+        self.weightG = Float(bitPattern: u32(4))
+        self.flowGps = Float(bitPattern: u32(8))
+        self.rawState = b[12]
+        self.state = State(raw: b[12])
+        self.flags = b[13]
+        self.setpointCg = u16(14)
+    }
+
+    /// Build a wire-format frame. Used by tests, SwiftUI previews, and a mock
+    /// device; mirrors `sendTelemetryFrame()` in the firmware byte-for-byte.
+    public static func encode(
+        tMs: UInt32,
+        weightG: Float,
+        flowGps: Float,
+        state: State,
+        scaleConnected: Bool,
+        setpointReached: Bool,
+        setpointG: Float
+    ) -> Data {
+        var b = [UInt8](repeating: 0, count: 16)
+
+        func putU32(_ v: UInt32, _ i: Int) {
+            b[i] = UInt8(v & 0xFF)
+            b[i + 1] = UInt8((v >> 8) & 0xFF)
+            b[i + 2] = UInt8((v >> 16) & 0xFF)
+            b[i + 3] = UInt8((v >> 24) & 0xFF)
+        }
+        func putU16(_ v: UInt16, _ i: Int) {
+            b[i] = UInt8(v & 0xFF)
+            b[i + 1] = UInt8((v >> 8) & 0xFF)
+        }
+
+        putU32(tMs, 0)
+        putU32(weightG.bitPattern, 4)
+        putU32(flowGps.bitPattern, 8)
+        b[12] = state.rawValue
+        var flags: UInt8 = 0
+        if scaleConnected { flags |= 0x01 }
+        if setpointReached { flags |= 0x02 }
+        b[13] = flags
+        putU16(UInt16((setpointG * 100).rounded()), 14)
+        return Data(b)
+    }
+}
