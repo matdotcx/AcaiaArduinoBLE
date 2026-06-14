@@ -52,6 +52,9 @@ struct WatchKioskView: View {
         .onAppear {
             model.start()
             keepAwake.begin()
+#if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-demo") { model.simulateShot() }
+#endif
         }
         .onDisappear {
             keepAwake.end()
