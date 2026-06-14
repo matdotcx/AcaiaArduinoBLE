@@ -1,0 +1,5 @@
+# macOS
+.DS_Store
+
+# Local Arduino compile output (release binaries under build/ are tracked deliberately)
+examples/shotStopper/build/esp32.esp32.esp32c3/
