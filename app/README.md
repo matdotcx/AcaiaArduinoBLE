@@ -67,12 +67,30 @@ client.start()
 - iOS app target: live Swift Charts view, shot history, CSV/JSON export — builds for
   the Simulator (`** BUILD SUCCEEDED **`).
 
+## CloudKit sync (phone ↔ watch)
+
+Already wired in code:
+- `ShotStopperTelemetryApp.swift` opens the store with
+  `ModelConfiguration(cloudKitDatabase: .automatic)` — syncs to the user's **private**
+  CloudKit DB when the iCloud entitlement is active, and falls back to a local store
+  otherwise (so the unsigned Simulator build still runs).
+- `ShotStopperTelemetry.entitlements` declares the container
+  `iCloud.org.iaconelli.ShotStopperTelemetry`, the CloudKit service, and `aps-environment`.
+- The `Shot` / `ShotSample` models are CloudKit-compatible (all attributes defaulted,
+  the relationship optional with an inverse, no `.unique`).
+
+To activate it (one-time, needs a paid Apple Developer team):
+1. In Xcode → target → **Signing & Capabilities**, select your Team (enables signing).
+2. Confirm the **iCloud** capability shows **CloudKit** ticked with the container above
+   (Xcode creates the container on first use; rename it to match your team's prefix if
+   needed, and update the entitlement + the `.automatic` container resolves it).
+3. Run on two devices signed into the same iCloud account — shots reconcile automatically.
+
+Still TODO for background push sync: add **Background Modes → Remote notifications**
+(`UIBackgroundModes = remote-notification`). Foreground/launch sync works without it.
+
 ## Still to build (Xcode)
 
 - watchOS target: kiosk chart + extended runtime session (shares the package +
   `AppShared/`).
-- SwiftData + CloudKit container for phone↔watch sync (swap the `ModelConfiguration`
-  in `ShotStopperTelemetryApp.swift`).
-- Set a Developer team for on-device runs (signing + iCloud/CloudKit entitlements).
-  `NSBluetoothAlwaysUsageDescription` is already set via build settings.
 - Hardware validation: flash the firmware, confirm `0xFF25` frames decode live.

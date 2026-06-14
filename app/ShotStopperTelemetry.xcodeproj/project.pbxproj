@@ -27,6 +27,7 @@
 		F0000000000000000000004 /* LiveShotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveShotView.swift; sourceTree = "<group>"; };
 		F0000000000000000000005 /* ShotHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotHistoryView.swift; sourceTree = "<group>"; };
 		F0000000000000000000006 /* ShotDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotDetailView.swift; sourceTree = "<group>"; };
+		F0000000000000000000020 /* ShotStopperTelemetry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShotStopperTelemetry.entitlements; sourceTree = "<group>"; };
 		F0000000000000000000007 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		F0000000000000000000008 /* ShotRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotRecorder.swift; sourceTree = "<group>"; };
 		F0000000000000000000009 /* ShotExport+Shot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShotExport+Shot.swift"; sourceTree = "<group>"; };
@@ -70,6 +71,7 @@
 				F0000000000000000000004 /* LiveShotView.swift */,
 				F0000000000000000000005 /* ShotHistoryView.swift */,
 				F0000000000000000000006 /* ShotDetailView.swift */,
+				F0000000000000000000020 /* ShotStopperTelemetry.entitlements */,
 			);
 			path = ShotStopperTelemetry;
 			sourceTree = "<group>";
@@ -222,6 +224,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = ShotStopperTelemetry/ShotStopperTelemetry.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -250,6 +253,7 @@
 				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = ShotStopperTelemetry/ShotStopperTelemetry.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
