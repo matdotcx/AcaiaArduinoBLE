@@ -49,6 +49,7 @@ struct ContentView: View {
                 .tag(2)
                 .tabItem { Label("Settings", systemImage: "gearshape") }
         }
+        .tint(DS.orange)
         .onAppear {
             model.start()
 #if DEBUG

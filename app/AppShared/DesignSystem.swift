@@ -1,0 +1,346 @@
+import SwiftUI
+import Charts
+import ShotTelemetryKit
+
+// ShotStopper Visual System v1 — design tokens + reusable components.
+// Fonts: the spec's Archivo/Space Mono are substituted with SF Pro (.expanded
+// width) and SF Mono per the handoff's sanctioned fallback — same intent
+// (expanded, light, tabular numerals), zero font-bundling risk.
+
+// MARK: - Color helpers
+
+extension Color {
+    init(rgb: UInt) {
+        self.init(.sRGB,
+                  red: Double((rgb >> 16) & 0xFF) / 255,
+                  green: Double((rgb >> 8) & 0xFF) / 255,
+                  blue: Double(rgb & 0xFF) / 255,
+                  opacity: 1)
+    }
+}
+
+#if os(watchOS)
+// watchOS is always dark; no dynamic provider.
+private func dyn(_ light: UInt, _ dark: UInt) -> Color { Color(rgb: dark) }
+private func dynColor(_ light: Color, _ dark: Color) -> Color { dark }
+#else
+import UIKit
+private func dyn(_ light: UInt, _ dark: UInt) -> Color {
+    Color(uiColor: UIColor { tc in
+        UIColor(Color(rgb: tc.userInterfaceStyle == .dark ? dark : light))
+    })
+}
+private func dynColor(_ light: Color, _ dark: Color) -> Color {
+    Color(uiColor: UIColor { tc in
+        UIColor(tc.userInterfaceStyle == .dark ? dark : light)
+    })
+}
+#endif
+
+// MARK: - Tokens
+
+enum DS {
+    // Surfaces / ink
+    static let canvas        = dyn(0xE9E7E0, 0x121110)
+    static let surface       = dyn(0xFBFAF4, 0x1E1C18)
+    static let surfaceRaised = dyn(0xFFFFFF, 0x26231E)
+    static let ink           = dyn(0x111110, 0xF1EFE8)
+    static let inkSecondary  = dyn(0x4A463F, 0xC2BCB0)
+    static let inkMuted      = dyn(0x6E6A62, 0x918C82)
+    static let inkFaint      = dyn(0xA6A299, 0x6E6A62)
+    static let disabledNum   = dyn(0xC9C5BC, 0x4A463F)
+    static let onInk         = dyn(0xFBFAF4, 0x121110) // text on an ink-filled pill
+
+    // Brand & state
+    static let orange = dyn(0xE84B29, 0xFB5A35)
+    static let green  = dyn(0x1F6B4A, 0x43B585)
+    static let idle   = dyn(0xA6A299, 0x8A8A8E)
+
+    static let hairline = dynColor(Color(rgb: 0x111110).opacity(0.10),
+                                    Color(rgb: 0xF1EFE8).opacity(0.12))
+    static let gridline = dynColor(Color(rgb: 0x111110).opacity(0.07),
+                                   Color(rgb: 0xF1EFE8).opacity(0.08))
+    static let targetLine = dynColor(Color(rgb: 0x111110).opacity(0.42),
+                                     Color(rgb: 0xF1EFE8).opacity(0.40))
+
+    // Spacing scale (4-based)
+    enum Space { static let xs: CGFloat = 4, s: CGFloat = 8, m: CGFloat = 12, l: CGFloat = 16, xl: CGFloat = 24, xxl: CGFloat = 32 }
+    // Radius
+    enum R { static let card: CGFloat = 18, inner: CGFloat = 14, chip: CGFloat = 7 }
+
+    // MARK: Fonts (SF Pro expanded + SF Mono)
+    static func hero(_ size: CGFloat) -> Font { .system(size: size, weight: .regular).width(.expanded) }
+    static func numeral(_ size: CGFloat, _ weight: Font.Weight = .medium) -> Font { .system(size: size, weight: weight).width(.expanded) }
+    static func title(_ size: CGFloat = 30) -> Font { .system(size: size, weight: .semibold).width(.expanded) }
+    static func mono(_ size: CGFloat, _ weight: Font.Weight = .regular) -> Font { .system(size: size, weight: weight, design: .monospaced) }
+}
+
+// MARK: - Brew visual state
+
+enum BrewVisualState {
+    case idle, brewing, done
+    var color: Color {
+        switch self {
+        case .idle:    return DS.idle
+        case .brewing: return DS.orange
+        case .done:    return DS.green
+        }
+    }
+}
+
+// MARK: - Recipe identity palette
+
+struct RecipeStyle {
+    let icon: String
+    let solid: Color    // chip background / dot
+    let tagText: Color  // tag label text
+    var tagBackground: Color { solid.opacity(0.15) }
+}
+
+extension DS {
+    static let recipeStyles: [RecipeStyle] = [
+        RecipeStyle(icon: "cup.and.saucer.fill", solid: dyn(0x7A4E2E, 0xC08A5E), tagText: dyn(0x7A4E2E, 0xD6A87E)), // House Espresso
+        RecipeStyle(icon: "leaf.fill",           solid: dyn(0xC28A1E, 0xE0B24E), tagText: dyn(0x8A6310, 0xE6BE64)), // Ethiopia Light
+        RecipeStyle(icon: "drop.fill",           solid: dyn(0xA32E3C, 0xE0788A), tagText: dyn(0xA32E3C, 0xE89AA6)), // Ristretto
+        RecipeStyle(icon: "moon.fill",           solid: dyn(0x44617F, 0x8AA6C2), tagText: dyn(0x44617F, 0x9FB8D0)), // Decaf
+    ]
+    static func recipeStyle(_ index: Int) -> RecipeStyle {
+        let n = recipeStyles.count
+        return recipeStyles[((index % n) + n) % n]
+    }
+    /// Stable style index from a recipe name (for shots that only carry a name).
+    static func styleIndex(forName name: String) -> Int {
+        let known = ["House Espresso": 0, "Ethiopia Light": 1, "Ristretto": 2, "Decaf": 3]
+        if let i = known[name] { return i }
+        return abs(name.hashValue) % recipeStyles.count
+    }
+}
+
+// MARK: - Components
+
+/// A grouped card: surface fill, hairline border, card radius.
+struct DSCard<Content: View>: View {
+    @ViewBuilder var content: Content
+    var body: some View {
+        content
+            .background(DS.surface, in: RoundedRectangle(cornerRadius: DS.R.card, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: DS.R.card, style: .continuous).strokeBorder(DS.hairline, lineWidth: 1))
+    }
+}
+
+/// Uppercase, tracked, mono micro-label.
+struct DSMonoLabel: View {
+    let text: String
+    var size: CGFloat = 10
+    var color: Color = DS.inkFaint
+    init(_ text: String, size: CGFloat = 10, color: Color = DS.inkFaint) {
+        self.text = text; self.size = size; self.color = color
+    }
+    var body: some View {
+        Text(text.uppercased())
+            .font(DS.mono(size, .medium))
+            .tracking(1.5)
+            .foregroundStyle(color)
+    }
+}
+
+/// Solid square token chip with a white recipe glyph.
+struct RecipeTokenChip: View {
+    let style: RecipeStyle
+    var size: CGFloat = 30
+    var body: some View {
+        RoundedRectangle(cornerRadius: max(6, size * 0.22), style: .continuous)
+            .fill(style.solid)
+            .frame(width: size, height: size)
+            .overlay(Image(systemName: style.icon)
+                .font(.system(size: size * 0.5, weight: .semibold))
+                .foregroundStyle(.white))
+    }
+}
+
+/// Capsule recipe tag (dot + name) or, when name is nil, an outlined "No recipe".
+struct RecipeTag: View {
+    let name: String?
+    var styleIndex: Int = 0
+    var body: some View {
+        if let name {
+            let s = DS.recipeStyle(styleIndex)
+            HStack(spacing: 5) {
+                Circle().fill(s.solid).frame(width: 6, height: 6)
+                Text(name).font(.system(size: 10.5, weight: .semibold)).foregroundStyle(s.tagText)
+            }
+            .padding(.horizontal, 8).padding(.vertical, 2)
+            .background(s.tagBackground, in: Capsule())
+        } else {
+            Text("No recipe")
+                .font(.system(size: 10.5, weight: .semibold))
+                .foregroundStyle(DS.inkFaint)
+                .padding(.horizontal, 8).padding(.vertical, 2)
+                .overlay(Capsule().strokeBorder(DS.hairline, lineWidth: 1))
+        }
+    }
+}
+
+/// Pill button styles (full capsule, consistent everywhere).
+struct DSPillStyle: ButtonStyle {
+    enum Kind { case orange, ink, green, outlined, recipe(Color) }
+    var kind: Kind = .orange
+    var fullWidth: Bool = false
+    func makeBody(configuration: Configuration) -> some View {
+        let (bg, fg, bordered): (Color, Color, Bool) = {
+            switch kind {
+            case .orange:        return (DS.orange, .white, false)
+            case .ink:           return (DS.ink, DS.onInk, false)
+            case .green:         return (DS.green, .white, false)
+            case .outlined:      return (.clear, DS.ink, true)
+            case .recipe(let c): return (c, .white, false)
+            }
+        }()
+        return configuration.label
+            .font(.system(size: 15.5, weight: .semibold))
+            .foregroundStyle(fg)
+            .padding(.vertical, 13).padding(.horizontal, 20)
+            .frame(maxWidth: fullWidth ? .infinity : nil)
+            .background(bg, in: Capsule())
+            .overlay(Capsule().strokeBorder(bordered ? DS.hairline : .clear, lineWidth: 1.3))
+            .opacity(configuration.isPressed ? 0.82 : 1)
+    }
+}
+
+/// A small pulsing dot (REC / uploading). Respects Reduce Motion.
+struct PulsingDot: View {
+    var color: Color = DS.orange
+    var size: CGFloat = 8
+    @State private var on = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var body: some View {
+        Circle().fill(color).frame(width: size, height: size)
+            .opacity(on ? 0.25 : 1)
+            .onAppear {
+                guard !reduceMotion else { return }
+                withAnimation(.easeInOut(duration: 1.4).repeatForever(autoreverses: true)) { on = true }
+            }
+    }
+}
+
+/// REC / DONE state pill for the Live status row.
+struct StatusPill: View {
+    let state: BrewVisualState
+    var body: some View {
+        switch state {
+        case .brewing:
+            HStack(spacing: 6) { PulsingDot(color: DS.orange, size: 7); Text("REC").font(DS.mono(11, .bold)).tracking(1.5).foregroundStyle(DS.orange) }
+        case .done:
+            HStack(spacing: 5) {
+                Image(systemName: "checkmark").font(.system(size: 10, weight: .bold)).foregroundStyle(DS.green)
+                Text("DONE").font(DS.mono(11, .bold)).tracking(1.5).foregroundStyle(DS.green)
+            }
+        case .idle:
+            EmptyView()
+        }
+    }
+}
+
+/// Progress-to-target pill bar.
+struct TargetProgressBar: View {
+    var fraction: Double
+    var color: Color
+    var height: CGFloat = 8
+    var body: some View {
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                Capsule().fill(DS.ink.opacity(0.08))
+                Capsule().fill(color)
+                    .frame(width: max(0, min(1, fraction)) * geo.size.width)
+            }
+        }
+        .frame(height: height)
+    }
+}
+
+// MARK: - Extraction chart (the hero — Swift Charts)
+
+struct ChartSample: Identifiable {
+    let id: Int
+    let t: Double   // seconds
+    let w: Double   // grams
+}
+
+struct ExtractionChart: View {
+    var samples: [ChartSample]
+    var target: Double
+    var state: BrewVisualState
+    var showAxes: Bool = true
+    var showLeadingDot: Bool = true
+    var dimmed: Bool = false
+
+    private var lineColor: Color { dimmed ? Color(rgb: 0x7A7A7E) : state.color }
+    private var lineWidth: CGFloat { dimmed ? 2.6 : 3.4 }
+    private var yMax: Double {
+        max(target * 1.12, (samples.map(\.w).max() ?? target) * 1.06, 1)
+    }
+
+    @ChartContentBuilder private var marks: some ChartContent {
+        if target > 0 {
+            RuleMark(y: .value("Target", target))
+                .lineStyle(StrokeStyle(lineWidth: 1, dash: [2, 7]))
+                .foregroundStyle(dimmed ? Color(rgb: 0x5A5A5E) : DS.targetLine)
+        }
+        ForEach(samples) { s in
+            if !dimmed {
+                AreaMark(x: .value("t", s.t), y: .value("w", s.w))
+                    .interpolationMethod(.monotone)
+                    .foregroundStyle(.linearGradient(
+                        colors: [lineColor.opacity(0.20), lineColor.opacity(0)],
+                        startPoint: .top, endPoint: .bottom))
+            }
+            LineMark(x: .value("t", s.t), y: .value("w", s.w))
+                .interpolationMethod(.monotone)
+                .lineStyle(StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
+                .foregroundStyle(lineColor)
+        }
+        if showLeadingDot, state == .brewing, !dimmed, let last = samples.last {
+            PointMark(x: .value("t", last.t), y: .value("w", last.w))
+                .symbolSize(70)
+                .foregroundStyle(lineColor)
+        }
+    }
+
+    var body: some View {
+        if showAxes {
+            Chart { marks }
+                .chartYScale(domain: 0...yMax)
+                .chartYAxis {
+                    AxisMarks(position: .trailing, values: .automatic(desiredCount: 4)) { value in
+                        AxisGridLine().foregroundStyle(DS.gridline)
+                        AxisValueLabel {
+                            if let g = value.as(Double.self) {
+                                Text("\(Int(g))").font(DS.mono(9)).foregroundStyle(DS.inkFaint)
+                            }
+                        }
+                    }
+                }
+                .chartXAxis {
+                    AxisMarks(values: .automatic(desiredCount: 3)) { value in
+                        AxisValueLabel {
+                            if let s = value.as(Double.self) {
+                                Text("\(Int(s)) s").font(DS.mono(9)).foregroundStyle(DS.inkFaint)
+                            }
+                        }
+                    }
+                }
+        } else {
+            Chart { marks }
+                .chartYScale(domain: 0...yMax)
+                .chartXAxis(.hidden)
+                .chartYAxis(.hidden)
+        }
+    }
+}
+
+extension ExtractionChart {
+    /// Build chart samples from telemetry frames (live curve).
+    static func samples(fromFrames frames: [TelemetryFrame]) -> [ChartSample] {
+        frames.enumerated().map { ChartSample(id: $0.offset, t: $0.element.elapsed, w: Double($0.element.weightG)) }
+    }
+}

@@ -54,6 +54,8 @@ public final class Preset {
     public var minShotDurationS: Int = 0
     public var maxShotDurationS: Int = 50
     public var dripDelayS: Int = 3
+    /// Index into the recipe identity palette (color + icon).
+    public var styleIndex: Int = 0
 
     public init(
         id: UUID = UUID(),
@@ -63,7 +65,8 @@ public final class Preset {
         autoTare: Bool,
         minShotDurationS: Int,
         maxShotDurationS: Int,
-        dripDelayS: Int
+        dripDelayS: Int,
+        styleIndex: Int = 0
     ) {
         self.id = id
         self.name = name
@@ -73,6 +76,7 @@ public final class Preset {
         self.minShotDurationS = minShotDurationS
         self.maxShotDurationS = maxShotDurationS
         self.dripDelayS = dripDelayS
+        self.styleIndex = styleIndex
     }
 }
 

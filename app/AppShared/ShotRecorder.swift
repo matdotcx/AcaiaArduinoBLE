@@ -14,6 +14,9 @@ public final class ShotRecorder {
     public private(set) var isRecording = false
     /// Frames of the shot currently being recorded — bind a chart to this.
     public private(set) var liveFrames: [TelemetryFrame] = []
+    /// The just-finished shot, held so Live can show its Done state (Save / Discard).
+    /// Cleared when a new shot starts or the user dismisses/discards it.
+    public private(set) var lastCompletedShot: Shot?
 
     public var machineName: String?
 
@@ -39,6 +42,7 @@ public final class ShotRecorder {
             case .began:
                 isRecording = true
                 liveFrames = []
+                lastCompletedShot = nil
                 startedAt = Date()
                 setpointG = frame.setpointG
             case .sample(let s):
@@ -69,5 +73,15 @@ public final class ShotRecorder {
 
         context.insert(shot) // cascades to samples via the relationship
         try? context.save()
+        lastCompletedShot = shot
+    }
+
+    /// Dismiss the Done state, keeping the saved shot.
+    public func keepLastCompleted() { lastCompletedShot = nil }
+
+    /// Delete the just-saved shot and dismiss the Done state.
+    public func discardLastCompleted() {
+        if let shot = lastCompletedShot { context.delete(shot); try? context.save() }
+        lastCompletedShot = nil
     }
 }

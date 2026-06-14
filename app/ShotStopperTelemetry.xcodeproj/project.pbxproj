@@ -13,16 +13,17 @@
 		B0000000000000000000004 /* LiveShotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000004 /* LiveShotView.swift */; };
 		B0000000000000000000005 /* ShotHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000005 /* ShotHistoryView.swift */; };
 		B0000000000000000000006 /* ShotDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000006 /* ShotDetailView.swift */; };
-		B0000000000000000000050 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000050 /* SettingsView.swift */; };
-		B0000000000000000000051 /* OTAView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000051 /* OTAView.swift */; };
 		B0000000000000000000007 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000007 /* Models.swift */; };
 		B0000000000000000000008 /* ShotRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000008 /* ShotRecorder.swift */; };
 		B0000000000000000000009 /* ShotExport+Shot.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000009 /* ShotExport+Shot.swift */; };
 		B000000000000000000000A /* SharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F000000000000000000000A /* SharedStore.swift */; };
 		B000000000000000000000B /* ShotSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F000000000000000000000B /* ShotSimulator.swift */; };
+		B000000000000000000000C /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F000000000000000000000C /* DesignSystem.swift */; };
 		B0000000000000000000030 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000030 /* Assets.xcassets */; };
 		B0000000000000000000031 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000031 /* Assets.xcassets */; };
 		B0000000000000000000042 /* ShotTelemetryKit in Frameworks */ = {isa = PBXBuildFile; productRef = A0000000000000000000041 /* ShotTelemetryKit */; };
+		B0000000000000000000050 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000050 /* SettingsView.swift */; };
+		B0000000000000000000051 /* OTAView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000051 /* OTAView.swift */; };
 		B0000000000000000000069 /* ShotTelemetryKit in Frameworks */ = {isa = PBXBuildFile; productRef = A0000000000000000000068 /* ShotTelemetryKit */; };
 		B0000000000000000000201 /* WatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000070 /* WatchApp.swift */; };
 		B0000000000000000000202 /* WatchKioskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000071 /* WatchKioskView.swift */; };
@@ -33,6 +34,7 @@
 		B0000000000000000000207 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000002 /* AppModel.swift */; };
 		B0000000000000000000208 /* SharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F000000000000000000000A /* SharedStore.swift */; };
 		B0000000000000000000209 /* ShotSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F000000000000000000000B /* ShotSimulator.swift */; };
+		B000000000000000000020A /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F000000000000000000000C /* DesignSystem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,17 +46,18 @@
 		F0000000000000000000004 /* LiveShotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveShotView.swift; sourceTree = "<group>"; };
 		F0000000000000000000005 /* ShotHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotHistoryView.swift; sourceTree = "<group>"; };
 		F0000000000000000000006 /* ShotDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotDetailView.swift; sourceTree = "<group>"; };
-		F0000000000000000000050 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		F0000000000000000000051 /* OTAView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTAView.swift; sourceTree = "<group>"; };
-		F0000000000000000000052 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F0000000000000000000007 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		F0000000000000000000008 /* ShotRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotRecorder.swift; sourceTree = "<group>"; };
 		F0000000000000000000009 /* ShotExport+Shot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShotExport+Shot.swift"; sourceTree = "<group>"; };
 		F000000000000000000000A /* SharedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStore.swift; sourceTree = "<group>"; };
 		F000000000000000000000B /* ShotSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotSimulator.swift; sourceTree = "<group>"; };
+		F000000000000000000000C /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		F0000000000000000000020 /* ShotStopperTelemetry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShotStopperTelemetry.entitlements; sourceTree = "<group>"; };
 		F0000000000000000000030 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F0000000000000000000031 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F0000000000000000000050 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F0000000000000000000051 /* OTAView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTAView.swift; sourceTree = "<group>"; };
+		F0000000000000000000052 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F0000000000000000000070 /* WatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchApp.swift; sourceTree = "<group>"; };
 		F0000000000000000000071 /* WatchKioskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchKioskView.swift; sourceTree = "<group>"; };
 		F0000000000000000000072 /* KioskKeepAwake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KioskKeepAwake.swift; sourceTree = "<group>"; };
@@ -127,6 +130,7 @@
 				F0000000000000000000002 /* AppModel.swift */,
 				F000000000000000000000A /* SharedStore.swift */,
 				F000000000000000000000B /* ShotSimulator.swift */,
+				F000000000000000000000C /* DesignSystem.swift */,
 			);
 			path = AppShared;
 			sourceTree = "<group>";
@@ -264,6 +268,7 @@
 				B0000000000000000000002 /* AppModel.swift in Sources */,
 				B000000000000000000000A /* SharedStore.swift in Sources */,
 				B000000000000000000000B /* ShotSimulator.swift in Sources */,
+				B000000000000000000000C /* DesignSystem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +285,7 @@
 				B0000000000000000000207 /* AppModel.swift in Sources */,
 				B0000000000000000000208 /* SharedStore.swift in Sources */,
 				B0000000000000000000209 /* ShotSimulator.swift in Sources */,
+				B000000000000000000020A /* DesignSystem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +341,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShotStopperTelemetry/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "ShotStopper telemetry needs Bluetooth to read live shot data from the machine.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -367,6 +374,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShotStopperTelemetry/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "ShotStopper telemetry needs Bluetooth to read live shot data from the machine.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
