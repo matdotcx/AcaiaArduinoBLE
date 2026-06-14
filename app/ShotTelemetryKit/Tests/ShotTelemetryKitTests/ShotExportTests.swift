@@ -39,4 +39,22 @@ final class ShotExportTests: XCTestCase {
         let name = ShotExporter.suggestedName(makeExport())
         XCTAssertTrue(name.hasPrefix("shot-"))
     }
+
+    func testCombinedCSVTagsEachShot() {
+        let shots = [makeExport(), makeExport()]
+        let lines = ShotExporter.combinedCSV(shots).split(separator: "\n", omittingEmptySubsequences: true)
+        XCTAssertEqual(lines.first, "shot,started_at,t_ms,weight_g,flow_gps,state")
+        XCTAssertEqual(lines.count, 1 + 6) // header + 3 samples × 2 shots
+        XCTAssertTrue(lines[1].hasPrefix("1,"))
+        XCTAssertTrue(lines.last!.hasPrefix("2,"))
+    }
+
+    func testBulkJSONRoundTrips() throws {
+        let shots = [makeExport(), makeExport()]
+        let data = try ShotExporter.json(shots)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let decoded = try decoder.decode([ShotExport].self, from: data)
+        XCTAssertEqual(decoded, shots)
+    }
 }

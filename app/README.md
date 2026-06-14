@@ -13,7 +13,7 @@ app/
 │   ├── ShotStopperTelemetryApp.swift   @main, ModelContainer via SharedStore
 │   ├── ContentView.swift               Live / History tabs
 │   ├── LiveShotView.swift              live weight chart + readouts
-│   ├── ShotHistoryView.swift           @Query list of saved shots
+│   ├── ShotHistoryView.swift           @Query list + "Export all" (combined CSV/JSON)
 │   ├── ShotDetailView.swift            saved-shot chart + CSV/JSON export
 │   └── ShotStopperTelemetry.entitlements   iCloud/CloudKit container
 ├── ShotStopperTelemetryWatch/   watchOS kiosk target — SwiftUI

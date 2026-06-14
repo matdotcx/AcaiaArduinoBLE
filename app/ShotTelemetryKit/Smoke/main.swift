@@ -86,5 +86,26 @@ do {
     check(ShotExporter.suggestedName(exp).hasPrefix("shot-"), "suggested filename stem")
 }
 
+print("ShotExport (bulk)")
+do {
+    func mk(_ secs: Double, _ goal: Float) -> ShotExport {
+        ShotExport(startedAt: Date(timeIntervalSince1970: secs), setpointG: goal, durationS: 24,
+                   machineName: "Linea Micra",
+                   samples: [.init(tMs: 0, weightG: 0, flowGps: 0, stateRaw: 2),
+                             .init(tMs: 1000, weightG: goal, flowGps: 2, stateRaw: 4)])
+    }
+    let shots = [mk(1_700_000_000, 36), mk(1_700_100_000, 40)]
+    let csv = ShotExporter.combinedCSV(shots)
+    let lines = csv.split(separator: "\n", omittingEmptySubsequences: true)
+    check(lines.first == "shot,started_at,t_ms,weight_g,flow_gps,state", "combined CSV header")
+    check(lines.count == 1 + 4, "combined CSV header + 4 sample rows")
+    check(lines[1].hasPrefix("1,"), "first data row tagged shot 1")
+    check(lines.last!.hasPrefix("2,"), "last data row tagged shot 2")
+    let data = (try? ShotExporter.json(shots)) ?? Data()
+    let dec = JSONDecoder(); dec.dateDecodingStrategy = .iso8601
+    let back = (try? dec.decode([ShotExport].self, from: data)) ?? []
+    check(back == shots, "bulk JSON array round-trips")
+}
+
 print(failures == 0 ? "\nALL PASSED" : "\n\(failures) FAILED")
 exit(failures == 0 ? 0 : 1)

@@ -64,4 +64,29 @@ public enum ShotExporter {
         f.timeZone = .current
         return "shot-\(f.string(from: shot.startedAt))"
     }
+
+    // MARK: Bulk export (all shots)
+
+    /// All shots in one CSV: one row per sample, tagged with the shot's 1-based
+    /// index and ISO-8601 start time so analysis tools can group by shot.
+    /// Header: `shot,started_at,t_ms,weight_g,flow_gps,state`.
+    public static func combinedCSV(_ shots: [ShotExport]) -> String {
+        let iso = ISO8601DateFormatter()
+        var lines = ["shot,started_at,t_ms,weight_g,flow_gps,state"]
+        for (i, shot) in shots.enumerated() {
+            let date = iso.string(from: shot.startedAt)
+            for s in shot.samples {
+                lines.append("\(i + 1),\(date),\(s.tMs),\(s.weightG),\(s.flowGps),\(s.stateRaw)")
+            }
+        }
+        return lines.joined(separator: "\n") + "\n"
+    }
+
+    /// All shots as a JSON array of full snapshots (ISO-8601 dates).
+    public static func json(_ shots: [ShotExport], pretty: Bool = true) throws -> Data {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = pretty ? [.prettyPrinted, .sortedKeys] : []
+        encoder.dateEncodingStrategy = .iso8601
+        return try encoder.encode(shots)
+    }
 }
