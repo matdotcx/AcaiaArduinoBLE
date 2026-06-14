@@ -17,6 +17,7 @@ public struct ShotExport: Codable, Sendable, Equatable {
         }
     }
 
+    public let id: UUID
     public let startedAt: Date
     public let setpointG: Float
     public let durationS: Double
@@ -24,12 +25,14 @@ public struct ShotExport: Codable, Sendable, Equatable {
     public let samples: [Sample]
 
     public init(
+        id: UUID = UUID(),
         startedAt: Date,
         setpointG: Float,
         durationS: Double,
         machineName: String?,
         samples: [Sample]
     ) {
+        self.id = id
         self.startedAt = startedAt
         self.setpointG = setpointG
         self.durationS = durationS
@@ -40,11 +43,14 @@ public struct ShotExport: Codable, Sendable, Equatable {
 
 /// Serializers for writing shots to iCloud Drive / Files.
 public enum ShotExporter {
+    /// Weights/flows are written with 3-decimal precision in CSV.
+    private static func f3(_ v: Float) -> String { String(format: "%.3f", v) }
+
     /// CSV with a header row: `t_ms,weight_g,flow_gps,state`.
     public static func csv(_ shot: ShotExport) -> String {
         var lines = ["t_ms,weight_g,flow_gps,state"]
         for s in shot.samples {
-            lines.append("\(s.tMs),\(s.weightG),\(s.flowGps),\(s.stateRaw)")
+            lines.append("\(s.tMs),\(f3(s.weightG)),\(f3(s.flowGps)),\(s.stateRaw)")
         }
         return lines.joined(separator: "\n") + "\n"
     }
@@ -67,16 +73,17 @@ public enum ShotExporter {
 
     // MARK: Bulk export (all shots)
 
-    /// All shots in one CSV: one row per sample, tagged with the shot's 1-based
-    /// index and ISO-8601 start time so analysis tools can group by shot.
-    /// Header: `shot,started_at,t_ms,weight_g,flow_gps,state`.
+    /// All shots in one CSV: one row per sample, tagged with the shot's stable
+    /// UUID and ISO-8601 start time so analysis tools can group by shot.
+    /// Header: `shot_id,started_at,t_ms,weight_g,flow_gps,state`.
     public static func combinedCSV(_ shots: [ShotExport]) -> String {
         let iso = ISO8601DateFormatter()
-        var lines = ["shot,started_at,t_ms,weight_g,flow_gps,state"]
-        for (i, shot) in shots.enumerated() {
+        var lines = ["shot_id,started_at,t_ms,weight_g,flow_gps,state"]
+        for shot in shots {
+            let id = shot.id.uuidString
             let date = iso.string(from: shot.startedAt)
             for s in shot.samples {
-                lines.append("\(i + 1),\(date),\(s.tMs),\(s.weightG),\(s.flowGps),\(s.stateRaw)")
+                lines.append("\(id),\(date),\(s.tMs),\(f3(s.weightG)),\(f3(s.flowGps)),\(s.stateRaw)")
             }
         }
         return lines.joined(separator: "\n") + "\n"

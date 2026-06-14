@@ -40,13 +40,21 @@ final class ShotExportTests: XCTestCase {
         XCTAssertTrue(name.hasPrefix("shot-"))
     }
 
-    func testCombinedCSVTagsEachShot() {
+    func testCombinedCSVTagsEachShotByUUID() {
         let shots = [makeExport(), makeExport()]
         let lines = ShotExporter.combinedCSV(shots).split(separator: "\n", omittingEmptySubsequences: true)
-        XCTAssertEqual(lines.first, "shot,started_at,t_ms,weight_g,flow_gps,state")
+        XCTAssertEqual(lines.first, "shot_id,started_at,t_ms,weight_g,flow_gps,state")
         XCTAssertEqual(lines.count, 1 + 6) // header + 3 samples × 2 shots
-        XCTAssertTrue(lines[1].hasPrefix("1,"))
-        XCTAssertTrue(lines.last!.hasPrefix("2,"))
+        XCTAssertTrue(lines[1].hasPrefix(shots[0].id.uuidString))
+        XCTAssertTrue(lines.last!.hasPrefix(shots[1].id.uuidString))
+        XCTAssertNotEqual(shots[0].id, shots[1].id)
+    }
+
+    func testCSVUsesThreeDecimals() {
+        let shot = ShotExport(startedAt: .init(timeIntervalSince1970: 0), setpointG: 36, durationS: 1,
+                              machineName: nil, samples: [.init(tMs: 0, weightG: 1.23456, flowGps: 0, stateRaw: 2)])
+        let row = ShotExporter.csv(shot).split(separator: "\n")[1]
+        XCTAssertEqual(row, "0,1.235,0.000,2")
     }
 
     func testBulkJSONRoundTrips() throws {

@@ -97,10 +97,11 @@ do {
     let shots = [mk(1_700_000_000, 36), mk(1_700_100_000, 40)]
     let csv = ShotExporter.combinedCSV(shots)
     let lines = csv.split(separator: "\n", omittingEmptySubsequences: true)
-    check(lines.first == "shot,started_at,t_ms,weight_g,flow_gps,state", "combined CSV header")
+    check(lines.first == "shot_id,started_at,t_ms,weight_g,flow_gps,state", "combined CSV header (shot_id)")
     check(lines.count == 1 + 4, "combined CSV header + 4 sample rows")
-    check(lines[1].hasPrefix("1,"), "first data row tagged shot 1")
-    check(lines.last!.hasPrefix("2,"), "last data row tagged shot 2")
+    check(lines[1].hasPrefix(shots[0].id.uuidString), "first data row tagged with shot 1 uuid")
+    check(lines.last!.hasPrefix(shots[1].id.uuidString), "last data row tagged with shot 2 uuid")
+    check(ShotExporter.csv(shots[0]).contains("36.000"), "per-shot CSV uses 3 decimals")
     let data = (try? ShotExporter.json(shots)) ?? Data()
     let dec = JSONDecoder(); dec.dateDecodingStrategy = .iso8601
     let back = (try? dec.decode([ShotExport].self, from: data)) ?? []
