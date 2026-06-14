@@ -18,6 +18,15 @@ struct ShotHistoryView: View {
             .onDelete(perform: delete)
         }
         .navigationTitle("Shots")
+#if DEBUG
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Add Samples", systemImage: "wand.and.stars") {
+                    ShotSimulator.seedHistory(into: context)
+                }
+            }
+        }
+#endif
         .overlay {
             if shots.isEmpty {
                 ContentUnavailableView(

@@ -107,6 +107,23 @@ self-care`) so the screen stays on through a pour instead of dimming to the cloc
 It declares the **same** iCloud container as the phone, so history syncs via CloudKit.
 Both targets build for their simulators (`** BUILD SUCCEEDED **`).
 
+## Demo data (no hardware — DEBUG only)
+
+The Simulator has no Bluetooth, so a `#if DEBUG` `ShotSimulator` fakes pours
+(`AppShared/ShotSimulator.swift`), fed through the same `AppModel.ingest` path the BLE
+client uses. In the app:
+- **Live tab → "Simulate shot"** plays a realistic ~24 s pour (logistic weight curve,
+  ~10 Hz) that animates the chart and records a shot.
+- **History tab → wand button ("Add Samples")** inserts several backdated completed shots.
+- **Watch:** tap the kiosk face to play a pour.
+
+Headless (CLI) demo hooks via launch arguments:
+```sh
+xcrun simctl launch <udid> org.iaconelli.ShotStopperTelemetry -demo      # seed + live shot
+xcrun simctl launch <udid> org.iaconelli.ShotStopperTelemetry -history   # seed + open History
+```
+None of this compiles into Release.
+
 ## Still to build / verify (Xcode + hardware)
 
 - App icons / asset catalogs (cosmetic; not required to build or run).

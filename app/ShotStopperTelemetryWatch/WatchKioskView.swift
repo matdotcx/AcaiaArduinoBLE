@@ -10,7 +10,7 @@ struct WatchKioskView: View {
 
     var body: some View {
         let frames = model.recorder.liveFrames
-        let latest = model.client.latestFrame
+        let latest = model.latestFrame
 
         VStack(spacing: 2) {
             Text(latest.map { String(format: "%.1f", $0.weightG) } ?? "—")
@@ -46,6 +46,9 @@ struct WatchKioskView: View {
             .chartXAxis(.hidden)
         }
         .padding(.horizontal, 4)
+#if DEBUG
+        .onTapGesture { model.simulateShot() } // tap the kiosk to demo a pour
+#endif
         .onAppear {
             model.start()
             keepAwake.begin()

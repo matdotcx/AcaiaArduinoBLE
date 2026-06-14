@@ -17,6 +17,7 @@
 		B0000000000000000000008 /* ShotRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000008 /* ShotRecorder.swift */; };
 		B0000000000000000000009 /* ShotExport+Shot.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000009 /* ShotExport+Shot.swift */; };
 		B000000000000000000000A /* SharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F000000000000000000000A /* SharedStore.swift */; };
+		B000000000000000000000B /* ShotSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F000000000000000000000B /* ShotSimulator.swift */; };
 		B0000000000000000000030 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000030 /* Assets.xcassets */; };
 		B0000000000000000000031 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000031 /* Assets.xcassets */; };
 		B0000000000000000000042 /* ShotTelemetryKit in Frameworks */ = {isa = PBXBuildFile; productRef = A0000000000000000000041 /* ShotTelemetryKit */; };
@@ -29,6 +30,7 @@
 		B0000000000000000000206 /* ShotExport+Shot.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000009 /* ShotExport+Shot.swift */; };
 		B0000000000000000000207 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000002 /* AppModel.swift */; };
 		B0000000000000000000208 /* SharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F000000000000000000000A /* SharedStore.swift */; };
+		B0000000000000000000209 /* ShotSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F000000000000000000000B /* ShotSimulator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +46,7 @@
 		F0000000000000000000008 /* ShotRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotRecorder.swift; sourceTree = "<group>"; };
 		F0000000000000000000009 /* ShotExport+Shot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShotExport+Shot.swift"; sourceTree = "<group>"; };
 		F000000000000000000000A /* SharedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStore.swift; sourceTree = "<group>"; };
+		F000000000000000000000B /* ShotSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotSimulator.swift; sourceTree = "<group>"; };
 		F0000000000000000000020 /* ShotStopperTelemetry.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShotStopperTelemetry.entitlements; sourceTree = "<group>"; };
 		F0000000000000000000030 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F0000000000000000000031 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -115,6 +118,7 @@
 				F0000000000000000000009 /* ShotExport+Shot.swift */,
 				F0000000000000000000002 /* AppModel.swift */,
 				F000000000000000000000A /* SharedStore.swift */,
+				F000000000000000000000B /* ShotSimulator.swift */,
 			);
 			path = AppShared;
 			sourceTree = "<group>";
@@ -249,6 +253,7 @@
 				B0000000000000000000009 /* ShotExport+Shot.swift in Sources */,
 				B0000000000000000000002 /* AppModel.swift in Sources */,
 				B000000000000000000000A /* SharedStore.swift in Sources */,
+				B000000000000000000000B /* ShotSimulator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,6 +269,7 @@
 				B0000000000000000000206 /* ShotExport+Shot.swift in Sources */,
 				B0000000000000000000207 /* AppModel.swift in Sources */,
 				B0000000000000000000208 /* SharedStore.swift in Sources */,
+				B0000000000000000000209 /* ShotSimulator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

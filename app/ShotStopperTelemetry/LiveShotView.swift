@@ -8,12 +8,23 @@ struct LiveShotView: View {
 
     var body: some View {
         let frames = model.recorder.liveFrames
-        let latest = model.client.latestFrame
+        let latest = model.latestFrame
 
         VStack(spacing: 16) {
             connectionBar
 
             readouts(latest)
+
+#if DEBUG
+            Button {
+                model.simulateShot()
+            } label: {
+                Label(model.isSimulating ? "Simulating…" : "Simulate shot",
+                      systemImage: "play.circle.fill")
+                    .font(.subheadline)
+            }
+            .disabled(model.isSimulating)
+#endif
 
             Chart {
                 ForEach(Array(frames.enumerated()), id: \.offset) { _, f in
