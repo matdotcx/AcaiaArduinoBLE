@@ -7,6 +7,7 @@ import ShotTelemetryKit
 /// uploads the new `.bin` from a browser.
 struct OTAView: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.dismiss) private var dismiss
     private var client: ShotStopperClient { model.client }
 
     @State private var ssid = ""
@@ -58,6 +59,11 @@ struct OTAView: View {
         }
         .navigationTitle("Firmware OTA")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Done") { dismiss() }
+            }
+        }
         .onAppear { ssid = client.settings.wifiSSID }
     }
 }

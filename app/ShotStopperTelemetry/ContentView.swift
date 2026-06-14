@@ -14,12 +14,17 @@ struct ContentView: View {
         if ProcessInfo.processInfo.arguments.contains("-detailroot"), let shot = allShots.first {
             NavigationStack { ShotDetailView(shot: shot) }
         } else if ProcessInfo.processInfo.arguments.contains("-otaroot") {
-            NavigationStack { OTAView() }
-                .onAppear {
+            // Push OTAView onto a stack so the screenshot shows the real back button.
+            NavigationStack {
+                Color(.systemGroupedBackground)
+                    .navigationTitle("Settings")
+                    .navigationDestination(isPresented: .constant(true)) { OTAView() }
+            }
+            .onAppear {
 #if targetEnvironment(simulator)
-                    model.client.debugLoadSettings()
+                model.client.debugLoadSettings()
 #endif
-                }
+            }
         } else {
             mainTabs
         }
