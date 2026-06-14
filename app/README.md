@@ -15,6 +15,8 @@ app/
 │   ├── LiveShotView.swift              live weight chart + readouts
 │   ├── ShotHistoryView.swift           @Query list + "Export all" (combined CSV/JSON)
 │   ├── ShotDetailView.swift            saved-shot chart + CSV/JSON export
+│   ├── SettingsView.swift              read/write machine config over BLE
+│   ├── OTAView.swift                   WiFi handoff for firmware OTA
 │   └── ShotStopperTelemetry.entitlements   iCloud/CloudKit container
 ├── ShotStopperTelemetryWatch/   watchOS kiosk target — SwiftUI
 │   ├── WatchApp.swift                  @main (shares SharedStore + AppModel)

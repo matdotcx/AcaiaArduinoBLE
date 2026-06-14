@@ -13,6 +13,8 @@
 		B0000000000000000000004 /* LiveShotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000004 /* LiveShotView.swift */; };
 		B0000000000000000000005 /* ShotHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000005 /* ShotHistoryView.swift */; };
 		B0000000000000000000006 /* ShotDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000006 /* ShotDetailView.swift */; };
+		B0000000000000000000050 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000050 /* SettingsView.swift */; };
+		B0000000000000000000051 /* OTAView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000051 /* OTAView.swift */; };
 		B0000000000000000000007 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000007 /* Models.swift */; };
 		B0000000000000000000008 /* ShotRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000008 /* ShotRecorder.swift */; };
 		B0000000000000000000009 /* ShotExport+Shot.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000009 /* ShotExport+Shot.swift */; };
@@ -42,6 +44,8 @@
 		F0000000000000000000004 /* LiveShotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveShotView.swift; sourceTree = "<group>"; };
 		F0000000000000000000005 /* ShotHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotHistoryView.swift; sourceTree = "<group>"; };
 		F0000000000000000000006 /* ShotDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotDetailView.swift; sourceTree = "<group>"; };
+		F0000000000000000000050 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F0000000000000000000051 /* OTAView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTAView.swift; sourceTree = "<group>"; };
 		F0000000000000000000007 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		F0000000000000000000008 /* ShotRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotRecorder.swift; sourceTree = "<group>"; };
 		F0000000000000000000009 /* ShotExport+Shot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShotExport+Shot.swift"; sourceTree = "<group>"; };
@@ -104,6 +108,8 @@
 				F0000000000000000000004 /* LiveShotView.swift */,
 				F0000000000000000000005 /* ShotHistoryView.swift */,
 				F0000000000000000000006 /* ShotDetailView.swift */,
+				F0000000000000000000050 /* SettingsView.swift */,
+				F0000000000000000000051 /* OTAView.swift */,
 				F0000000000000000000020 /* ShotStopperTelemetry.entitlements */,
 				F0000000000000000000030 /* Assets.xcassets */,
 			);
@@ -248,6 +254,8 @@
 				B0000000000000000000004 /* LiveShotView.swift in Sources */,
 				B0000000000000000000005 /* ShotHistoryView.swift in Sources */,
 				B0000000000000000000006 /* ShotDetailView.swift in Sources */,
+				B0000000000000000000050 /* SettingsView.swift in Sources */,
+				B0000000000000000000051 /* OTAView.swift in Sources */,
 				B0000000000000000000007 /* Models.swift in Sources */,
 				B0000000000000000000008 /* ShotRecorder.swift in Sources */,
 				B0000000000000000000009 /* ShotExport+Shot.swift in Sources */,

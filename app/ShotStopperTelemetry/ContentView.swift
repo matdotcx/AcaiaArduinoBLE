@@ -10,9 +10,16 @@ struct ContentView: View {
 
     var body: some View {
 #if DEBUG
-        // -detailroot shows a shot's detail screen as the root, for screenshots.
+        // Screenshot roots: show one screen directly (Simulator demos).
         if ProcessInfo.processInfo.arguments.contains("-detailroot"), let shot = allShots.first {
             NavigationStack { ShotDetailView(shot: shot) }
+        } else if ProcessInfo.processInfo.arguments.contains("-otaroot") {
+            NavigationStack { OTAView() }
+                .onAppear {
+#if targetEnvironment(simulator)
+                    model.client.debugLoadSettings()
+#endif
+                }
         } else {
             mainTabs
         }
@@ -32,10 +39,17 @@ struct ContentView: View {
             }
             .tag(1)
             .tabItem { Label("History", systemImage: "clock") }
+
+            SettingsView()
+                .tag(2)
+                .tabItem { Label("Settings", systemImage: "gearshape") }
         }
         .onAppear {
             model.start()
 #if DEBUG
+#if targetEnvironment(simulator)
+            model.client.debugLoadSettings() // populate Settings/OTA in the Simulator
+#endif
             // Launch-argument hooks for demoing in the Simulator (no hardware):
             //   -demo     seed history + play a live shot
             //   -history  seed history + open the History tab
@@ -48,6 +62,7 @@ struct ContentView: View {
                 model.seedHistory()
                 tab = 1
             }
+            if args.contains("-settings") { tab = 2 }
 #endif
         }
     }

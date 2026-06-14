@@ -1,9 +1,9 @@
 import Foundation
 import CoreBluetooth
 
-/// CoreBluetooth central that connects to the ShotStopper, subscribes to the
-/// telemetry characteristic, and republishes decoded frames. Read-only — it
-/// never writes (config stays in the separate companion app).
+/// CoreBluetooth central that connects to the ShotStopper, streams telemetry,
+/// and reads/writes the device configuration (setpoint, toggles, durations,
+/// WiFi, OTA trigger).
 ///
 /// The central manager uses the main queue (`queue: nil`), so all delegate
 /// callbacks arrive on the main actor; we hop with `assumeIsolated` to satisfy
@@ -25,12 +25,16 @@ public final class ShotStopperClient: NSObject {
     public private(set) var latestFrame: TelemetryFrame?
     public private(set) var deviceName: String?
 
+    /// The device's configuration, populated on connect and updated on write.
+    public private(set) var settings = DeviceSettings()
+    public var isConnected: Bool { state == .connected }
+
     /// Called for every decoded frame (on the main actor). Wire to `ShotRecorder.ingest`.
     public var onFrame: ((TelemetryFrame) -> Void)?
 
     @ObservationIgnored private var central: CBCentralManager!
     @ObservationIgnored private var peripheral: CBPeripheral?
-    @ObservationIgnored private var telemetryChar: CBCharacteristic?
+    @ObservationIgnored private var chars: [CBUUID: CBCharacteristic] = [:]
     @ObservationIgnored private var wantConnection = false
 
     public override init() {
@@ -56,6 +60,52 @@ public final class ShotStopperClient: NSObject {
         state = .scanning
         central.scanForPeripherals(withServices: [TelemetryGATT.service])
     }
+
+    // MARK: Config writes
+
+    public func setEnabled(_ on: Bool)        { settings.enabled = on;        writeByte(on ? 1 : 0, TelemetryGATT.enabled) }
+    public func setGoalWeight(_ g: UInt8)     { settings.goalWeightG = g;     writeByte(g, TelemetryGATT.setpoint) }
+    public func setMomentary(_ on: Bool)      { settings.momentary = on;      writeByte(on ? 1 : 0, TelemetryGATT.momentary) }
+    public func setReedSwitch(_ on: Bool)     { settings.reedSwitch = on;     writeByte(on ? 1 : 0, TelemetryGATT.reedSwitch) }
+    public func setAutoTare(_ on: Bool)       { settings.autoTare = on;       writeByte(on ? 1 : 0, TelemetryGATT.autoTare) }
+    public func setMinShotDuration(_ s: UInt8){ settings.minShotDurationS = s; writeByte(s, TelemetryGATT.minShotDuration) }
+    public func setMaxShotDuration(_ s: UInt8){ settings.maxShotDurationS = s; writeByte(s, TelemetryGATT.maxShotDuration) }
+    public func setDripDelay(_ s: UInt8)      { settings.dripDelayS = s;      writeByte(s, TelemetryGATT.dripDelay) }
+
+    /// Send WiFi credentials (used by the OTA flow).
+    public func setWiFi(ssid: String, password: String) {
+        settings.wifiSSID = ssid
+        writeString(ssid, TelemetryGATT.wifiSSID)
+        writeString(password, TelemetryGATT.wifiPassword)
+    }
+
+    /// Request the firmware enter/leave OTA mode (joins WiFi + hosts the uploader).
+    public func setOTARequested(_ on: Bool) {
+        settings.otaRequested = on
+        writeByte(on ? 1 : 0, TelemetryGATT.otaModeRequested)
+    }
+
+    private func writeByte(_ value: UInt8, _ uuid: CBUUID) {
+        guard let ch = chars[uuid], let peripheral else { return }
+        peripheral.writeValue(Data([value]), for: ch, type: .withResponse)
+    }
+
+    private func writeString(_ value: String, _ uuid: CBUUID) {
+        guard let ch = chars[uuid], let peripheral else { return }
+        peripheral.writeValue(Data(value.utf8), for: ch, type: .withResponse)
+    }
+
+#if DEBUG
+    /// Populate `settings` with sample values so the Settings/OTA UI can be seen
+    /// in the Simulator (no Bluetooth there).
+    public func debugLoadSettings() {
+        var s = DeviceSettings()
+        s.enabled = true; s.goalWeightG = 36; s.autoTare = true; s.momentary = false
+        s.minShotDurationS = 5; s.maxShotDurationS = 50; s.dripDelayS = 3
+        s.firmwareVersion = 2; s.wifiSSID = "Kitchen"; s.wifiIP = ""
+        settings = s
+    }
+#endif
 }
 
 extension ShotStopperClient: CBCentralManagerDelegate, CBPeripheralDelegate {
@@ -100,7 +150,7 @@ extension ShotStopperClient: CBCentralManagerDelegate, CBPeripheralDelegate {
         error: Error?
     ) {
         MainActor.assumeIsolated {
-            telemetryChar = nil
+            chars = [:]
             self.peripheral = nil
             if wantConnection { beginScan() } else { state = .idle }
         }
@@ -120,7 +170,7 @@ extension ShotStopperClient: CBCentralManagerDelegate, CBPeripheralDelegate {
     public nonisolated func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         MainActor.assumeIsolated {
             guard let service = peripheral.services?.first(where: { $0.uuid == TelemetryGATT.service }) else { return }
-            peripheral.discoverCharacteristics([TelemetryGATT.telemetry], for: service)
+            peripheral.discoverCharacteristics(nil, for: service) // discover all
         }
     }
 
@@ -130,9 +180,15 @@ extension ShotStopperClient: CBCentralManagerDelegate, CBPeripheralDelegate {
         error: Error?
     ) {
         MainActor.assumeIsolated {
-            guard let ch = service.characteristics?.first(where: { $0.uuid == TelemetryGATT.telemetry }) else { return }
-            telemetryChar = ch
-            peripheral.setNotifyValue(true, for: ch)
+            for ch in service.characteristics ?? [] {
+                chars[ch.uuid] = ch
+                if TelemetryGATT.notifying.contains(ch.uuid) {
+                    peripheral.setNotifyValue(true, for: ch)
+                }
+                if TelemetryGATT.readableConfig.contains(ch.uuid) {
+                    peripheral.readValue(for: ch)
+                }
+            }
         }
     }
 
@@ -141,12 +197,38 @@ extension ShotStopperClient: CBCentralManagerDelegate, CBPeripheralDelegate {
         didUpdateValueFor characteristic: CBCharacteristic,
         error: Error?
     ) {
-        guard characteristic.uuid == TelemetryGATT.telemetry,
-              let data = characteristic.value,
-              let frame = TelemetryFrame(data) else { return }
-        MainActor.assumeIsolated {
-            latestFrame = frame
-            onFrame?(frame)
+        let uuid = characteristic.uuid
+        let data = characteristic.value
+        // Telemetry decodes off the main actor; everything else hops on.
+        if uuid == TelemetryGATT.telemetry, let data, let frame = TelemetryFrame(data) {
+            MainActor.assumeIsolated {
+                latestFrame = frame
+                onFrame?(frame)
+            }
+            return
+        }
+        MainActor.assumeIsolated { applyConfig(uuid: uuid, data: data) }
+    }
+
+    private func applyConfig(uuid: CBUUID, data: Data?) {
+        guard let data else { return }
+        let byte = data.first ?? 0
+        let bool = byte != 0
+        let str = String(data: data, encoding: .utf8) ?? ""
+        switch uuid {
+        case TelemetryGATT.enabled:          settings.enabled = bool
+        case TelemetryGATT.setpoint:         settings.goalWeightG = byte
+        case TelemetryGATT.momentary:        settings.momentary = bool
+        case TelemetryGATT.reedSwitch:       settings.reedSwitch = bool
+        case TelemetryGATT.autoTare:         settings.autoTare = bool
+        case TelemetryGATT.minShotDuration:  settings.minShotDurationS = byte
+        case TelemetryGATT.maxShotDuration:  settings.maxShotDurationS = byte
+        case TelemetryGATT.dripDelay:        settings.dripDelayS = byte
+        case TelemetryGATT.firmwareVersion:  settings.firmwareVersion = byte
+        case TelemetryGATT.otaModeRequested: settings.otaRequested = bool
+        case TelemetryGATT.wifiSSID:         settings.wifiSSID = str
+        case TelemetryGATT.wifiIP:           settings.wifiIP = str
+        default: break
         }
     }
 }
