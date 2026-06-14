@@ -1,0 +1,313 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B0000000000000000000001 /* ShotStopperTelemetryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000001 /* ShotStopperTelemetryApp.swift */; };
+		B0000000000000000000002 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000002 /* AppModel.swift */; };
+		B0000000000000000000003 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000003 /* ContentView.swift */; };
+		B0000000000000000000004 /* LiveShotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000004 /* LiveShotView.swift */; };
+		B0000000000000000000005 /* ShotHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000005 /* ShotHistoryView.swift */; };
+		B0000000000000000000006 /* ShotDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000006 /* ShotDetailView.swift */; };
+		B0000000000000000000007 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000007 /* Models.swift */; };
+		B0000000000000000000008 /* ShotRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000008 /* ShotRecorder.swift */; };
+		B0000000000000000000009 /* ShotExport+Shot.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000009 /* ShotExport+Shot.swift */; };
+		B0000000000000000000042 /* ShotTelemetryKit in Frameworks */ = {isa = PBXBuildFile; productRef = A0000000000000000000041 /* ShotTelemetryKit */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A0000000000000000000011 /* ShotStopperTelemetry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShotStopperTelemetry.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0000000000000000000001 /* ShotStopperTelemetryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotStopperTelemetryApp.swift; sourceTree = "<group>"; };
+		F0000000000000000000002 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		F0000000000000000000003 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F0000000000000000000004 /* LiveShotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveShotView.swift; sourceTree = "<group>"; };
+		F0000000000000000000005 /* ShotHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotHistoryView.swift; sourceTree = "<group>"; };
+		F0000000000000000000006 /* ShotDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotDetailView.swift; sourceTree = "<group>"; };
+		F0000000000000000000007 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		F0000000000000000000008 /* ShotRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotRecorder.swift; sourceTree = "<group>"; };
+		F0000000000000000000009 /* ShotExport+Shot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShotExport+Shot.swift"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A0000000000000000000013 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0000000000000000000042 /* ShotTelemetryKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A0000000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				A0000000000000000000030 /* ShotStopperTelemetry */,
+				A0000000000000000000031 /* AppShared */,
+				A0000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A0000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A0000000000000000000011 /* ShotStopperTelemetry.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A0000000000000000000030 /* ShotStopperTelemetry */ = {
+			isa = PBXGroup;
+			children = (
+				F0000000000000000000001 /* ShotStopperTelemetryApp.swift */,
+				F0000000000000000000002 /* AppModel.swift */,
+				F0000000000000000000003 /* ContentView.swift */,
+				F0000000000000000000004 /* LiveShotView.swift */,
+				F0000000000000000000005 /* ShotHistoryView.swift */,
+				F0000000000000000000006 /* ShotDetailView.swift */,
+			);
+			path = ShotStopperTelemetry;
+			sourceTree = "<group>";
+		};
+		A0000000000000000000031 /* AppShared */ = {
+			isa = PBXGroup;
+			children = (
+				F0000000000000000000007 /* Models.swift */,
+				F0000000000000000000008 /* ShotRecorder.swift */,
+				F0000000000000000000009 /* ShotExport+Shot.swift */,
+			);
+			path = AppShared;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A0000000000000000000010 /* ShotStopperTelemetry */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A0000000000000000000021 /* Build configuration list for PBXNativeTarget "ShotStopperTelemetry" */;
+			buildPhases = (
+				A0000000000000000000012 /* Sources */,
+				A0000000000000000000013 /* Frameworks */,
+				A0000000000000000000014 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ShotStopperTelemetry;
+			packageProductDependencies = (
+				A0000000000000000000041 /* ShotTelemetryKit */,
+			);
+			productName = ShotStopperTelemetry;
+			productReference = A0000000000000000000011 /* ShotStopperTelemetry.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A0000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2650;
+				LastUpgradeCheck = 2650;
+				TargetAttributes = {
+					A0000000000000000000010 = {
+						CreatedOnToolsVersion = 26.5;
+					};
+				};
+			};
+			buildConfigurationList = A0000000000000000000020 /* Build configuration list for PBXProject "ShotStopperTelemetry" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A0000000000000000000002;
+			packageReferences = (
+				A0000000000000000000040 /* XCLocalSwiftPackageReference "ShotTelemetryKit" */,
+			);
+			productRefGroup = A0000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A0000000000000000000010 /* ShotStopperTelemetry */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A0000000000000000000014 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A0000000000000000000012 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0000000000000000000001 /* ShotStopperTelemetryApp.swift in Sources */,
+				B0000000000000000000002 /* AppModel.swift in Sources */,
+				B0000000000000000000003 /* ContentView.swift in Sources */,
+				B0000000000000000000004 /* LiveShotView.swift in Sources */,
+				B0000000000000000000005 /* ShotHistoryView.swift in Sources */,
+				B0000000000000000000006 /* ShotDetailView.swift in Sources */,
+				B0000000000000000000007 /* Models.swift in Sources */,
+				B0000000000000000000008 /* ShotRecorder.swift in Sources */,
+				B0000000000000000000009 /* ShotExport+Shot.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A0000000000000000000022 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A0000000000000000000023 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A0000000000000000000024 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "ShotStopper telemetry needs Bluetooth to read live shot data from the machine.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = org.iaconelli.ShotStopperTelemetry;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A0000000000000000000025 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "ShotStopper telemetry needs Bluetooth to read live shot data from the machine.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = org.iaconelli.ShotStopperTelemetry;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A0000000000000000000020 /* Build configuration list for PBXProject "ShotStopperTelemetry" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A0000000000000000000022 /* Debug */,
+				A0000000000000000000023 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A0000000000000000000021 /* Build configuration list for PBXNativeTarget "ShotStopperTelemetry" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A0000000000000000000024 /* Debug */,
+				A0000000000000000000025 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A0000000000000000000040 /* XCLocalSwiftPackageReference "ShotTelemetryKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ShotTelemetryKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A0000000000000000000041 /* ShotTelemetryKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ShotTelemetryKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A0000000000000000000001 /* Project object */;
+}

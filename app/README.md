@@ -8,7 +8,15 @@ firmware. See [`../docs/TELEMETRY_PLAN.md`](../docs/TELEMETRY_PLAN.md) and
 
 ```
 app/
-├── ShotTelemetryKit/         Swift package — the pure, testable core
+├── ShotStopperTelemetry.xcodeproj   iOS app project (builds; open this in Xcode)
+├── ShotStopperTelemetry/        iOS app target — SwiftUI
+│   ├── ShotStopperTelemetryApp.swift   @main, ModelContainer wiring
+│   ├── AppModel.swift                  owns client + recorder, wires onFrame
+│   ├── ContentView.swift               Live / History tabs
+│   ├── LiveShotView.swift              live weight chart + readouts
+│   ├── ShotHistoryView.swift           @Query list of saved shots
+│   └── ShotDetailView.swift            saved-shot chart + CSV/JSON export
+├── ShotTelemetryKit/            Swift package — the pure, testable core
 │   ├── Sources/ShotTelemetryKit/
 │   │   ├── TelemetryGATT.swift      BLE UUIDs (service 0x0FFE, telemetry 0xFF25)
 │   │   ├── TelemetryFrame.swift     16-byte LE frame decode/encode
@@ -22,6 +30,10 @@ app/
     ├── ShotRecorder.swift           frames → persisted shots
     └── ShotExport+Shot.swift        bridge Shot → ShotExport
 ```
+
+The `.xcodeproj` already references the package as a local dependency and pulls in
+the `AppShared/` files. Open it in Xcode and it builds as-is. (The app target is
+unsigned and intended for the Simulator until a Developer team is set.)
 
 ### Why the split
 
@@ -50,11 +62,17 @@ client.start()
 // Live chart binds to recorder.liveFrames; history is a @Query on Shot.
 ```
 
+## Done
+
+- iOS app target: live Swift Charts view, shot history, CSV/JSON export — builds for
+  the Simulator (`** BUILD SUCCEEDED **`).
+
 ## Still to build (Xcode)
 
-- iOS app target: live Swift Charts view, shot history, export to iCloud Drive.
-- watchOS target: kiosk chart + extended runtime session.
-- SwiftData + CloudKit container for phone↔watch sync.
-
-These need an Xcode project + an Apple Developer team (CloudKit container,
-Bluetooth + iCloud entitlements, `NSBluetoothAlwaysUsageDescription`).
+- watchOS target: kiosk chart + extended runtime session (shares the package +
+  `AppShared/`).
+- SwiftData + CloudKit container for phone↔watch sync (swap the `ModelConfiguration`
+  in `ShotStopperTelemetryApp.swift`).
+- Set a Developer team for on-device runs (signing + iCloud/CloudKit entitlements).
+  `NSBluetoothAlwaysUsageDescription` is already set via build settings.
+- Hardware validation: flash the firmware, confirm `0xFF25` frames decode live.
