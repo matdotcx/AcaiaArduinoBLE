@@ -9,7 +9,7 @@ import SwiftData
 /// do/catch is a last resort so the app still launches if the store can't open.
 public enum SharedStore {
     public static func makeContainer() -> ModelContainer {
-        let schema = Schema([Shot.self, ShotSample.self])
+        let schema = Schema([Shot.self, ShotSample.self, Preset.self])
         do {
             let cloud = ModelConfiguration(schema: schema, cloudKitDatabase: .automatic)
             return try ModelContainer(for: schema, configurations: cloud)

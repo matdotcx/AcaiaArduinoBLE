@@ -39,6 +39,40 @@ public final class Shot {
     }
 }
 
+/// A named bundle of per-coffee brew settings (dial-in). Applied to the device
+/// over BLE; persisted + CloudKit-synced like shots.
+@Model
+public final class Preset {
+    public var id: UUID = UUID()
+    public var name: String = ""
+    public var createdAt: Date = Date(timeIntervalSince1970: 0)
+    public var goalWeightG: Int = 36
+    public var autoTare: Bool = false
+    public var minShotDurationS: Int = 0
+    public var maxShotDurationS: Int = 50
+    public var dripDelayS: Int = 3
+
+    public init(
+        id: UUID = UUID(),
+        name: String,
+        createdAt: Date,
+        goalWeightG: Int,
+        autoTare: Bool,
+        minShotDurationS: Int,
+        maxShotDurationS: Int,
+        dripDelayS: Int
+    ) {
+        self.id = id
+        self.name = name
+        self.createdAt = createdAt
+        self.goalWeightG = goalWeightG
+        self.autoTare = autoTare
+        self.minShotDurationS = minShotDurationS
+        self.maxShotDurationS = maxShotDurationS
+        self.dripDelayS = dripDelayS
+    }
+}
+
 @Model
 public final class ShotSample {
     public var tMs: Int = 0

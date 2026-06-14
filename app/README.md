@@ -15,7 +15,7 @@ app/
 │   ├── LiveShotView.swift              live weight chart + readouts
 │   ├── ShotHistoryView.swift           @Query list + "Export all" (combined CSV/JSON)
 │   ├── ShotDetailView.swift            saved-shot chart + CSV/JSON export
-│   ├── SettingsView.swift              read/write machine config over BLE
+│   ├── SettingsView.swift              named presets + read/write machine config over BLE
 │   ├── OTAView.swift                   firmware OTA: pick a .bin from Files, upload in-app
 │   ├── Info.plist                      ATS local-networking + local-network usage (for OTA upload)
 │   └── ShotStopperTelemetry.entitlements   iCloud/CloudKit container
