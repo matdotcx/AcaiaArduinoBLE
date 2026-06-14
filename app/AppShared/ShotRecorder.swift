@@ -24,6 +24,8 @@ public final class ShotRecorder {
     /// follows. Set when a preset is applied; cleared on a manual setting change.
     public var activePresetID: UUID?
     public var activePresetName: String?
+    public var activeRecipeColorIndex: Int?
+    public var activeRecipeIcon: String?
 
     @ObservationIgnored private let context: ModelContext
     @ObservationIgnored private var segmenter = ShotSegmenter()
@@ -70,6 +72,8 @@ public final class ShotRecorder {
         shot.endStateRaw = Int(liveFrames.last?.rawState ?? 0)
         shot.presetName = activePresetName
         shot.presetID = activePresetID
+        shot.recipeColorIndex = activeRecipeColorIndex
+        shot.recipeIcon = activeRecipeIcon
 
         context.insert(shot) // cascades to samples via the relationship
         try? context.save()

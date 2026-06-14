@@ -25,6 +25,9 @@ public final class Shot {
     /// The preset that was active when this shot was pulled (nil = none / manual).
     public var presetName: String?
     public var presetID: UUID?
+    /// Recipe identity captured at record time (so the shot keeps its look).
+    public var recipeColorIndex: Int?
+    public var recipeIcon: String?
 
     @Relationship(deleteRule: .cascade, inverse: \ShotSample.shot)
     public var samples: [ShotSample]? = []
@@ -54,7 +57,10 @@ public final class Preset {
     public var minShotDurationS: Int = 0
     public var maxShotDurationS: Int = 50
     public var dripDelayS: Int = 3
-    /// Index into the recipe identity palette (color + icon).
+    /// Recipe identity (customizable): palette color index + SF Symbol name.
+    public var colorIndex: Int = 0
+    public var iconName: String = "cup.and.saucer.fill"
+    /// Legacy field (superseded by colorIndex/iconName); kept for migration.
     public var styleIndex: Int = 0
 
     public init(
@@ -66,7 +72,8 @@ public final class Preset {
         minShotDurationS: Int,
         maxShotDurationS: Int,
         dripDelayS: Int,
-        styleIndex: Int = 0
+        colorIndex: Int = 0,
+        iconName: String = "cup.and.saucer.fill"
     ) {
         self.id = id
         self.name = name
@@ -76,7 +83,8 @@ public final class Preset {
         self.minShotDurationS = minShotDurationS
         self.maxShotDurationS = maxShotDurationS
         self.dripDelayS = dripDelayS
-        self.styleIndex = styleIndex
+        self.colorIndex = colorIndex
+        self.iconName = iconName
     }
 }
 

@@ -30,6 +30,29 @@ public final class AppModel {
     public func start() { client.start() }
     public func stop() { client.stop() }
 
+    /// Apply a recipe to the device and mark it active (shots get tagged with it).
+    public func applyRecipe(_ p: Preset) {
+        client.setGoalWeight(UInt8(clamping: p.goalWeightG))
+        client.setAutoTare(p.autoTare)
+        client.setMinShotDuration(UInt8(clamping: p.minShotDurationS))
+        client.setMaxShotDuration(UInt8(clamping: p.maxShotDurationS))
+        client.setDripDelay(UInt8(clamping: p.dripDelayS))
+        recorder.activePresetID = p.id
+        recorder.activePresetName = p.name
+        recorder.activeRecipeColorIndex = p.colorIndex
+        recorder.activeRecipeIcon = p.iconName
+    }
+
+    /// A manual settings change means the live config no longer matches a recipe.
+    public func clearActiveRecipe() {
+        recorder.activePresetID = nil
+        recorder.activePresetName = nil
+        recorder.activeRecipeColorIndex = nil
+        recorder.activeRecipeIcon = nil
+    }
+
+    public var activeRecipeID: UUID? { recorder.activePresetID }
+
 #if DEBUG
     public private(set) var isSimulating = false
 

@@ -8,7 +8,8 @@ the iOS 26.5 / watchOS 26.5 Simulators (no Bluetooth there, so connection shows
 
 | File | Screen | Notes |
 | --- | --- | --- |
-| `ios-1-live-idle.png` | iPhone · Live (idle) | Hero `0.0` in disabled grey, stats card, dashed empty card + orange Simulate pill. |
+| `ios-1-live-idle.png` | iPhone · Live (idle) | Hero `0.0` in disabled grey, **Choose-recipe picker** (apply a recipe before the pull), stats card, dashed empty card. |
+| `ios-9-recipe-editor.png` | iPhone · Recipe editor | Customize a recipe: name, **color grid (12)**, **icon grid (12)**, brew params. Live preview tag. |
 | `ios-2-live-pour.png` | iPhone · Live (brewing) | REC pulse, big ink hero numeral, orange progress + curve with leading dot, neutral dashed target. |
 | `ios-3-history.png` | iPhone · History | Filter chips (recipe-colored), sparkline rows, recipe tags, ON TARGET status. |
 | `ios-4-detail-export.png` | iPhone · Shot detail | Green chart, summary card (recipe token), Export CSV/JSON pills, bottom Back pill. |

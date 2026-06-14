@@ -1,12 +1,15 @@
 import SwiftUI
+import SwiftData
 import ShotTelemetryKit
 
 /// The hero screen: live weight is the biggest thing on screen, with a status
 /// row, progress-to-target, secondary stats, and the extraction chart.
 struct LiveShotView: View {
     @Environment(AppModel.self) private var model
+    @Query(sort: \Preset.name) private var presets: [Preset]
     private var client: ShotStopperClient { model.client }
     private var recorder: ShotRecorder { model.recorder }
+    private var activePreset: Preset? { presets.first { $0.id == model.activeRecipeID } }
 
     private var state: BrewVisualState {
         if recorder.isRecording { return .brewing }
@@ -40,6 +43,7 @@ struct LiveShotView: View {
     var body: some View {
         VStack(spacing: DS.Space.xl) {
             statusRow
+            if state == .idle && !presets.isEmpty { recipeBar }
             heroBlock
             progressBlock
             statsCard
@@ -65,6 +69,35 @@ struct LiveShotView: View {
             }
             Spacer()
             StatusPill(state: state)
+        }
+    }
+
+    // MARK: Recipe picker (idle, before the pull)
+
+    private var recipeBar: some View {
+        Menu {
+            ForEach(presets) { p in
+                Button { model.applyRecipe(p) } label: { Label(p.name, systemImage: p.iconName) }
+            }
+            if activePreset != nil {
+                Divider()
+                Button("Clear recipe", role: .destructive) { model.clearActiveRecipe() }
+            }
+        } label: {
+            HStack(spacing: 8) {
+                if let p = activePreset {
+                    RecipeTokenChip(style: DS.recipeStyle(colorIndex: p.colorIndex, icon: p.iconName), size: 22)
+                    Text(p.name).font(.system(size: 14, weight: .semibold)).foregroundStyle(DS.ink)
+                } else {
+                    Image(systemName: "square.stack.3d.up.fill").font(.system(size: 14)).foregroundStyle(DS.inkMuted)
+                    Text("Choose recipe").font(.system(size: 14, weight: .semibold)).foregroundStyle(DS.inkMuted)
+                }
+                Spacer()
+                Image(systemName: "chevron.up.chevron.down").font(.system(size: 11, weight: .semibold)).foregroundStyle(DS.inkFaint)
+            }
+            .padding(.horizontal, 14).padding(.vertical, 10)
+            .background(DS.surface, in: Capsule())
+            .overlay(Capsule().strokeBorder(DS.hairline, lineWidth: 1))
         }
     }
 

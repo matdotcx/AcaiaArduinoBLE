@@ -58,7 +58,7 @@ struct ShotDetailView: View {
                 if let recipe = shot.presetName {
                     summaryRow("Recipe") {
                         HStack(spacing: 8) {
-                            RecipeTokenChip(style: DS.recipeStyle(DS.styleIndex(forName: recipe)), size: 20)
+                            RecipeTokenChip(style: DS.recipeStyle(colorIndex: shot.recipeColorIndex, icon: shot.recipeIcon, name: recipe), size: 20)
                             Text(recipe).font(.system(size: 15, weight: .bold)).foregroundStyle(DS.ink)
                         }
                     }

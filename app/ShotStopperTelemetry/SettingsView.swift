@@ -8,8 +8,8 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \Preset.name) private var presets: [Preset]
 
-    @State private var showingSave = false
-    @State private var newPresetName = ""
+    @State private var showEditor = false
+    @State private var editorPreset: Preset?
 
     private var client: ShotStopperClient { model.client }
     private var s: DeviceSettings { client.settings }
@@ -25,25 +25,18 @@ struct SettingsView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: DS.Space.xl) {
-                    Text("Settings").font(DS.title(32)).foregroundStyle(DS.ink)
-                        .padding(.top, DS.Space.s)
-
+                    Text("Settings").font(DS.title(32)).foregroundStyle(DS.ink).padding(.top, DS.Space.s)
                     connectionCard
                     recipesSection
                     brewSection
                     deviceSection
                 }
-                .padding(.horizontal, DS.Space.xl)
-                .padding(.bottom, DS.Space.xl)
+                .padding(.horizontal, DS.Space.xl).padding(.bottom, DS.Space.xl)
             }
             .background(DS.canvas)
             .navigationBarHidden(true)
-            .alert("Save recipe", isPresented: $showingSave) {
-                TextField("Name", text: $newPresetName)
-                Button("Save") { savePreset() }.disabled(newPresetName.isEmpty)
-                Button("Cancel", role: .cancel) { newPresetName = "" }
-            } message: {
-                Text("Saves the current target weight, timing and auto-tare as a recipe.")
+            .sheet(isPresented: $showEditor) {
+                RecipeEditorView(existing: editorPreset, defaults: s)
             }
             .onAppear {
 #if DEBUG
@@ -98,7 +91,7 @@ struct SettingsView: View {
                             recipeRow(p)
                             rowDivider
                         }
-                        Button { showingSave = true } label: {
+                        Button { editorPreset = nil; showEditor = true } label: {
                             HStack(spacing: 8) {
                                 Image(systemName: "plus").font(.system(size: 13, weight: .bold))
                                 Text("Save current as recipe…").font(.system(size: 15, weight: .semibold))
@@ -117,24 +110,31 @@ struct SettingsView: View {
     }
 
     private func recipeRow(_ p: Preset) -> some View {
-        Button { apply(p) } label: {
-            HStack(spacing: 12) {
-                RecipeTokenChip(style: DS.recipeStyle(p.styleIndex), size: 30)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(p.name).font(.system(size: 15, weight: .bold)).foregroundStyle(DS.ink)
-                    Text("\(p.goalWeightG) g · \(p.dripDelayS) s drip" + (p.autoTare ? " · auto-tare" : ""))
-                        .font(DS.mono(10)).foregroundStyle(DS.inkMuted)
+        HStack(spacing: 10) {
+            Button { model.applyRecipe(p) } label: {
+                HStack(spacing: 12) {
+                    RecipeTokenChip(style: DS.recipeStyle(colorIndex: p.colorIndex, icon: p.iconName), size: 30)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(p.name).font(.system(size: 15, weight: .bold)).foregroundStyle(DS.ink)
+                        Text("\(p.goalWeightG) g · \(p.dripDelayS) s drip" + (p.autoTare ? " · auto-tare" : ""))
+                            .font(DS.mono(10)).foregroundStyle(DS.inkMuted)
+                    }
+                    Spacer(minLength: 8)
                 }
-                Spacer(minLength: 8)
-                if model.recorder.activePresetID == p.id {
-                    badge("APPLIED", color: DS.green)
-                }
+                .contentShape(Rectangle())
             }
-            .padding(.horizontal, 16).padding(.vertical, 12)
-            .contentShape(Rectangle())
+            .buttonStyle(.plain)
+            .disabled(!interactive)
+
+            if model.activeRecipeID == p.id { badge("APPLIED", color: DS.green) }
+
+            Button { editorPreset = p; showEditor = true } label: {
+                Image(systemName: "slider.horizontal.3").font(.system(size: 15, weight: .medium))
+                    .foregroundStyle(DS.inkFaint).frame(width: 34, height: 34)
+            }
+            .buttonStyle(.plain)
         }
-        .buttonStyle(.plain)
-        .disabled(!interactive)
+        .padding(.horizontal, 16).padding(.vertical, 12)
     }
 
     private var emptyRecipes: some View {
@@ -144,9 +144,8 @@ struct SettingsView: View {
             Text("Dial in a shot you like, then save it as a recipe to apply it again later.")
                 .font(.system(size: 13)).foregroundStyle(DS.inkMuted).multilineTextAlignment(.center)
                 .frame(maxWidth: 240)
-            Button("Save current dial-in") { showingSave = true }
-                .buttonStyle(DSPillStyle(kind: .orange))
-                .padding(.top, 4)
+            Button("Save current dial-in") { editorPreset = nil; showEditor = true }
+                .buttonStyle(DSPillStyle(kind: .orange)).padding(.top, 4)
         }
         .frame(maxWidth: .infinity).padding(.vertical, 28).padding(.horizontal, 16)
     }
@@ -162,8 +161,8 @@ struct SettingsView: View {
                         Text("Target weight").font(.system(size: 15, weight: .medium)).foregroundStyle(DS.ink)
                         Spacer()
                         stepper(value: Int(s.goalWeightG), unit: "g",
-                                dec: { client.setGoalWeight(UInt8(max(0, Int(s.goalWeightG) - 1))); clearActivePreset() },
-                                inc: { client.setGoalWeight(UInt8(min(100, Int(s.goalWeightG) + 1))); clearActivePreset() })
+                                dec: { client.setGoalWeight(UInt8(max(0, Int(s.goalWeightG) - 1))); model.clearActiveRecipe() },
+                                inc: { client.setGoalWeight(UInt8(min(100, Int(s.goalWeightG) + 1))); model.clearActiveRecipe() })
                     }
                     .padding(.horizontal, 16).padding(.vertical, 12)
                     rowDivider
@@ -177,11 +176,8 @@ struct SettingsView: View {
     }
 
     private func toggleRow(_ title: String, isOn: Binding<Bool>) -> some View {
-        Toggle(isOn: isOn) {
-            Text(title).font(.system(size: 15, weight: .medium)).foregroundStyle(DS.ink)
-        }
-        .tint(DS.orange)
-        .padding(.horizontal, 16).padding(.vertical, 8)
+        Toggle(isOn: isOn) { Text(title).font(.system(size: 15, weight: .medium)).foregroundStyle(DS.ink) }
+            .tint(DS.orange).padding(.horizontal, 16).padding(.vertical, 8)
     }
 
     private func stepper(value: Int, unit: String, dec: @escaping () -> Void, inc: @escaping () -> Void) -> some View {
@@ -190,8 +186,7 @@ struct SettingsView: View {
             Text("\(value) \(unit)").font(DS.numeral(15, .semibold)).monospacedDigit().foregroundStyle(DS.ink).frame(minWidth: 46)
             Button(action: inc) { Image(systemName: "plus").font(.system(size: 14, weight: .bold)).foregroundStyle(.white).frame(width: 38, height: 32).background(DS.orange) }
         }
-        .background(DS.ink.opacity(0.05))
-        .clipShape(Capsule())
+        .background(DS.ink.opacity(0.05)).clipShape(Capsule())
         .overlay(Capsule().strokeBorder(DS.hairline, lineWidth: 1))
     }
 
@@ -203,7 +198,7 @@ struct SettingsView: View {
             DSCard {
                 NavigationLink { OTAView() } label: {
                     HStack(spacing: 12) {
-                        Image(systemName: "arrow.up.circle").font(.system(size: 18, weight: .regular)).foregroundStyle(DS.ink)
+                        Image(systemName: "arrow.up.circle").font(.system(size: 18)).foregroundStyle(DS.ink)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("Firmware OTA").font(.system(size: 15, weight: .semibold)).foregroundStyle(DS.ink)
                             Text("Current v\(s.firmwareVersion)").font(DS.mono(10)).foregroundStyle(DS.inkMuted)
@@ -211,46 +206,17 @@ struct SettingsView: View {
                         Spacer()
                         Image(systemName: "chevron.right").font(.system(size: 13, weight: .semibold)).foregroundStyle(DS.inkFaint)
                     }
-                    .padding(.horizontal, 16).padding(.vertical, 14)
-                    .contentShape(Rectangle())
+                    .padding(.horizontal, 16).padding(.vertical, 14).contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
             }
         }
     }
 
-    private var rowDivider: some View {
-        Rectangle().fill(DS.hairline).frame(height: 1).padding(.leading, 16)
-    }
-
-    // MARK: Logic
-
-    private func apply(_ preset: Preset) {
-        client.setGoalWeight(UInt8(clamping: preset.goalWeightG))
-        client.setAutoTare(preset.autoTare)
-        client.setMinShotDuration(UInt8(clamping: preset.minShotDurationS))
-        client.setMaxShotDuration(UInt8(clamping: preset.maxShotDurationS))
-        client.setDripDelay(UInt8(clamping: preset.dripDelayS))
-        model.recorder.activePresetID = preset.id
-        model.recorder.activePresetName = preset.name
-    }
-    private func clearActivePreset() {
-        model.recorder.activePresetID = nil
-        model.recorder.activePresetName = nil
-    }
-
-    private func savePreset() {
-        let name = newPresetName.trimmingCharacters(in: .whitespaces)
-        context.insert(Preset(name: name, createdAt: .now, goalWeightG: Int(s.goalWeightG),
-                              autoTare: s.autoTare, minShotDurationS: Int(s.minShotDurationS),
-                              maxShotDurationS: Int(s.maxShotDurationS), dripDelayS: Int(s.dripDelayS),
-                              styleIndex: DS.styleIndex(forName: name)))
-        try? context.save()
-        newPresetName = ""
-    }
+    private var rowDivider: some View { Rectangle().fill(DS.hairline).frame(height: 1).padding(.leading, 16) }
 
     private func boolBind(_ kp: KeyPath<DeviceSettings, Bool>, set: @escaping (Bool) -> Void) -> Binding<Bool> {
-        Binding(get: { client.settings[keyPath: kp] }, set: { set($0); clearActivePreset() })
+        Binding(get: { client.settings[keyPath: kp] }, set: { set($0); model.clearActiveRecipe() })
     }
 
 #if DEBUG
@@ -261,7 +227,7 @@ struct SettingsView: View {
         for (name, weight, tare, drip) in samples {
             context.insert(Preset(name: name, createdAt: .now, goalWeightG: weight, autoTare: tare,
                                   minShotDurationS: 5, maxShotDurationS: 50, dripDelayS: drip,
-                                  styleIndex: DS.styleIndex(forName: name)))
+                                  colorIndex: DS.styleIndex(forName: name), iconName: DS.defaultIcon(forName: name)))
         }
         try? context.save()
     }

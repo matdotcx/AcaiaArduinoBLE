@@ -47,7 +47,7 @@ struct ShotHistoryView: View {
         HStack(alignment: .center) {
             if let filter {
                 HStack(spacing: 10) {
-                    RecipeTokenChip(style: DS.recipeStyle(DS.styleIndex(forName: filter)), size: 34)
+                    RecipeTokenChip(style: DS.recipeStyle(forName: filter), size: 34)
                     VStack(alignment: .leading, spacing: 2) {
                         Text(filter).font(DS.title(26)).foregroundStyle(DS.ink).lineLimit(1)
                         DSMonoLabel("\(filteredShots.count) OF \(shots.count) SHOTS", size: 9.5)
@@ -114,7 +114,7 @@ struct ShotHistoryView: View {
     }
 
     private func recipeChip(_ name: String, action: @escaping () -> Void) -> some View {
-        let s = DS.recipeStyle(DS.styleIndex(forName: name))
+        let s = DS.recipeStyle(forName: name)
         let active = filter == name
         return Button(action: action) {
             HStack(spacing: 6) {
@@ -155,7 +155,7 @@ struct ShotHistoryView: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text(title(shot.startedAt)).font(.system(size: 15, weight: .bold)).foregroundStyle(DS.ink)
                 HStack(spacing: 7) {
-                    RecipeTag(name: shot.presetName, styleIndex: shot.presetName.map { DS.styleIndex(forName: $0) } ?? 0)
+                    RecipeTag(name: shot.presetName, style: DS.recipeStyle(colorIndex: shot.recipeColorIndex, icon: shot.recipeIcon, name: shot.presetName))
                     Text(String(format: "%.1f s", shot.durationS)).font(DS.mono(10)).foregroundStyle(DS.inkFaint)
                 }
             }

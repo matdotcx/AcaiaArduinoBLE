@@ -13,6 +13,13 @@ struct ContentView: View {
         // Screenshot roots: show one screen directly (Simulator demos).
         if ProcessInfo.processInfo.arguments.contains("-detailroot"), let shot = allShots.first {
             NavigationStack { ShotDetailView(shot: shot) }
+        } else if ProcessInfo.processInfo.arguments.contains("-recipeeditor") {
+            RecipeEditorView(existing: nil, defaults: model.client.settings)
+                .onAppear {
+#if targetEnvironment(simulator)
+                    model.client.debugLoadSettings()
+#endif
+                }
         } else if ProcessInfo.processInfo.arguments.contains("-otaroot") {
             // Push OTAView onto a stack so the screenshot shows the real back button.
             NavigationStack {

@@ -98,21 +98,58 @@ struct RecipeStyle {
 }
 
 extension DS {
-    static let recipeStyles: [RecipeStyle] = [
-        RecipeStyle(icon: "cup.and.saucer.fill", solid: dyn(0x7A4E2E, 0xC08A5E), tagText: dyn(0x7A4E2E, 0xD6A87E)), // House Espresso
-        RecipeStyle(icon: "leaf.fill",           solid: dyn(0xC28A1E, 0xE0B24E), tagText: dyn(0x8A6310, 0xE6BE64)), // Ethiopia Light
-        RecipeStyle(icon: "drop.fill",           solid: dyn(0xA32E3C, 0xE0788A), tagText: dyn(0xA32E3C, 0xE89AA6)), // Ristretto
-        RecipeStyle(icon: "moon.fill",           solid: dyn(0x44617F, 0x8AA6C2), tagText: dyn(0x44617F, 0x9FB8D0)), // Decaf
+    /// Recipe color palette (light, dark). Indices 0–3 keep the handoff's
+    /// House Espresso / Ethiopia Light / Ristretto / Decaf; the rest extend it.
+    static let recipeColorPairs: [(UInt, UInt)] = [
+        (0x7A4E2E, 0xC08A5E), // umber
+        (0xC28A1E, 0xE0B24E), // amber
+        (0xA32E3C, 0xE0788A), // garnet
+        (0x44617F, 0x8AA6C2), // slate
+        (0x2F7D6E, 0x5FC4B0), // teal
+        (0x6B4FA3, 0xB39DE0), // plum
+        (0xB5532A, 0xE8895E), // terracotta
+        (0x3E6CA6, 0x7FA8DE), // blue
+        (0x9A2F6E, 0xE08AC0), // magenta
+        (0x5C6B2E, 0xAEC074), // olive
+        (0x2C7A4B, 0x57C285), // forest
+        (0x8A6310, 0xE6BE64), // ochre
     ]
-    static func recipeStyle(_ index: Int) -> RecipeStyle {
-        let n = recipeStyles.count
-        return recipeStyles[((index % n) + n) % n]
+    /// Recipe icon set (SF Symbols).
+    static let recipeIcons: [String] = [
+        "cup.and.saucer.fill", "leaf.fill", "drop.fill", "moon.fill",
+        "flame.fill", "sparkles", "bolt.fill", "star.fill",
+        "heart.fill", "mug.fill", "camera.macro", "circle.hexagongrid.fill",
+    ]
+
+    static func recipeColor(_ index: Int) -> Color {
+        let n = recipeColorPairs.count
+        let p = recipeColorPairs[((index % n) + n) % n]
+        return dyn(p.0, p.1)
     }
-    /// Stable style index from a recipe name (for shots that only carry a name).
+    static func recipeStyle(colorIndex: Int, icon: String) -> RecipeStyle {
+        let c = recipeColor(colorIndex)
+        return RecipeStyle(icon: icon.isEmpty ? recipeIcons[0] : icon, solid: c, tagText: c)
+    }
+
+    /// Stable color index from a recipe name (fallback for shots that only carry a name).
     static func styleIndex(forName name: String) -> Int {
         let known = ["House Espresso": 0, "Ethiopia Light": 1, "Ristretto": 2, "Decaf": 3]
         if let i = known[name] { return i }
-        return abs(name.hashValue) % recipeStyles.count
+        return abs(name.hashValue) % recipeColorPairs.count
+    }
+    static func defaultIcon(forName name: String) -> String {
+        let known = ["House Espresso": "cup.and.saucer.fill", "Ethiopia Light": "leaf.fill",
+                     "Ristretto": "drop.fill", "Decaf": "moon.fill"]
+        return known[name] ?? recipeIcons[styleIndex(forName: name) % recipeIcons.count]
+    }
+    static func recipeStyle(forName name: String) -> RecipeStyle {
+        recipeStyle(colorIndex: styleIndex(forName: name), icon: defaultIcon(forName: name))
+    }
+    /// Resolve a style from optional stored fields, falling back to the name.
+    static func recipeStyle(colorIndex: Int?, icon: String?, name: String?) -> RecipeStyle {
+        if let ci = colorIndex { return recipeStyle(colorIndex: ci, icon: icon ?? recipeIcons[((ci % recipeIcons.count) + recipeIcons.count) % recipeIcons.count]) }
+        if let name { return recipeStyle(forName: name) }
+        return recipeStyle(colorIndex: 0, icon: recipeIcons[0])
     }
 }
 
@@ -161,16 +198,15 @@ struct RecipeTokenChip: View {
 /// Capsule recipe tag (dot + name) or, when name is nil, an outlined "No recipe".
 struct RecipeTag: View {
     let name: String?
-    var styleIndex: Int = 0
+    var style: RecipeStyle = DS.recipeStyle(colorIndex: 0, icon: DS.recipeIcons[0])
     var body: some View {
         if let name {
-            let s = DS.recipeStyle(styleIndex)
             HStack(spacing: 5) {
-                Circle().fill(s.solid).frame(width: 6, height: 6)
-                Text(name).font(.system(size: 10.5, weight: .semibold)).foregroundStyle(s.tagText)
+                Circle().fill(style.solid).frame(width: 6, height: 6)
+                Text(name).font(.system(size: 10.5, weight: .semibold)).foregroundStyle(style.tagText)
             }
             .padding(.horizontal, 8).padding(.vertical, 2)
-            .background(s.tagBackground, in: Capsule())
+            .background(style.tagBackground, in: Capsule())
         } else {
             Text("No recipe")
                 .font(.system(size: 10.5, weight: .semibold))
