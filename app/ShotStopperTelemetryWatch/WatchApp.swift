@@ -2,12 +2,11 @@ import SwiftUI
 import SwiftData
 
 @main
-struct ShotStopperTelemetryApp: App {
+struct ShotStopperTelemetryWatchApp: App {
     let container: ModelContainer
     @State private var model: AppModel
 
     init() {
-        // CloudKit-backed when entitled, local otherwise. See SharedStore (AppShared/).
         let container = SharedStore.makeContainer()
         self.container = container
         _model = State(initialValue: AppModel(context: container.mainContext))
@@ -15,7 +14,7 @@ struct ShotStopperTelemetryApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WatchKioskView()
                 .environment(model)
         }
         .modelContainer(container)

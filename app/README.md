@@ -8,14 +8,20 @@ firmware. See [`../docs/TELEMETRY_PLAN.md`](../docs/TELEMETRY_PLAN.md) and
 
 ```
 app/
-├── ShotStopperTelemetry.xcodeproj   iOS app project (builds; open this in Xcode)
+├── ShotStopperTelemetry.xcodeproj   iOS + watchOS project (both build; open in Xcode)
 ├── ShotStopperTelemetry/        iOS app target — SwiftUI
-│   ├── ShotStopperTelemetryApp.swift   @main, ModelContainer wiring
-│   ├── AppModel.swift                  owns client + recorder, wires onFrame
+│   ├── ShotStopperTelemetryApp.swift   @main, ModelContainer via SharedStore
 │   ├── ContentView.swift               Live / History tabs
 │   ├── LiveShotView.swift              live weight chart + readouts
 │   ├── ShotHistoryView.swift           @Query list of saved shots
-│   └── ShotDetailView.swift            saved-shot chart + CSV/JSON export
+│   ├── ShotDetailView.swift            saved-shot chart + CSV/JSON export
+│   └── ShotStopperTelemetry.entitlements   iCloud/CloudKit container
+├── ShotStopperTelemetryWatch/   watchOS kiosk target — SwiftUI
+│   ├── WatchApp.swift                  @main (shares SharedStore + AppModel)
+│   ├── WatchKioskView.swift            full-screen live readout + curve
+│   ├── KioskKeepAwake.swift            WKExtendedRuntimeSession (screen stays on)
+│   ├── Info.plist                      WKApplication + WKBackgroundModes (self-care)
+│   └── ShotStopperTelemetryWatch.entitlements   same iCloud container (sync)
 ├── ShotTelemetryKit/            Swift package — the pure, testable core
 │   ├── Sources/ShotTelemetryKit/
 │   │   ├── TelemetryGATT.swift      BLE UUIDs (service 0x0FFE, telemetry 0xFF25)
@@ -25,10 +31,12 @@ app/
 │   │   └── ShotExport.swift         CSV/JSON serializers
 │   ├── Smoke/main.swift             assertion smoke test (no Xcode needed)
 │   └── Tests/                       XCTest suite (needs full Xcode)
-└── AppShared/                Xcode-only sources (SwiftData @Model macro)
+└── AppShared/                Xcode-only sources, compiled into BOTH app targets
     ├── Models.swift                 Shot / ShotSample @Model
     ├── ShotRecorder.swift           frames → persisted shots
-    └── ShotExport+Shot.swift        bridge Shot → ShotExport
+    ├── ShotExport+Shot.swift        bridge Shot → ShotExport
+    ├── AppModel.swift               owns client + recorder, wires onFrame
+    └── SharedStore.swift            CloudKit-or-local ModelContainer factory
 ```
 
 The `.xcodeproj` already references the package as a local dependency and pulls in
@@ -89,8 +97,18 @@ To activate it (one-time, needs a paid Apple Developer team):
 Still TODO for background push sync: add **Background Modes → Remote notifications**
 (`UIBackgroundModes = remote-notification`). Foreground/launch sync works without it.
 
-## Still to build (Xcode)
+## watchOS kiosk
 
-- watchOS target: kiosk chart + extended runtime session (shares the package +
-  `AppShared/`).
+The `ShotStopperTelemetryWatch` target is a standalone watch app for the unit mounted
+(strapless) on the machine. It reuses the package, `AppShared/`, and the same recorder;
+`WatchKioskView` shows a big live weight readout, compact stats, and the pour curve.
+`KioskKeepAwake` starts a `WKExtendedRuntimeSession` (Info.plist `WKBackgroundModes =
+self-care`) so the screen stays on through a pour instead of dimming to the clock.
+It declares the **same** iCloud container as the phone, so history syncs via CloudKit.
+Both targets build for their simulators (`** BUILD SUCCEEDED **`).
+
+## Still to build / verify (Xcode + hardware)
+
+- App icons / asset catalogs (cosmetic; not required to build or run).
+- Run each app in its Simulator once runtimes are installed.
 - Hardware validation: flash the firmware, confirm `0xFF25` frames decode live.
