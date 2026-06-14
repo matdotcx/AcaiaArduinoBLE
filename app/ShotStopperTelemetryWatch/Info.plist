@@ -20,6 +20,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>WKApplication</key>
 	<true/>
+	<key>WKWatchOnly</key>
+	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>ShotStopper telemetry needs Bluetooth to read live shot data from the machine.</string>
 	<key>WKBackgroundModes</key>
