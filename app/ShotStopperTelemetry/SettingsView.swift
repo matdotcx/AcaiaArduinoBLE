@@ -2,8 +2,7 @@ import SwiftUI
 import SwiftData
 import ShotTelemetryKit
 
-/// Read/write the ShotStopper's configuration over BLE. Changes are written
-/// immediately. Controls are disabled until the device is connected.
+/// Machine configuration over BLE: connection, recipes, brew settings, OTA.
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.modelContext) private var context
@@ -14,72 +13,37 @@ struct SettingsView: View {
 
     private var client: ShotStopperClient { model.client }
     private var s: DeviceSettings { client.settings }
+    private var interactive: Bool {
+#if targetEnvironment(simulator)
+        true
+#else
+        client.isConnected
+#endif
+    }
 
     var body: some View {
         NavigationStack {
-            Form {
-                if !client.isConnected {
-                    Section {
-                        Label("Not connected", systemImage: "antenna.radiowaves.left.and.right.slash")
-                            .foregroundStyle(.secondary)
-                    }
-                }
+            ScrollView {
+                VStack(alignment: .leading, spacing: DS.Space.xl) {
+                    Text("Settings").font(DS.title(32)).foregroundStyle(DS.ink)
+                        .padding(.top, DS.Space.s)
 
-                Section("Presets") {
-                    ForEach(presets) { preset in
-                        Button { apply(preset) } label: {
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(preset.name)
-                                Text("\(preset.goalWeightG) g · \(preset.dripDelayS) s drip"
-                                     + (preset.autoTare ? " · auto-tare" : ""))
-                                    .font(.caption).foregroundStyle(.secondary)
-                            }
-                        }
-                        .tint(.primary)
-                    }
-                    .onDelete(perform: deletePresets)
-
-                    Button("Save current as preset…") { showingSave = true }
+                    connectionCard
+                    recipesSection
+                    brewSection
+                    deviceSection
                 }
-
-                Section("Brew") {
-                    Stepper(value: bind(\.goalWeightG, set: client.setGoalWeight), in: 0...100) {
-                        LabeledContent("Target weight", value: "\(s.goalWeightG) g")
-                    }
-                    Toggle("Brew by weight enabled", isOn: boolBind(\.enabled, set: client.setEnabled))
-                    Toggle("Auto-tare", isOn: boolBind(\.autoTare, set: client.setAutoTare))
-                }
-
-                Section("Switch") {
-                    Toggle("Momentary button", isOn: boolBind(\.momentary, set: client.setMomentary))
-                    Toggle("Reed switch", isOn: boolBind(\.reedSwitch, set: client.setReedSwitch))
-                }
-
-                Section("Timing") {
-                    Stepper(value: bind(\.minShotDurationS, set: client.setMinShotDuration), in: 0...60) {
-                        LabeledContent("Min shot duration", value: "\(s.minShotDurationS) s")
-                    }
-                    Stepper(value: bind(\.maxShotDurationS, set: client.setMaxShotDuration), in: 0...120) {
-                        LabeledContent("Max shot duration", value: "\(s.maxShotDurationS) s")
-                    }
-                    Stepper(value: bind(\.dripDelayS, set: client.setDripDelay), in: 0...30) {
-                        LabeledContent("Drip delay", value: "\(s.dripDelayS) s")
-                    }
-                }
-
-                Section("Firmware") {
-                    LabeledContent("Version", value: "\(s.firmwareVersion)")
-                    NavigationLink("Update firmware (OTA)") { OTAView() }
-                }
+                .padding(.horizontal, DS.Space.xl)
+                .padding(.bottom, DS.Space.xl)
             }
-            .navigationTitle("Settings")
-            .disabled(!interactive)
-            .alert("Save preset", isPresented: $showingSave) {
+            .background(DS.canvas)
+            .navigationBarHidden(true)
+            .alert("Save recipe", isPresented: $showingSave) {
                 TextField("Name", text: $newPresetName)
                 Button("Save") { savePreset() }.disabled(newPresetName.isEmpty)
                 Button("Cancel", role: .cancel) { newPresetName = "" }
             } message: {
-                Text("Saves the current target weight, timing and auto-tare under a name.")
+                Text("Saves the current target weight, timing and auto-tare as a recipe.")
             }
             .onAppear {
 #if DEBUG
@@ -89,25 +53,178 @@ struct SettingsView: View {
 #endif
             }
         }
+        .tint(DS.orange)
     }
 
-#if DEBUG
-    private func seedSamplePresets() {
-        let samples = [
-            ("House Espresso", 36, true, 3),
-            ("Ethiopia Light", 40, true, 4),
-            ("Ristretto", 22, false, 2),
-        ]
-        for (name, weight, tare, drip) in samples {
-            context.insert(Preset(name: name, createdAt: .now, goalWeightG: weight,
-                                  autoTare: tare, minShotDurationS: 5, maxShotDurationS: 50, dripDelayS: drip))
+    // MARK: Connection
+
+    private var connectionCard: some View {
+        DSCard {
+            HStack(spacing: 12) {
+                Circle().fill(client.isConnected ? DS.green : DS.idle).frame(width: 11, height: 11)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(client.isConnected ? (client.deviceName ?? "ShotStopper") : "ShotStopper")
+                        .font(.system(size: 16, weight: .bold)).foregroundStyle(DS.ink)
+                    Text(client.isConnected
+                         ? "Reading data from the connected scale · firmware v\(s.firmwareVersion)"
+                         : "Not connected · bring your phone near the machine")
+                        .font(DS.mono(10)).foregroundStyle(DS.inkMuted)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 8)
+                badge(client.isConnected ? "CONNECTED" : "OFFLINE", color: client.isConnected ? DS.green : DS.idle)
+            }
+            .padding(16)
         }
-        try? context.save()
     }
-#endif
 
-    /// Write a preset's values to the device and mark it active so following
-    /// shots get tagged with it.
+    private func badge(_ text: String, color: Color) -> some View {
+        DSMonoLabel(text, size: 8.5, color: color)
+            .padding(.horizontal, 7).padding(.vertical, 3)
+            .background(color.opacity(0.14), in: Capsule())
+    }
+
+    // MARK: Recipes
+
+    private var recipesSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            DSMonoLabel("RECIPES", color: DS.inkMuted)
+            DSCard {
+                VStack(spacing: 0) {
+                    if presets.isEmpty {
+                        emptyRecipes
+                    } else {
+                        ForEach(Array(presets.enumerated()), id: \.element.id) { _, p in
+                            recipeRow(p)
+                            rowDivider
+                        }
+                        Button { showingSave = true } label: {
+                            HStack(spacing: 8) {
+                                Image(systemName: "plus").font(.system(size: 13, weight: .bold))
+                                Text("Save current as recipe…").font(.system(size: 15, weight: .semibold))
+                                Spacer()
+                            }
+                            .foregroundStyle(DS.orange)
+                            .padding(.horizontal, 16).padding(.vertical, 14)
+                            .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(!interactive)
+                    }
+                }
+            }
+        }
+    }
+
+    private func recipeRow(_ p: Preset) -> some View {
+        Button { apply(p) } label: {
+            HStack(spacing: 12) {
+                RecipeTokenChip(style: DS.recipeStyle(p.styleIndex), size: 30)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(p.name).font(.system(size: 15, weight: .bold)).foregroundStyle(DS.ink)
+                    Text("\(p.goalWeightG) g · \(p.dripDelayS) s drip" + (p.autoTare ? " · auto-tare" : ""))
+                        .font(DS.mono(10)).foregroundStyle(DS.inkMuted)
+                }
+                Spacer(minLength: 8)
+                if model.recorder.activePresetID == p.id {
+                    badge("APPLIED", color: DS.green)
+                }
+            }
+            .padding(.horizontal, 16).padding(.vertical, 12)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .disabled(!interactive)
+    }
+
+    private var emptyRecipes: some View {
+        VStack(spacing: 10) {
+            Image(systemName: "cup.and.saucer").font(.system(size: 26, weight: .light)).foregroundStyle(DS.inkFaint)
+            Text("No recipes yet").font(.system(size: 16, weight: .bold)).foregroundStyle(DS.inkSecondary)
+            Text("Dial in a shot you like, then save it as a recipe to apply it again later.")
+                .font(.system(size: 13)).foregroundStyle(DS.inkMuted).multilineTextAlignment(.center)
+                .frame(maxWidth: 240)
+            Button("Save current dial-in") { showingSave = true }
+                .buttonStyle(DSPillStyle(kind: .orange))
+                .padding(.top, 4)
+        }
+        .frame(maxWidth: .infinity).padding(.vertical, 28).padding(.horizontal, 16)
+    }
+
+    // MARK: Brew
+
+    private var brewSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            DSMonoLabel("BREW", color: DS.inkMuted)
+            DSCard {
+                VStack(spacing: 0) {
+                    HStack {
+                        Text("Target weight").font(.system(size: 15, weight: .medium)).foregroundStyle(DS.ink)
+                        Spacer()
+                        stepper(value: Int(s.goalWeightG), unit: "g",
+                                dec: { client.setGoalWeight(UInt8(max(0, Int(s.goalWeightG) - 1))); clearActivePreset() },
+                                inc: { client.setGoalWeight(UInt8(min(100, Int(s.goalWeightG) + 1))); clearActivePreset() })
+                    }
+                    .padding(.horizontal, 16).padding(.vertical, 12)
+                    rowDivider
+                    toggleRow("Brew by weight", isOn: boolBind(\.enabled, set: client.setEnabled))
+                    rowDivider
+                    toggleRow("Auto-tare", isOn: boolBind(\.autoTare, set: client.setAutoTare))
+                }
+            }
+            .disabled(!interactive)
+        }
+    }
+
+    private func toggleRow(_ title: String, isOn: Binding<Bool>) -> some View {
+        Toggle(isOn: isOn) {
+            Text(title).font(.system(size: 15, weight: .medium)).foregroundStyle(DS.ink)
+        }
+        .tint(DS.orange)
+        .padding(.horizontal, 16).padding(.vertical, 8)
+    }
+
+    private func stepper(value: Int, unit: String, dec: @escaping () -> Void, inc: @escaping () -> Void) -> some View {
+        HStack(spacing: 0) {
+            Button(action: dec) { Image(systemName: "minus").font(.system(size: 14, weight: .bold)).foregroundStyle(DS.ink).frame(width: 38, height: 32) }
+            Text("\(value) \(unit)").font(DS.numeral(15, .semibold)).monospacedDigit().foregroundStyle(DS.ink).frame(minWidth: 46)
+            Button(action: inc) { Image(systemName: "plus").font(.system(size: 14, weight: .bold)).foregroundStyle(.white).frame(width: 38, height: 32).background(DS.orange) }
+        }
+        .background(DS.ink.opacity(0.05))
+        .clipShape(Capsule())
+        .overlay(Capsule().strokeBorder(DS.hairline, lineWidth: 1))
+    }
+
+    // MARK: Device / OTA
+
+    private var deviceSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            DSMonoLabel("DEVICE", color: DS.inkMuted)
+            DSCard {
+                NavigationLink { OTAView() } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "arrow.up.circle").font(.system(size: 18, weight: .regular)).foregroundStyle(DS.ink)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Firmware OTA").font(.system(size: 15, weight: .semibold)).foregroundStyle(DS.ink)
+                            Text("Current v\(s.firmwareVersion)").font(DS.mono(10)).foregroundStyle(DS.inkMuted)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right").font(.system(size: 13, weight: .semibold)).foregroundStyle(DS.inkFaint)
+                    }
+                    .padding(.horizontal, 16).padding(.vertical, 14)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
+    private var rowDivider: some View {
+        Rectangle().fill(DS.hairline).frame(height: 1).padding(.leading, 16)
+    }
+
+    // MARK: Logic
+
     private func apply(_ preset: Preset) {
         client.setGoalWeight(UInt8(clamping: preset.goalWeightG))
         client.setAutoTare(preset.autoTare)
@@ -117,49 +234,36 @@ struct SettingsView: View {
         model.recorder.activePresetID = preset.id
         model.recorder.activePresetName = preset.name
     }
-
-    /// A manual settings change means the live config no longer matches a preset.
     private func clearActivePreset() {
         model.recorder.activePresetID = nil
         model.recorder.activePresetName = nil
     }
 
     private func savePreset() {
-        let preset = Preset(
-            name: newPresetName.trimmingCharacters(in: .whitespaces),
-            createdAt: .now,
-            goalWeightG: Int(s.goalWeightG),
-            autoTare: s.autoTare,
-            minShotDurationS: Int(s.minShotDurationS),
-            maxShotDurationS: Int(s.maxShotDurationS),
-            dripDelayS: Int(s.dripDelayS)
-        )
-        context.insert(preset)
+        let name = newPresetName.trimmingCharacters(in: .whitespaces)
+        context.insert(Preset(name: name, createdAt: .now, goalWeightG: Int(s.goalWeightG),
+                              autoTare: s.autoTare, minShotDurationS: Int(s.minShotDurationS),
+                              maxShotDurationS: Int(s.maxShotDurationS), dripDelayS: Int(s.dripDelayS),
+                              styleIndex: DS.styleIndex(forName: name)))
         try? context.save()
         newPresetName = ""
     }
 
-    private func deletePresets(_ offsets: IndexSet) {
-        for index in offsets { context.delete(presets[index]) }
-        try? context.save()
-    }
-
-    /// On device, controls are live only when connected. In the Simulator (no BLE)
-    /// they stay interactive so the screen can be previewed/demoed.
-    private var interactive: Bool {
-#if targetEnvironment(simulator)
-        true
-#else
-        client.isConnected
-#endif
-    }
-
-    // Custom bindings that read from settings and write through the client.
-    // A manual change also clears the active preset (the shot is no longer "that recipe").
-    private func bind(_ kp: KeyPath<DeviceSettings, UInt8>, set: @escaping (UInt8) -> Void) -> Binding<UInt8> {
-        Binding(get: { client.settings[keyPath: kp] }, set: { set($0); clearActivePreset() })
-    }
     private func boolBind(_ kp: KeyPath<DeviceSettings, Bool>, set: @escaping (Bool) -> Void) -> Binding<Bool> {
         Binding(get: { client.settings[keyPath: kp] }, set: { set($0); clearActivePreset() })
     }
+
+#if DEBUG
+    private func seedSamplePresets() {
+        let samples: [(String, Int, Bool, Int)] = [
+            ("House Espresso", 36, true, 3), ("Ethiopia Light", 40, true, 4), ("Ristretto", 22, false, 2),
+        ]
+        for (name, weight, tare, drip) in samples {
+            context.insert(Preset(name: name, createdAt: .now, goalWeightG: weight, autoTare: tare,
+                                  minShotDurationS: 5, maxShotDurationS: 50, dripDelayS: drip,
+                                  styleIndex: DS.styleIndex(forName: name)))
+        }
+        try? context.save()
+    }
+#endif
 }
