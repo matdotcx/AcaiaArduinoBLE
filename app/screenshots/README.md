@@ -1,20 +1,23 @@
 # ShotStopper Telemetry — UI screenshots
 
-Current state of the app for a UI-polish pass. The bones work; the styling is
-default SwiftUI. Captured in the iOS 26.5 / watchOS 26.5 Simulators (no Bluetooth
-in the Simulator, so the connection status reads "Idle" — on hardware it shows the
-device name and live data). Shot data here is from the built-in demo simulator.
+**Visual System v1 is implemented** (the `design_handoff_shotstopper` spec): cohesive
+light/dark color system, expanded precision-gauge numerals (SF Pro expanded + SF Mono),
+recipe identity (color + icon), styled Swift Charts, and a state language. Captured in
+the iOS 26.5 / watchOS 26.5 Simulators (no Bluetooth there, so connection shows
+"Not connected"). Shot data is from the built-in demo simulator.
 
 | File | Screen | Notes |
 | --- | --- | --- |
-| `ios-1-live-idle.png` | iPhone · Live (idle) | Connection status, Weight/Time/Flow/Target readouts, empty chart, Live/History tabs. |
-| `ios-2-live-pour.png` | iPhone · Live (recording) | Mid-pour: live readouts, red REC indicator, weight curve building toward the dashed target line. |
-| `ios-3-history.png` | iPhone · History | Saved shots tagged with the recipe (preset) used; filter by recipe. Toolbar: Filter, Export (share) + DEBUG "Add Samples". |
-| `ios-4-detail-export.png` | iPhone · Shot detail | Weight-vs-time curve with dashed target line, summary grid, Export CSV / Export JSON buttons. |
-| `ios-5-settings.png` | iPhone · Settings | Named presets (dial-in), then read/write machine config over BLE: target weight, toggles, durations. (Disabled until connected on hardware.) |
-| `ios-6-ota.png` | iPhone · Firmware OTA | Send WiFi + start OTA mode, then pick a .bin from Files / iCloud Drive and upload it to the device in-app (web-uploader fallback also shown). |
-| `watch-1-idle.png` | Watch · Kiosk (idle) | Big weight readout, compact time/flow/target row, chart. Strapless on the machine as an always-on display. |
-| `watch-2-pour.png` | Watch · Kiosk (recording) | Live pour: big weight, stats row, curve building to the target line. |
+| `ios-1-live-idle.png` | iPhone · Live (idle) | Hero `0.0` in disabled grey, stats card, dashed empty card + orange Simulate pill. |
+| `ios-2-live-pour.png` | iPhone · Live (brewing) | REC pulse, big ink hero numeral, orange progress + curve with leading dot, neutral dashed target. |
+| `ios-3-history.png` | iPhone · History | Filter chips (recipe-colored), sparkline rows, recipe tags, ON TARGET status. |
+| `ios-4-detail-export.png` | iPhone · Shot detail | Green chart, summary card (recipe token), Export CSV/JSON pills, bottom Back pill. |
+| `ios-5-settings.png` | iPhone · Settings | Connection card, recipe rows (token chip + APPLIED), orange stepper/toggles, Device/OTA. |
+| `ios-6-ota.png` | iPhone · Firmware OTA | WiFi/Device cards, dark uploading card, Choose-firmware pill, Back + Done. |
+| `ios-7-dark-live.png` | iPhone · Live (dark) | Dark-mode Live: near-black canvas, cream hero, brighter orange. |
+| `ios-8-dark-history.png` | iPhone · History (dark) | Dark-mode History: recipe-tag dark variants, dark cards. |
+| `watch-1-idle.png` | Watch · Kiosk (idle) | True black, grey dash, WAITING FOR SHOT, orange Start pill. |
+| `watch-2-pour.png` | Watch · Kiosk (brewing) | True black, cream giant numeral, mono stats, mini chart + leading dot. |
 
 ## Design intent / brand
 - It's a brew-by-weight espresso companion. Glanceable, calm, used wet-handed at the machine.
@@ -24,9 +27,13 @@ device name and live data). Shot data here is from the built-in demo simulator.
 - Two surfaces: a glanceable **phone** (live + history + export) and a **watch kiosk**
   (live only, large type, readable from across the counter).
 
-## Not styled yet (fair game)
-App icon is a placeholder; typography/spacing are SwiftUI defaults; no color theming,
-empty states are minimal, the watch face is bare. Charts are stock Swift Charts.
+## Implementation notes
+- The visual system lives in `AppShared/DesignSystem.swift` (tokens, fonts, components,
+  the `ExtractionChart`). Fonts use SF Pro `.expanded` + SF Mono (the spec's sanctioned
+  substitute for Archivo / Space Mono — no bundled font files).
+- Recipe identity (color + icon) carries across Settings, History chips/tags, and detail.
+- Light **and** dark modes are intentional via adaptive tokens; the watch is true-black
+  with an Always-On dimmed treatment (`isLuminanceReduced`).
 
 ## Recipes — focused brief
 The **recipe** feature (save a dial-in, tag each shot with it, filter History by it)
