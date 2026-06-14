@@ -132,6 +132,7 @@ struct Shot {
   float shotTimer;         // Reset when the final drip measurement is made
   float end_s;             // Number of seconds after the shot started
   float expected_end_s;    // Estimated duration of the shot
+  float flow_gps;          // Grams/second, smoothed slope from calculateEndTime()
   float weight[1000];      // A scatter plot of the weight measurements, along with time_s[]
   float time_s[1000];      // Number of seconds after the shot starte
   int datapoints;          // Number of datapoitns in the scatter plot
@@ -140,7 +141,7 @@ struct Shot {
 };
 
 //Initialize shot
-Shot shot = {0,0,0,0,{},{},0,false,ENDTYPE::UNDEF};
+Shot shot = {0,0,0,0,0,{},{},0,false,ENDTYPE::UNDEF};
 
 //BLE peripheral device
 BLEService shotStopperService("0x0FFE"); // create service
@@ -159,12 +160,45 @@ BLEByteCharacteristic otaModeRequestedCharacteristic("0xFF21",  BLEWrite | BLERe
 BLECharacteristic wifiSsidCharacteristic("0xFF22",  BLEWrite | BLERead, 32);
 BLECharacteristic wifiPassCharacteristic("0xFF23",  BLEWrite, 32);
 BLECharacteristic wifiIpCharacteristic("0xFF24",  BLERead | BLENotify, 16);
+BLECharacteristic telemetryCharacteristic("0xFF25",  BLERead | BLENotify, 16); // 16-byte live shot frame, see docs/GATT_DESIGN.md
 
 
 enum ScaleStatus {
   STATUS_DISCONNECTED = 0,
   STATUS_CONNECTED = 1,
 };
+
+// Telemetry frame state field. PREINFUSE/SETTLE are reserved for a future
+// firmware enhancement and are not emitted yet. See docs/GATT_DESIGN.md.
+enum TelemetryState {
+  TELEM_IDLE      = 0,
+  TELEM_PREINFUSE = 1, // reserved, not emitted
+  TELEM_BREW      = 2,
+  TELEM_SETTLE    = 3, // reserved, not emitted
+  TELEM_DONE      = 4,
+};
+
+// Pack and notify one 16-byte little-endian telemetry frame.
+// ESP32 is little-endian, so a raw memcpy of native types matches the wire layout.
+void sendTelemetryFrame(uint8_t state) {
+  uint8_t buf[16];
+  uint32_t t_ms        = (state == TELEM_IDLE) ? 0 : (uint32_t)(shot.shotTimer * 1000.0);
+  float    weight_g    = currentWeight;
+  float    flow_gps    = (state == TELEM_IDLE) ? 0.0f : shot.flow_gps;
+  uint8_t  flags       = 0;
+  if (scale.isConnected())                          flags |= 0x01; // bit0 scaleConnected
+  if (currentWeight >= (goalWeight - weightOffset)) flags |= 0x02; // bit1 setpointReached
+  uint16_t setpoint_cg = (uint16_t)(goalWeight * 100);
+
+  memcpy(&buf[0],  &t_ms,        4);
+  memcpy(&buf[4],  &weight_g,    4);
+  memcpy(&buf[8],  &flow_gps,    4);
+  buf[12] = state;
+  buf[13] = flags;
+  memcpy(&buf[14], &setpoint_cg, 2);
+
+  telemetryCharacteristic.writeValue(buf, 16);
+}
 
 uint8_t lastScaleStatus = 255; // Invalid initial value to force first update
 static uint8_t lastShotStatusValue = 0xFF; // Initialize with a value that is unlikely to be a valid status
@@ -281,6 +315,7 @@ void initializeBLE() {
   shotStopperService.addCharacteristic(wifiSsidCharacteristic);
   shotStopperService.addCharacteristic(wifiPassCharacteristic);
   shotStopperService.addCharacteristic(wifiIpCharacteristic);
+  shotStopperService.addCharacteristic(telemetryCharacteristic);
   BLE.addService(shotStopperService);
   enabledCharacteristic.writeValue(enabled ? 1 : 0);
   weightCharacteristic.writeValue(goalWeight);
@@ -296,6 +331,7 @@ void initializeBLE() {
   otaModeRequestedCharacteristic.writeValue(otaModeRequested ? 1 : 0);
   writeStringToCharacteristic(wifiSsidCharacteristic, wifiSsid);
   writeStringToCharacteristic(wifiIpCharacteristic, lastWifiIp);
+  sendTelemetryFrame(TELEM_IDLE); // seed a valid frame for early readers
   BLE.advertise();
   Serial.println("Bluetooth® device active, waiting for connections...");
   BLE.setEventHandler(BLEDisconnected, blePeripheralDisconnectHandler);
@@ -477,6 +513,9 @@ void loop() {
       Serial.print(shot.expected_end_s);
     }
     Serial.println();
+
+    // Stream a telemetry frame on each fresh scale sample (see docs/GATT_DESIGN.md)
+    sendTelemetryFrame(shot.brewing ? TELEM_BREW : TELEM_IDLE);
   }
 
   // Read button every period
@@ -615,11 +654,13 @@ void setBrewingState(bool brewing){
     shot.start_timestamp_s = seconds_f();
     shot.shotTimer = 0;
     shot.datapoints = 0;
+    shot.flow_gps = 0;
     scale.resetTimer();
     scale.startTimer();
     if(autoTare){
       scale.tare();
     }
+    sendTelemetryFrame(TELEM_BREW); // mark shot boundary at t=0 for clients
     Serial.println("Weight Timer End");
   }else{
     Serial.print("ShotEnded by ");
@@ -656,7 +697,9 @@ void setBrewingState(bool brewing){
       Serial.println("Button Unlatched and not pressed");
       digitalWrite(OUT,LOW); Serial.println("wrote low");
     }
-  } 
+
+    sendTelemetryFrame(TELEM_DONE); // final frame so clients can close the shot curve
+  }
 
   // Reset
   shot.end = ENDTYPE::UNDEF;
@@ -666,6 +709,7 @@ void calculateEndTime(Shot* s){
   // Do not  predict end time if there aren't enough espresso measurements yet
   if( (s->datapoints < N) || (s->weight[s->datapoints-1] < 10) ){
     s->expected_end_s = maxShotDurationS;
+    s->flow_gps = 0;
   }
   else{
     //Get line of best fit (y=mx+b) from the last 10 measurements 
@@ -682,6 +726,7 @@ void calculateEndTime(Shot* s){
     meanX = sumX/N;
     meanY = sumY/N;
     b = meanY-m*meanX;
+    s->flow_gps = m; // slope (g/s) doubles as the live flow rate
 
     //Calculate time at which goal weight will be reached (x = (y-b)/m)
     // if M is negative (which can happen during a blooming shot when the flow stops) assume max duration (issue #29)
