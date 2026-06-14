@@ -27,3 +27,14 @@ device name and live data). Shot data here is from the built-in demo simulator.
 ## Not styled yet (fair game)
 App icon is a placeholder; typography/spacing are SwiftUI defaults; no color theming,
 empty states are minimal, the watch face is bare. Charts are stock Swift Charts.
+
+## Recipes — focused brief
+The **recipe** feature (save a dial-in, tag each shot with it, filter History by it)
+spans three surfaces and is the main way shots get organised. It has its own design
+brief — including the highest-leverage opportunity (per-recipe colour/icon identity) and
+a terminology inconsistency to resolve ("Presets" vs "Recipe"):
+
+→ see **[RECIPES.md](./RECIPES.md)**
+
+Relevant screenshots: `ios-5-settings.png` (preset list), `ios-3-history.png` (tags +
+filter).
