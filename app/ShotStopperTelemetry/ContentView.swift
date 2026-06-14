@@ -39,11 +39,9 @@ struct ContentView: View {
                 .tag(0)
                 .tabItem { Label("Live", systemImage: "chart.xyaxis.line") }
 
-            NavigationStack {
-                ShotHistoryView()
-            }
-            .tag(1)
-            .tabItem { Label("History", systemImage: "clock") }
+            ShotHistoryView()
+                .tag(1)
+                .tabItem { Label("History", systemImage: "clock") }
 
             SettingsView()
                 .tag(2)

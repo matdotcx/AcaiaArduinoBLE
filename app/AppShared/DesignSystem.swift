@@ -258,6 +258,26 @@ struct TargetProgressBar: View {
     }
 }
 
+/// Tiny line sparkline for History rows.
+struct Sparkline: View {
+    var values: [Double]
+    var color: Color
+    var lineWidth: CGFloat = 2.4
+    var body: some View {
+        GeometryReader { geo in
+            Path { p in
+                guard values.count > 1, let mx = values.max(), mx > 0 else { return }
+                let stepX = geo.size.width / CGFloat(values.count - 1)
+                for (i, v) in values.enumerated() {
+                    let pt = CGPoint(x: CGFloat(i) * stepX, y: geo.size.height * (1 - CGFloat(v / mx) * 0.92) - 1)
+                    if i == 0 { p.move(to: pt) } else { p.addLine(to: pt) }
+                }
+            }
+            .stroke(color, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
+        }
+    }
+}
+
 // MARK: - Extraction chart (the hero — Swift Charts)
 
 struct ChartSample: Identifiable {
