@@ -1,11 +1,14 @@
 import SwiftUI
 import Charts
+import CoreText
 import ShotTelemetryKit
 
 // ShotStopper Visual System v1 — design tokens + reusable components.
-// Fonts: the spec's Archivo/Space Mono are substituted with SF Pro (.expanded
-// width) and SF Mono per the handoff's sanctioned fallback — same intent
-// (expanded, light, tabular numerals), zero font-bundling risk.
+// Fonts: the spec's Grotesque (Archivo) is now bundled as a variable font
+// (AppShared/Archivo-Variable.ttf) and driven on its wght/wdth axes to hit the
+// spec's exact weights + expanded width (font-stretch 110–120%). Space Mono is
+// still substituted by SF Mono (DS.mono). If the font fails to load we fall back
+// to SF Pro (.expanded) — same intent, never a crash.
 
 // MARK: - Color helpers
 
@@ -68,11 +71,68 @@ enum DS {
     // Radius
     enum R { static let card: CGFloat = 18, inner: CGFloat = 14, chip: CGFloat = 7 }
 
-    // MARK: Fonts (SF Pro expanded + SF Mono)
-    static func hero(_ size: CGFloat) -> Font { .system(size: size, weight: .regular).width(.expanded) }
-    static func numeral(_ size: CGFloat, _ weight: Font.Weight = .medium) -> Font { .system(size: size, weight: weight).width(.expanded) }
-    static func title(_ size: CGFloat = 30) -> Font { .system(size: size, weight: .semibold).width(.expanded) }
+    // MARK: Fonts (Archivo variable for the Grotesque; SF Mono for the mono)
+    // Width ~115 = the spec's expanded look; hero/title carry the spec's exact weights.
+    static func hero(_ size: CGFloat) -> Font { Archivo.font(size, weight: 480, width: 116) }
+    static func numeral(_ size: CGFloat, _ weight: Font.Weight = .medium) -> Font { Archivo.font(size, weight: Archivo.wght(weight), width: 115) }
+    static func title(_ size: CGFloat = 30) -> Font { Archivo.font(size, weight: 600, width: 110) }
     static func mono(_ size: CGFloat, _ weight: Font.Weight = .regular) -> Font { .system(size: size, weight: weight, design: .monospaced) }
+}
+
+// MARK: - Archivo variable-font loader
+
+/// Builds SwiftUI `Font`s from the bundled Archivo variable font, setting the
+/// wght/wdth axes explicitly (the variable font's default instance is neither
+/// the weight nor the expanded width the spec calls for). Tabular figures are
+/// baked in so numerals stay column-aligned. Loaded straight from the bundle —
+/// no `UIAppFonts` registration required.
+fileprivate enum Archivo {
+    static let wghtAxis = 0x77676874   // 'wght' (id 2003265652)
+    static let wdthAxis = 0x77647468   // 'wdth' (id 2003072104)
+
+    /// Base descriptor for the bundled variable font, resolved once.
+    static let base: CTFontDescriptor? = {
+        guard let url = Bundle.main.url(forResource: "Archivo-Variable", withExtension: "ttf"),
+              let descs = CTFontManagerCreateFontDescriptorsFromURL(url as CFURL) as? [CTFontDescriptor],
+              let first = descs.first else { return nil }
+        return first
+    }()
+
+    /// Map a SwiftUI weight to a numeric value on the wght axis (100–900).
+    static func wght(_ w: Font.Weight) -> CGFloat {
+        if w == .ultraLight { return 100 }
+        if w == .thin       { return 200 }
+        if w == .light      { return 300 }
+        if w == .regular    { return 400 }
+        if w == .medium     { return 500 }
+        if w == .semibold   { return 600 }
+        if w == .bold       { return 700 }
+        if w == .heavy      { return 800 }
+        if w == .black      { return 900 }
+        return 500
+    }
+
+    static func font(_ size: CGFloat, weight: CGFloat, width: CGFloat) -> Font {
+        guard let base else {
+            // Font missing from the bundle — keep the original SF substitution.
+            return .system(size: size, weight: .regular).width(.expanded)
+        }
+        let variations: [NSNumber: NSNumber] = [
+            NSNumber(value: wghtAxis): NSNumber(value: Double(weight)),
+            NSNumber(value: wdthAxis): NSNumber(value: Double(width)),
+        ]
+        // Tabular figures: kNumberSpacingType (6) / kMonospacedNumbersSelector (0).
+        let tnum: [CFString: Int] = [
+            kCTFontFeatureTypeIdentifierKey: 6,
+            kCTFontFeatureSelectorIdentifierKey: 0,
+        ]
+        let attrs: [CFString: Any] = [
+            kCTFontVariationAttribute: variations,
+            kCTFontFeatureSettingsAttribute: [tnum],
+        ]
+        let desc = CTFontDescriptorCreateCopyWithAttributes(base, attrs as CFDictionary)
+        return Font(CTFontCreateWithFontDescriptor(desc, size, nil))
+    }
 }
 
 // MARK: - Brew visual state
