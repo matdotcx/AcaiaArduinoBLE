@@ -29,6 +29,14 @@ public final class ShotStopperClient: NSObject {
     public private(set) var settings = DeviceSettings()
     public var isConnected: Bool { state == .connected }
 
+    /// Whether config writes (e.g. applying a recipe) are in flight or just landed.
+    /// Drives the Live screen's "Sending… / Sent" indicator. `.synced` auto-resets
+    /// to `.idle` shortly after the last write is acknowledged.
+    public enum SyncState: Equatable { case idle, writing, synced }
+    public private(set) var syncState: SyncState = .idle
+    @ObservationIgnored private var writesInFlight = 0
+    @ObservationIgnored private var syncResetTask: Task<Void, Never>?
+
     /// Called for every decoded frame (on the main actor). Wire to `ShotRecorder.ingest`.
     public var onFrame: ((TelemetryFrame) -> Void)?
 
@@ -91,12 +99,21 @@ public final class ShotStopperClient: NSObject {
 
     private func writeByte(_ value: UInt8, _ uuid: CBUUID) {
         guard let ch = chars[uuid], let peripheral else { return }
+        markWriting()
         peripheral.writeValue(Data([value]), for: ch, type: .withResponse)
     }
 
     private func writeString(_ value: String, _ uuid: CBUUID) {
         guard let ch = chars[uuid], let peripheral else { return }
+        markWriting()
         peripheral.writeValue(Data(value.utf8), for: ch, type: .withResponse)
+    }
+
+    /// Count an outgoing `.withResponse` write; cleared in `didWriteValueFor`.
+    private func markWriting() {
+        writesInFlight += 1
+        syncResetTask?.cancel()
+        syncState = .writing
     }
 
 #if DEBUG
@@ -166,7 +183,29 @@ extension ShotStopperClient: CBCentralManagerDelegate, CBPeripheralDelegate {
         MainActor.assumeIsolated {
             chars = [:]
             self.peripheral = nil
+            writesInFlight = 0
+            syncResetTask?.cancel()
+            syncState = .idle
             if wantConnection { beginScan() } else { state = .idle }
+        }
+    }
+
+    public nonisolated func peripheral(
+        _ peripheral: CBPeripheral,
+        didWriteValueFor characteristic: CBCharacteristic,
+        error: Error?
+    ) {
+        MainActor.assumeIsolated {
+            writesInFlight = max(0, writesInFlight - 1)
+            guard writesInFlight == 0 else { return }
+            // All queued writes acknowledged. Flash "synced", then settle to idle.
+            syncState = .synced
+            syncResetTask?.cancel()
+            syncResetTask = Task { [weak self] in
+                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                guard !Task.isCancelled else { return }
+                self?.syncState = .idle
+            }
         }
     }
 

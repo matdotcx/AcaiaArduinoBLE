@@ -18,7 +18,9 @@ struct LiveShotView: View {
     }
 
     private var target: Double {
-        if let f = model.latestFrame, f.setpointG > 0 { return Double(f.setpointG) }
+        // While brewing, trust the device's live setpoint from the frame; otherwise show
+        // the configured goal weight, which updates instantly when a recipe is applied.
+        if state == .brewing, let f = model.latestFrame, f.setpointG > 0 { return Double(f.setpointG) }
         return Double(client.settings.goalWeightG)
     }
 
@@ -52,6 +54,7 @@ struct LiveShotView: View {
         }
         .padding(.horizontal, DS.Space.xl)
         .padding(.top, DS.Space.m)
+        .padding(.bottom, DS.Space.l) // breathing room above the tab bar (shrinks the flexible chart)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(DS.canvas)
         .onAppear { model.start() }
@@ -93,11 +96,31 @@ struct LiveShotView: View {
                     Text("Choose recipe").font(.system(size: 14, weight: .semibold)).foregroundStyle(DS.inkMuted)
                 }
                 Spacer()
-                Image(systemName: "chevron.up.chevron.down").font(.system(size: 11, weight: .semibold)).foregroundStyle(DS.inkFaint)
+                recipeSyncIndicator
             }
             .padding(.horizontal, 14).padding(.vertical, 10)
             .background(DS.surface, in: Capsule())
             .overlay(Capsule().strokeBorder(DS.hairline, lineWidth: 1))
+        }
+    }
+
+    /// Shows write progress when a recipe's values are being sent to the ShotStopper:
+    /// spinner while in flight, a brief "Sent" once the machine acknowledges, then the
+    /// usual menu chevron. Driven by the client's `.withResponse` write acks.
+    @ViewBuilder private var recipeSyncIndicator: some View {
+        switch client.syncState {
+        case .writing:
+            HStack(spacing: 6) {
+                ProgressView().controlSize(.small)
+                Text("Sending…").font(.system(size: 12, weight: .semibold)).foregroundStyle(DS.inkMuted)
+            }
+        case .synced:
+            HStack(spacing: 5) {
+                Image(systemName: "checkmark.circle.fill").font(.system(size: 12, weight: .semibold)).foregroundStyle(DS.green)
+                Text("Sent").font(.system(size: 12, weight: .semibold)).foregroundStyle(DS.green)
+            }
+        case .idle:
+            Image(systemName: "chevron.up.chevron.down").font(.system(size: 11, weight: .semibold)).foregroundStyle(DS.inkFaint)
         }
     }
 
