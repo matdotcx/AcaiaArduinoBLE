@@ -38,7 +38,22 @@
 		B000000000000000000020A /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F000000000000000000000C /* DesignSystem.swift */; };
 		B0000000000000000000080 /* Archivo-Variable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000080 /* Archivo-Variable.ttf */; };
 		B0000000000000000000081 /* Archivo-Variable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000080 /* Archivo-Variable.ttf */; };
+		B0000000000000000000090 /* ShotStopperTelemetryWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = A0000000000000000000061 /* ShotStopperTelemetryWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A0000000000000000000015 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				B0000000000000000000090 /* ShotStopperTelemetryWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A0000000000000000000011 /* ShotStopperTelemetry.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShotStopperTelemetry.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,6 +84,16 @@
 		F0000000000000000000074 /* ShotStopperTelemetryWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShotStopperTelemetryWatch.entitlements; sourceTree = "<group>"; };
 		F0000000000000000000080 /* Archivo-Variable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Archivo-Variable.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXContainerItemProxy section */
+		A0000000000000000000093 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A0000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A0000000000000000000060;
+			remoteInfo = ShotStopperTelemetryWatch;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A0000000000000000000013 /* Frameworks */ = {
@@ -165,10 +190,12 @@
 				A0000000000000000000012 /* Sources */,
 				A0000000000000000000013 /* Frameworks */,
 				A0000000000000000000014 /* Resources */,
+				A0000000000000000000015 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				A0000000000000000000092 /* PBXTargetDependency */,
 			);
 			name = ShotStopperTelemetry;
 			packageProductDependencies = (
@@ -301,6 +328,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		A0000000000000000000092 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A0000000000000000000060 /* ShotStopperTelemetryWatch */;
+			targetProxy = A0000000000000000000093 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
 		A0000000000000000000022 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -422,7 +457,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = org.iaconelli.ShotStopperTelemetryWatch;
+				PRODUCT_BUNDLE_IDENTIFIER = org.iaconelli.ShotStopperTelemetry.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -448,7 +483,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = org.iaconelli.ShotStopperTelemetryWatch;
+				PRODUCT_BUNDLE_IDENTIFIER = org.iaconelli.ShotStopperTelemetry.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SWIFT_COMPILATION_MODE = wholemodule;
