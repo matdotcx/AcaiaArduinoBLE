@@ -58,7 +58,11 @@ public final class ShotStopperClient: NSObject {
     private func beginScan() {
         guard central.state == .poweredOn else { return }
         state = .scanning
-        central.scanForPeripherals(withServices: [TelemetryGATT.service])
+        // Scan unfiltered and match the device by name in `didDiscover`: the
+        // firmware's service UUID is a 128-bit value (see TelemetryGATT) that may
+        // not fit in the advertisement packet alongside the name, so a
+        // service-filtered scan can miss it. The companion app scans the same way.
+        central.scanForPeripherals(withServices: nil)
     }
 
     // MARK: Config writes
@@ -129,9 +133,18 @@ extension ShotStopperClient: CBCentralManagerDelegate, CBPeripheralDelegate {
         rssi RSSI: NSNumber
     ) {
         MainActor.assumeIsolated {
+            // Identify the ShotStopper: it advertises local name "shotStopper"
+            // (firmware `BLE.setLocalName`). Also accept a match if the (128-bit)
+            // service UUID happens to be advertised. Ignore every other device.
+            let advName = (advertisementData[CBAdvertisementDataLocalNameKey] as? String) ?? peripheral.name
+            let advServices = (advertisementData[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID]) ?? []
+            let isShotStopper = advServices.contains(TelemetryGATT.service)
+                || (advName?.range(of: "shotstopper", options: .caseInsensitive) != nil)
+            guard isShotStopper else { return }
+
             self.peripheral = peripheral
             peripheral.delegate = self
-            deviceName = peripheral.name
+            deviceName = advName ?? peripheral.name
             state = .connecting
             central.stopScan()
             central.connect(peripheral)
