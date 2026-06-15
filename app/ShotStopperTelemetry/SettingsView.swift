@@ -166,6 +166,15 @@ struct SettingsView: View {
                     }
                     .padding(.horizontal, 16).padding(.vertical, 12)
                     rowDivider
+                    HStack {
+                        Text("Min shot duration").font(.system(size: 15, weight: .medium)).foregroundStyle(DS.ink)
+                        Spacer()
+                        stepper(value: Int(s.minShotDurationS), unit: "s",
+                                dec: { client.setMinShotDuration(UInt8(max(0, Int(s.minShotDurationS) - 1))) },
+                                inc: { client.setMinShotDuration(UInt8(min(60, Int(s.minShotDurationS) + 1))) })
+                    }
+                    .padding(.horizontal, 16).padding(.vertical, 12)
+                    rowDivider
                     toggleRow("Brew by weight", isOn: boolBind(\.enabled, set: client.setEnabled))
                     rowDivider
                     toggleRow("Auto-tare", isOn: boolBind(\.autoTare, set: client.setAutoTare))
