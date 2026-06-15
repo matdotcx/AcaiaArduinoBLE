@@ -181,13 +181,17 @@ struct SettingsView: View {
     }
 
     private func stepper(value: Int, unit: String, dec: @escaping () -> Void, inc: @escaping () -> Void) -> some View {
-        HStack(spacing: 0) {
-            Button(action: dec) { Image(systemName: "minus").font(.system(size: 14, weight: .bold)).foregroundStyle(DS.ink).frame(width: 38, height: 32) }
-            Text("\(value) \(unit)").font(DS.numeral(15, .semibold)).monospacedDigit().foregroundStyle(DS.ink).frame(minWidth: 46)
-            Button(action: inc) { Image(systemName: "plus").font(.system(size: 14, weight: .bold)).foregroundStyle(.white).frame(width: 38, height: 32).background(DS.orange) }
+        HStack(spacing: 12) {
+            Text("\(value) \(unit)").font(DS.numeral(16, .bold)).monospacedDigit().foregroundStyle(DS.ink)
+            HStack(spacing: 0) {
+                Button(action: dec) { Image(systemName: "minus").font(.system(size: 15, weight: .semibold)).foregroundStyle(DS.inkSecondary).frame(width: 44, height: 34) }
+                Rectangle().fill(DS.hairline).frame(width: 1, height: 22)
+                Button(action: inc) { Image(systemName: "plus").font(.system(size: 15, weight: .semibold)).foregroundStyle(DS.orange).frame(width: 44, height: 34) }
+            }
+            .background(DS.canvas)
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).strokeBorder(DS.hairline, lineWidth: 1))
         }
-        .background(DS.ink.opacity(0.05)).clipShape(Capsule())
-        .overlay(Capsule().strokeBorder(DS.hairline, lineWidth: 1))
     }
 
     // MARK: Device / OTA
