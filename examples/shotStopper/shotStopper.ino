@@ -193,6 +193,11 @@ void sendTelemetryFrame(uint8_t state) {
   uint8_t  flags       = 0;
   if (scale.isConnected())                          flags |= 0x01; // bit0 scaleConnected
   if (currentWeight >= (goalWeight - weightOffset)) flags |= 0x02; // bit1 setpointReached
+  // On the final frame, pack the end reason into the spare flag bits 2-4 so clients
+  // can tag the shot (ON TARGET / OVERRUN / CUT SHORT). Wire value is ENDTYPE+1 so 0
+  // means "not reported" (legacy / non-done frames): 1=BUTTON 2=WEIGHT 3=TIME
+  // 4=DISCONNECT. shot.end is still valid here (reset to UNDEF afterwards).
+  if (state == TELEM_DONE) flags |= (((uint8_t)shot.end + 1) & 0x07) << 2; // bits2-4 endReason
   uint16_t setpoint_cg = (uint16_t)(goalWeight * 100);
 
   memcpy(&buf[0],  &t_ms,        4);

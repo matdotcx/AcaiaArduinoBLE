@@ -64,4 +64,28 @@ final class TelemetryFrameTests: XCTestCase {
     func testTooShortReturnsNil() {
         XCTAssertNil(TelemetryFrame(Data([0, 1, 2])))
     }
+
+    func testEndReasonRoundTrip() throws {
+        // Each reason survives the flags bits-2-4 round trip on a done frame,
+        // and the scaleConnected/setpointReached bits are unaffected.
+        for reason in [TelemetryFrame.EndReason.button, .weight, .time, .disconnect] {
+            let data = TelemetryFrame.encode(
+                tMs: 0, weightG: 0, flowGps: 0, state: .done,
+                scaleConnected: true, setpointReached: true, setpointG: 36, endReason: reason
+            )
+            let f = try XCTUnwrap(TelemetryFrame(data))
+            XCTAssertEqual(f.endReason, reason)
+            XCTAssertTrue(f.scaleConnected)
+            XCTAssertTrue(f.setpointReached)
+        }
+    }
+
+    func testEndReasonAbsentReadsNone() throws {
+        // A frame with no end-reason bits (e.g. a brew frame or legacy firmware)
+        // must read .none — NOT .button — so old shots aren't mislabelled.
+        let brew = try XCTUnwrap(TelemetryFrame(TelemetryFrame.encode(
+            tMs: 100, weightG: 10, flowGps: 1, state: .brew,
+            scaleConnected: true, setpointReached: false, setpointG: 36)))
+        XCTAssertEqual(brew.endReason, .none)
+    }
 }

@@ -17,6 +17,17 @@ public struct TelemetryFrame: Equatable, Sendable {
         init(raw: UInt8) { self = State(rawValue: raw) ?? .unknown }
     }
 
+    /// Why the shot ended. Sent by the firmware in `flags` bits 2-4 on the final
+    /// (`done`) frame only. Wire value is the firmware `ENDTYPE` + 1, so 0 cleanly
+    /// means "not reported" (legacy firmware or any non-done frame).
+    public enum EndReason: UInt8, Sendable, Equatable {
+        case none = 0        // not reported (legacy / non-done frame)
+        case button = 1      // user dropped the paddle / pressed stop → CUT SHORT
+        case weight = 2      // hit the target weight                  → ON TARGET
+        case time = 3        // hit max shot duration                  → OVERRUN
+        case disconnect = 4  // scale dropped mid-shot
+    }
+
     public let tMs: UInt32
     public let weightG: Float
     public let flowGps: Float
@@ -31,6 +42,8 @@ public struct TelemetryFrame: Equatable, Sendable {
     public var setpointG: Float { Float(setpointCg) / 100 }
     public var scaleConnected: Bool { flags & 0x01 != 0 }
     public var setpointReached: Bool { flags & 0x02 != 0 }
+    /// End reason packed in flags bits 2-4 (meaningful on the `done` frame).
+    public var endReason: EndReason { EndReason(rawValue: (flags >> 2) & 0x07) ?? .none }
 
     /// Decode a notify payload. Returns `nil` if it is shorter than 16 bytes.
     public init?(_ data: Data) {
@@ -62,7 +75,8 @@ public struct TelemetryFrame: Equatable, Sendable {
         state: State,
         scaleConnected: Bool,
         setpointReached: Bool,
-        setpointG: Float
+        setpointG: Float,
+        endReason: EndReason = .none
     ) -> Data {
         var b = [UInt8](repeating: 0, count: 16)
 
@@ -84,6 +98,7 @@ public struct TelemetryFrame: Equatable, Sendable {
         var flags: UInt8 = 0
         if scaleConnected { flags |= 0x01 }
         if setpointReached { flags |= 0x02 }
+        if state == .done { flags |= (endReason.rawValue & 0x07) << 2 }
         b[13] = flags
         putU16(UInt16((setpointG * 100).rounded()), 14)
         return Data(b)
