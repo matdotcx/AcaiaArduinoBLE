@@ -126,6 +126,11 @@ bool buttonPressed = false; //physical status of button
 bool buttonLatched = false; //electrical status of button
 unsigned long lastButtonRead_ms = 0;
 int newButtonState = 0;
+bool requireRelease = false; // latching switch: after a weight/time stop, ignore the
+                             // still-raised paddle until it is physically lowered,
+                             // so the shot does not immediately auto-restart.
+bool firstDropTared = false; // re-tare once on the first detected drop of each shot.
+#define FIRST_DROP_G 1.0     // grams of rise that counts as "first drop" (re-tare point)
 
 struct Shot {
   float start_timestamp_s; // Relative to runtime
@@ -499,6 +504,22 @@ void loop() {
 
     // update shot trajectory
     if(shot.brewing && !TIMER_ONLY){
+      // First-drop re-tare: once the system has taken over (latched) and real
+      // flow begins, zero the scale and restart the measurement from here so the
+      // goal weight is counted from the first drop. This tare is also the user's
+      // audible "I've taken over" cue (replaces the old fixed-time latch tare).
+      if(buttonLatched && autoTare && !firstDropTared && currentWeight > FIRST_DROP_G){
+        firstDropTared = true;
+        scale.tare();
+        shot.start_timestamp_s = seconds_f();
+        shot.shotTimer = 0;
+        shot.datapoints = 0;
+        shot.flow_gps = 0;
+        shot.expected_end_s = maxShotDurationS;
+        currentWeight = 0;
+        sendTelemetryFrame(TELEM_BREW); // re-mark t=0 for clients
+        Serial.println("first drop detected - tared, measuring from here");
+      }
       shot.time_s[shot.datapoints] = seconds_f()-shot.start_timestamp_s;
       shot.weight[shot.datapoints] = currentWeight;
       shot.shotTimer = shot.time_s[shot.datapoints];
@@ -548,10 +569,18 @@ void loop() {
     }
   }
 
+  // Latching-switch re-arm guard: after a weight/time stop the paddle is often
+  // still raised. Wait until it is physically lowered before allowing a new shot,
+  // otherwise the still-active switch immediately restarts the shot.
+  if(requireRelease && !newButtonState){
+    requireRelease = false;
+    Serial.println("paddle released - re-armed");
+  }
+
   // SHOT INITIATION EVENTS --------------------------------
-  
+
   //button just pressed (and released)
-  if(newButtonState && buttonPressed == false ){
+  if(newButtonState && buttonPressed == false && !requireRelease ){
     Serial.println("ButtonPressed");
     buttonPressed = true;
     if(!momentary || reedSwitch){
@@ -570,10 +599,8 @@ void loop() {
     buttonLatched = true;
     Serial.println("Button Latched");
     digitalWrite(OUT,HIGH); Serial.println("wrote high");
-    // Get the scale to beep to inform user.
-    if(autoTare){
-      scale.tare();
-    }
+    // Tare moved to first-drop detection (see weight loop above) so the beep/zero
+    // coincides with actual flow rather than a fixed timer.
   }
 
   // SHOT COMPLETION EVENTS --------------------------------
@@ -655,6 +682,7 @@ void setBrewingState(bool brewing){
     shot.shotTimer = 0;
     shot.datapoints = 0;
     shot.flow_gps = 0;
+    firstDropTared = false; // re-tare again on this shot's first drop
     scale.resetTimer();
     scale.startTimer();
     if(autoTare){
@@ -694,6 +722,11 @@ void setBrewingState(bool brewing){
     }else if(!TIMER_ONLY && !momentary){
       buttonLatched = false;
       buttonPressed = false;
+      // Weight/time stop leaves the paddle raised: require a physical release
+      // before re-arming so the shot doesn't immediately restart.
+      if(ENDTYPE::WEIGHT == shot.end || ENDTYPE::TIME == shot.end){
+        requireRelease = true;
+      }
       Serial.println("Button Unlatched and not pressed");
       digitalWrite(OUT,LOW); Serial.println("wrote low");
     }
