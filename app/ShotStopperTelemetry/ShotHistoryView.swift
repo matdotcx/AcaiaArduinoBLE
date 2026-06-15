@@ -148,7 +148,7 @@ struct ShotHistoryView: View {
     private func row(_ shot: Shot) -> some View {
         let done = shot.endStateRaw == 4
         let sampleWeights = (shot.samples ?? []).sorted { $0.tMs < $1.tMs }.map { Double($0.weightG) }
-        let delta = shot.finalWeightG - shot.setpointG
+        let tag = shot.statusTag
         return HStack(spacing: 12) {
             Sparkline(values: sampleWeights, color: (done ? DS.green : DS.idle).opacity(0.9))
                 .frame(width: 40, height: 26)
@@ -166,11 +166,11 @@ struct ShotHistoryView: View {
                     Text("g").font(.system(size: 11, weight: .semibold)).foregroundStyle(DS.inkMuted)
                 }
                 HStack(spacing: 5) {
-                    Circle().fill(abs(delta) < 0.5 ? DS.green : DS.idle).frame(width: 6, height: 6)
-                    if abs(delta) < 0.5 {
-                        DSMonoLabel("ON TARGET", size: 8.5, color: DS.green)
+                    Circle().fill(tag.color).frame(width: 6, height: 6)
+                    if tag.isWord {
+                        DSMonoLabel(tag.text, size: 8.5, color: tag.color)
                     } else {
-                        Text(String(format: "%+.1f g", delta)).font(DS.mono(9)).foregroundStyle(DS.inkMuted)
+                        Text(tag.text).font(DS.mono(9)).foregroundStyle(tag.color)
                     }
                 }
             }

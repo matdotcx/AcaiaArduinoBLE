@@ -70,6 +70,7 @@ public final class ShotRecorder {
         shot.finalWeightG = liveFrames.last?.weightG ?? 0
         shot.durationS = Double(liveFrames.last?.tMs ?? 0) / 1000
         shot.endStateRaw = Int(liveFrames.last?.rawState ?? 0)
+        shot.endReasonRaw = Int(liveFrames.last?.endReason.rawValue ?? 0) // 0 = not reported
         shot.presetName = activePresetName
         shot.presetID = activePresetID
         shot.recipeColorIndex = activeRecipeColorIndex

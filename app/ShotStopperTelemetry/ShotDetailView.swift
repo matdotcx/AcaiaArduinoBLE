@@ -14,8 +14,6 @@ struct ShotDetailView: View {
         (shot.samples ?? []).sorted { $0.tMs < $1.tMs }
             .enumerated().map { ChartSample(id: $0.offset, t: Double($0.element.tMs) / 1000, w: Double($0.element.weightG)) }
     }
-    private var delta: Double { Double(shot.finalWeightG - shot.setpointG) }
-    private var onTarget: Bool { abs(delta) < 0.5 }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -42,11 +40,12 @@ struct ShotDetailView: View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Shot detail").font(DS.title(28)).foregroundStyle(DS.ink)
             HStack(spacing: 6) {
-                Circle().fill(onTarget ? DS.green : DS.idle).frame(width: 6, height: 6)
+                let tag = shot.statusTag
+                Circle().fill(tag.color).frame(width: 6, height: 6)
                 DSMonoLabel(shot.startedAt.formatted(.dateTime.month().day()).uppercased()
                             + " · " + shot.startedAt.formatted(.dateTime.hour().minute())
-                            + " · " + (onTarget ? "ON TARGET" : String(format: "%+.1f G", delta)),
-                            size: 10, color: onTarget ? DS.green : DS.inkMuted)
+                            + " · " + tag.text,
+                            size: 10, color: tag.color)
             }
         }
         .padding(.top, DS.Space.s)

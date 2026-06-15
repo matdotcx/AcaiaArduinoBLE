@@ -1,5 +1,7 @@
 import Foundation
 import SwiftData
+import SwiftUI
+import ShotTelemetryKit
 
 // NOTE: SwiftData's @Model macro only builds under Xcode's build system (its
 // macro plugin is not loadable from plain `swift build`). These files live
@@ -21,6 +23,9 @@ public final class Shot {
     public var durationS: Double = 0
     /// Raw `state` byte of the final sample (e.g. 4 = done).
     public var endStateRaw: Int = 0
+    /// Why the shot ended (TelemetryFrame.EndReason raw: 0=none/unknown, 1=button,
+    /// 2=weight, 3=time, 4=disconnect). 0 for shots recorded before firmware sent it.
+    public var endReasonRaw: Int = 0
     public var machineName: String?
     /// The preset that was active when this shot was pulled (nil = none / manual).
     public var presetName: String?
@@ -42,6 +47,38 @@ public final class Shot {
         self.startedAt = startedAt
         self.setpointG = setpointG
         self.machineName = machineName
+    }
+}
+
+/// How a shot's outcome should be labelled in History / detail.
+public struct ShotStatusTag {
+    public let text: String
+    public let color: Color
+    /// true → render as a tracked uppercase `DSMonoLabel`; false → plain delta text.
+    public let isWord: Bool
+}
+
+extension Shot {
+    public var weightDelta: Float { finalWeightG - setpointG }
+
+    /// Status derived from the firmware end-reason (when present) plus the weight
+    /// delta. Shots recorded before the firmware sent a reason (`endReasonRaw == 0`)
+    /// fall back to the original delta-based label, so old history is unchanged.
+    public var statusTag: ShotStatusTag {
+        let delta = weightDelta
+        let onTarget = abs(delta) < 0.5
+        func deltaTag() -> ShotStatusTag {
+            onTarget
+                ? ShotStatusTag(text: "On target", color: DS.green, isWord: true)
+                : ShotStatusTag(text: String(format: "%+.1f g", delta), color: DS.inkMuted, isWord: false)
+        }
+        switch TelemetryFrame.EndReason(rawValue: UInt8(max(0, endReasonRaw))) ?? .none {
+        case .weight:     return deltaTag()
+        case .time:       return ShotStatusTag(text: "Overrun", color: DS.orange, isWord: true)
+        case .button:     return ShotStatusTag(text: "Cut short", color: DS.idle, isWord: true)
+        case .disconnect: return ShotStatusTag(text: "Lost", color: DS.idle, isWord: true)
+        case .none:       return deltaTag()
+        }
     }
 }
 

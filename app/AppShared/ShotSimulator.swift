@@ -47,9 +47,14 @@ enum ShotSimulator {
         let setpoints: [Float] = [36, 40, 18, 30, 36, 22]
         // Loosely pair setpoints with recipe names (some shots have no recipe).
         let recipes: [String?] = ["House Espresso", "Ethiopia Light", "Ristretto", nil, "House Espresso", "Ristretto"]
+        // End reasons (TelemetryFrame.EndReason raw) so History shows the full set:
+        // 2=weight (ON TARGET), 3=time (OVERRUN), 1=button (CUT SHORT).
+        let endReasons: [Int] = [2, 3, 1, 2, 3, 1]
         for i in 0..<count {
             let goal = setpoints[i % setpoints.count]
-            let dur = Double.random(in: 22...32)
+            let reason = endReasons[i % endReasons.count]
+            // Cut-short shots stop early (less coffee); overruns creep past the goal.
+            let dur = Double.random(in: 22...32) * (reason == 1 ? 0.72 : 1.0)
             let started = Date().addingTimeInterval(-(Double(i) * 86_400 + Double.random(in: 0...40_000)))
             let shot = Shot(startedAt: started, setpointG: goal)
             shot.presetName = recipes[i % recipes.count]
@@ -60,7 +65,8 @@ enum ShotSimulator {
             var samples: [ShotSample] = []
             for s in 0...steps {
                 let t = Double(s) * dt
-                let w = Float(weight(at: t / dur, goal: Double(goal)))
+                var w = Float(weight(at: t / dur, goal: Double(goal)))
+                if reason == 3 { w *= 1.10 } // overrun
                 let flow = max(0, Float((Double(w) - Double(prevW)) / dt))
                 samples.append(ShotSample(tMs: Int(t * 1000), weightG: w, flowGps: flow, stateRaw: 2))
                 prevW = w
@@ -70,6 +76,7 @@ enum ShotSimulator {
             shot.finalWeightG = samples.last?.weightG ?? 0
             shot.durationS = dur
             shot.endStateRaw = 4
+            shot.endReasonRaw = reason
             context.insert(shot)
         }
         try? context.save()
