@@ -10,6 +10,8 @@ struct SettingsView: View {
 
     @State private var showEditor = false
     @State private var editorPreset: Preset?
+    /// App-level (per-device) preference: show a short description under each setting.
+    @AppStorage("showSettingDescriptions") private var showDescriptions = false
 
     private var client: ShotStopperClient { model.client }
     private var s: DeviceSettings { client.settings }
@@ -29,6 +31,7 @@ struct SettingsView: View {
                     connectionCard
                     recipesSection
                     brewSection
+                    displaySection
                     deviceSection
                 }
                 .padding(.horizontal, DS.Space.xl).padding(.bottom, DS.Space.xl)
@@ -157,36 +160,77 @@ struct SettingsView: View {
             DSMonoLabel("BREW", color: DS.inkMuted)
             DSCard {
                 VStack(spacing: 0) {
-                    HStack {
-                        Text("Target weight").font(.system(size: 15, weight: .medium)).foregroundStyle(DS.ink)
-                        Spacer()
-                        stepper(value: Int(s.goalWeightG), unit: "g",
-                                dec: { client.setGoalWeight(UInt8(max(0, Int(s.goalWeightG) - 1))); model.clearActiveRecipe() },
-                                inc: { client.setGoalWeight(UInt8(min(100, Int(s.goalWeightG) + 1))); model.clearActiveRecipe() })
-                    }
-                    .padding(.horizontal, 16).padding(.vertical, 12)
+                    brewStepperRow("Target weight", "Stops the shot when the cup reaches this weight.",
+                                   value: Int(s.goalWeightG), unit: "g",
+                                   dec: { client.setGoalWeight(UInt8(max(0, Int(s.goalWeightG) - 1))); model.clearActiveRecipe() },
+                                   inc: { client.setGoalWeight(UInt8(min(100, Int(s.goalWeightG) + 1))); model.clearActiveRecipe() })
                     rowDivider
-                    HStack {
-                        Text("Min shot duration").font(.system(size: 15, weight: .medium)).foregroundStyle(DS.ink)
-                        Spacer()
-                        stepper(value: Int(s.minShotDurationS), unit: "s",
-                                dec: { client.setMinShotDuration(UInt8(max(0, Int(s.minShotDurationS) - 1))) },
-                                inc: { client.setMinShotDuration(UInt8(min(60, Int(s.minShotDurationS) + 1))) })
-                    }
-                    .padding(.horizontal, 16).padding(.vertical, 12)
+                    brewStepperRow("Min shot duration", "Ignores brews shorter than this (e.g. group flushes).",
+                                   value: Int(s.minShotDurationS), unit: "s",
+                                   dec: { client.setMinShotDuration(UInt8(max(0, Int(s.minShotDurationS) - 1))) },
+                                   inc: { client.setMinShotDuration(UInt8(min(60, Int(s.minShotDurationS) + 1))) })
                     rowDivider
-                    toggleRow("Brew by weight", isOn: boolBind(\.enabled, set: client.setEnabled))
+                    brewStepperRow("Max shot duration", "Safety cap — ends the shot if it runs this long.",
+                                   value: Int(s.maxShotDurationS), unit: "s",
+                                   dec: { client.setMaxShotDuration(UInt8(max(10, Int(s.maxShotDurationS) - 1))) },
+                                   inc: { client.setMaxShotDuration(UInt8(min(120, Int(s.maxShotDurationS) + 1))) })
                     rowDivider
-                    toggleRow("Auto-tare", isOn: boolBind(\.autoTare, set: client.setAutoTare))
+                    toggleRow("Brew by weight", description: "Let ShotStopper stop the shot at the target weight.",
+                              isOn: boolBind(\.enabled, set: client.setEnabled))
+                    rowDivider
+                    toggleRow("Auto-tare", description: "Zeroes the scale automatically at the start of each shot.",
+                              isOn: boolBind(\.autoTare, set: client.setAutoTare))
                 }
             }
             .disabled(!interactive)
         }
     }
 
-    private func toggleRow(_ title: String, isOn: Binding<Bool>) -> some View {
-        Toggle(isOn: isOn) { Text(title).font(.system(size: 15, weight: .medium)).foregroundStyle(DS.ink) }
-            .tint(DS.orange).padding(.horizontal, 16).padding(.vertical, 8)
+    /// A BREW row: title + stepper, with an optional description shown when
+    /// "Show descriptions" is on.
+    private func brewStepperRow(_ title: String, _ description: String, value: Int, unit: String,
+                                dec: @escaping () -> Void, inc: @escaping () -> Void) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(title).font(.system(size: 15, weight: .medium)).foregroundStyle(DS.ink)
+                Spacer()
+                stepper(value: value, unit: unit, dec: dec, inc: inc)
+            }
+            rowCaption(description)
+        }
+        .padding(.horizontal, 16).padding(.vertical, 12)
+    }
+
+    /// Optional descriptive subtitle, shown only when descriptions are enabled.
+    @ViewBuilder private func rowCaption(_ text: String) -> some View {
+        if showDescriptions && !text.isEmpty {
+            Text(text).font(DS.mono(10)).foregroundStyle(DS.inkMuted)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    private func toggleRow(_ title: String, description: String = "", isOn: Binding<Bool>) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Toggle(isOn: isOn) { Text(title).font(.system(size: 15, weight: .medium)).foregroundStyle(DS.ink) }
+                .tint(DS.orange)
+            rowCaption(description)
+        }
+        .padding(.horizontal, 16).padding(.vertical, 8)
+    }
+
+    // MARK: Display (app preferences)
+
+    private var displaySection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            DSMonoLabel("DISPLAY", color: DS.inkMuted)
+            DSCard {
+                Toggle(isOn: $showDescriptions) {
+                    Text("Show descriptions").font(.system(size: 15, weight: .medium)).foregroundStyle(DS.ink)
+                }
+                .tint(DS.orange).padding(.horizontal, 16).padding(.vertical, 8)
+            }
+        }
     }
 
     private func stepper(value: Int, unit: String, dec: @escaping () -> Void, inc: @escaping () -> Void) -> some View {
