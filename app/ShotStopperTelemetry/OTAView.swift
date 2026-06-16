@@ -1,5 +1,6 @@
 import SwiftUI
 import UniformTypeIdentifiers
+import Security
 import ShotTelemetryKit
 
 /// Firmware OTA: send WiFi, enter OTA mode, then upload a .bin from Files in-app.
@@ -14,6 +15,13 @@ struct OTAView: View {
     @State private var showImporter = false
 
     private var deviceIP: String { client.settings.wifiIP }
+    /// The firmware reports `"disconnected"` / `"empty"` (not "") until it actually
+    /// joins Wi-Fi, so only treat a real dotted IPv4 as connected — otherwise the
+    /// upload UI and `http://<ip>/` link would point at a bogus host.
+    private var hasDeviceIP: Bool {
+        let parts = deviceIP.split(separator: ".")
+        return parts.count == 4 && parts.allSatisfy { UInt8($0) != nil }
+    }
     private var uploading: Bool { if case .uploading = uploader.status { return true }; return false }
 
     var body: some View {
@@ -39,7 +47,10 @@ struct OTAView: View {
                 Task { await uploader.upload(fileURL: url, toIP: deviceIP) }
             }
         }
-        .onAppear { ssid = client.settings.wifiSSID }
+        .onAppear {
+            ssid = client.settings.wifiSSID
+            password = WiFiCredentialStore.loadPassword()   // write-only on the device; remember it locally
+        }
     }
 
     private var uploadFinished: Bool {
@@ -135,14 +146,22 @@ struct OTAView: View {
     @ViewBuilder private var actionArea: some View {
         if !client.settings.otaRequested {
             Button {
+                WiFiCredentialStore.savePassword(password)
                 client.setWiFi(ssid: ssid, password: password)
                 client.setOTARequested(true)
             } label: { Label("Start OTA mode", systemImage: "arrow.up.circle") }
                 .buttonStyle(DSPillStyle(kind: .orange, fullWidth: true))
-                .disabled(ssid.isEmpty)
-        } else if deviceIP.isEmpty {
-            HStack(spacing: 8) { ProgressView().tint(DS.orange); Text("Connecting to WiFi…").font(.system(size: 14)).foregroundStyle(DS.inkMuted) }
-                .frame(maxWidth: .infinity)
+                .disabled(ssid.isEmpty || password.isEmpty)
+        } else if !hasDeviceIP {
+            VStack(spacing: 8) {
+                HStack(spacing: 8) { ProgressView().tint(DS.orange); Text("Connecting to WiFi…").font(.system(size: 14)).foregroundStyle(DS.inkMuted) }
+                Text("Must be a 2.4 GHz network — the controller can't use 5 GHz. Check the SSID and password.")
+                    .font(.system(size: 12)).foregroundStyle(DS.inkMuted)
+                    .multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
+                Button("Cancel") { client.setOTARequested(false) }
+                    .buttonStyle(DSPillStyle(kind: .outlined, fullWidth: true)).padding(.top, 4)
+            }
+            .frame(maxWidth: .infinity)
         } else {
             VStack(spacing: 12) {
                 if !uploading {
@@ -175,4 +194,35 @@ struct OTAView: View {
     }
 
     private var binTypes: [UTType] { [UTType(filenameExtension: "bin") ?? .data, .data] }
+}
+
+/// Remembers the OTA Wi-Fi password in the Keychain. The device's password
+/// characteristic is write-only, so the app can't read it back — without this the
+/// field blanks every visit and "Start OTA mode" could send an empty password.
+enum WiFiCredentialStore {
+    private static let service = "org.iaconelli.ShotStopperTelemetry.ota"
+    private static let account = "wifi-password"
+
+    static func savePassword(_ password: String) {
+        let base: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
+                                    kSecAttrService as String: service,
+                                    kSecAttrAccount as String: account]
+        SecItemDelete(base as CFDictionary)
+        guard !password.isEmpty else { return }
+        var add = base
+        add[kSecValueData as String] = Data(password.utf8)
+        SecItemAdd(add as CFDictionary, nil)
+    }
+
+    static func loadPassword() -> String {
+        let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
+                                     kSecAttrService as String: service,
+                                     kSecAttrAccount as String: account,
+                                     kSecReturnData as String: true,
+                                     kSecMatchLimit as String: kSecMatchLimitOne]
+        var item: CFTypeRef?
+        guard SecItemCopyMatching(query as CFDictionary, &item) == errSecSuccess,
+              let data = item as? Data else { return "" }
+        return String(decoding: data, as: UTF8.self)
+    }
 }
