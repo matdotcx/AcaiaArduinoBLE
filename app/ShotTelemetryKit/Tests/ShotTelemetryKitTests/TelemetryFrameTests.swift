@@ -3,6 +3,18 @@ import XCTest
 
 final class TelemetryFrameTests: XCTestCase {
 
+    func testAwaitingPaddleReturnFlag() throws {
+        let on = try XCTUnwrap(TelemetryFrame(TelemetryFrame.encode(
+            tMs: 1000, weightG: 10, flowGps: 1, state: .brew,
+            scaleConnected: true, setpointReached: false, setpointG: 36, awaitingPaddleReturn: true)))
+        XCTAssertTrue(on.awaitingPaddleReturn)
+        XCTAssertTrue(on.scaleConnected)        // other flag bits unaffected
+        let off = try XCTUnwrap(TelemetryFrame(TelemetryFrame.encode(
+            tMs: 1000, weightG: 10, flowGps: 1, state: .brew,
+            scaleConnected: true, setpointReached: false, setpointG: 36)))
+        XCTAssertFalse(off.awaitingPaddleReturn)
+    }
+
     func testRoundTrip() throws {
         let data = TelemetryFrame.encode(
             tMs: 12345,

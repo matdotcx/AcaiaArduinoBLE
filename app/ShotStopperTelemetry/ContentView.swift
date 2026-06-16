@@ -129,6 +129,10 @@ struct ContentView: View {
             tab = 1; section = .history
         }
         if args.contains("-settings") { tab = 2; section = .settings }
+        if args.contains("-paddlecue") {           // mock up the "return paddle to home" cue
+            model.simulateShot()
+            model.client.debugTriggerPaddleReturn()
+        }
 #endif
     }
 }

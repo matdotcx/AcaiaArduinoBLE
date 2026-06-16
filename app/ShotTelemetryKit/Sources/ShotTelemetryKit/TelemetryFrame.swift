@@ -42,6 +42,9 @@ public struct TelemetryFrame: Equatable, Sendable {
     public var setpointG: Float { Float(setpointCg) / 100 }
     public var scaleConnected: Bool { flags & 0x01 != 0 }
     public var setpointReached: Bool { flags & 0x02 != 0 }
+    /// Firmware has latched a latching-switch shot and is waiting for the paddle to be
+    /// returned to home (flags bit 5). False on momentary machines and once returned/ended.
+    public var awaitingPaddleReturn: Bool { flags & 0x20 != 0 }
     /// End reason packed in flags bits 2-4 (meaningful on the `done` frame).
     public var endReason: EndReason { EndReason(rawValue: (flags >> 2) & 0x07) ?? .none }
 
@@ -76,7 +79,8 @@ public struct TelemetryFrame: Equatable, Sendable {
         scaleConnected: Bool,
         setpointReached: Bool,
         setpointG: Float,
-        endReason: EndReason = .none
+        endReason: EndReason = .none,
+        awaitingPaddleReturn: Bool = false
     ) -> Data {
         var b = [UInt8](repeating: 0, count: 16)
 
@@ -99,6 +103,7 @@ public struct TelemetryFrame: Equatable, Sendable {
         if scaleConnected { flags |= 0x01 }
         if setpointReached { flags |= 0x02 }
         if state == .done { flags |= (endReason.rawValue & 0x07) << 2 }
+        if awaitingPaddleReturn { flags |= 0x20 }
         b[13] = flags
         putU16(UInt16((setpointG * 100).rounded()), 14)
         return Data(b)

@@ -74,13 +74,34 @@ struct WatchKioskView: View {
         .padding(.horizontal, 6)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.black)
+        .overlay { if client.showPaddleReturnCue { paddleReturnCue } }
+        .sensoryFeedback(trigger: client.showPaddleReturnCue) { _, now in now ? .warning : nil }
         .onAppear {
             model.start(); keepAwake.begin()
 #if DEBUG
             if ProcessInfo.processInfo.arguments.contains("-demo") { model.simulateShot() }
+            if ProcessInfo.processInfo.arguments.contains("-paddlecue") {
+                model.simulateShot(); model.client.debugTriggerPaddleReturn()
+            }
 #endif
         }
         .onDisappear { keepAwake.end() }
+    }
+
+    /// Full-bleed "return the paddle to home" cue — mirrors the phone's Live banner so
+    /// the across-the-counter kiosk catches a missed scale beep. Auto-clears (see
+    /// `ShotStopperClient.showPaddleReturnCue`).
+    private var paddleReturnCue: some View {
+        VStack(spacing: 6) {
+            Image(systemName: "arrow.uturn.down.circle.fill")
+                .font(.system(size: 34, weight: .semibold)).foregroundStyle(.white)
+            Text("Return paddle\nto home")
+                .font(.system(size: 18, weight: .bold)).foregroundStyle(.white)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(DS.orange)
+        .ignoresSafeArea()
     }
 
     private var topRow: some View {

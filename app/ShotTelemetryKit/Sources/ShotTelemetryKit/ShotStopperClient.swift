@@ -21,13 +21,6 @@ public final class ShotStopperClient: NSObject {
         case connected
     }
 
-    /// One firmware log line received over BLE (`0xFF26`).
-    public struct DeviceLogLine: Identifiable, Equatable, Sendable {
-        public let id: Int
-        public let at: Date
-        public let text: String
-    }
-
     public private(set) var state: State = .idle
     public private(set) var latestFrame: TelemetryFrame?
     public private(set) var deviceName: String?
@@ -36,6 +29,14 @@ public final class ShotStopperClient: NSObject {
     /// characteristic. Capped to the most recent 300. Empty on firmware without it.
     public private(set) var logLines: [DeviceLogLine] = []
     @ObservationIgnored private var logCounter = 0
+
+    /// Whether to show the "return the paddle to home" cue. Driven by the telemetry
+    /// `awaitingPaddleReturn` flag: raised once when the firmware latches a latching-
+    /// switch shot, then auto-cleared the instant the paddle is returned, after 5 s, or
+    /// at shot end. Always false on momentary machines (the firmware never sets the bit).
+    public private(set) var showPaddleReturnCue = false
+    @ObservationIgnored private var paddleCuedThisShot = false
+    @ObservationIgnored private var paddleCueResetTask: Task<Void, Never>?
 
     /// The device's configuration, populated on connect and updated on write.
     public private(set) var settings = DeviceSettings()
@@ -171,6 +172,9 @@ public final class ShotStopperClient: NSObject {
         s.otaRequested = true; s.wifiIP = "192.168.1.42" // show the OTA upload UI in the Simulator
         settings = s
     }
+
+    /// Force the paddle-return cue (Simulator mockups / screenshots).
+    public func debugTriggerPaddleReturn() { showPaddleReturnCue = true }
 #endif
 }
 
@@ -233,6 +237,9 @@ extension ShotStopperClient: CBCentralManagerDelegate, CBPeripheralDelegate {
             verifyFailed = false
             syncResetTask?.cancel()
             syncState = .idle
+            showPaddleReturnCue = false
+            paddleCuedThisShot = false
+            paddleCueResetTask?.cancel()
             if wantConnection { beginScan() } else { state = .idle }
         }
     }
@@ -304,6 +311,7 @@ extension ShotStopperClient: CBCentralManagerDelegate, CBPeripheralDelegate {
         if uuid == TelemetryGATT.telemetry, let data, let frame = TelemetryFrame(data) {
             MainActor.assumeIsolated {
                 latestFrame = frame
+                updatePaddleCue(for: frame)
                 onFrame?(frame)
             }
             return
@@ -329,6 +337,32 @@ extension ShotStopperClient: CBCentralManagerDelegate, CBPeripheralDelegate {
 
     /// Clear the captured firmware log (e.g. before pulling a fresh shot).
     public func clearLog() { logLines.removeAll() }
+
+    /// Drive the paddle-return cue from the telemetry latched flag: raise it once when
+    /// the firmware latches (with a 5 s fallback timer), and clear it the moment the
+    /// paddle is returned (flag drops) or the shot ends.
+    private func updatePaddleCue(for frame: TelemetryFrame) {
+        if frame.state == .done || frame.state == .idle {
+            showPaddleReturnCue = false
+            paddleCuedThisShot = false
+            paddleCueResetTask?.cancel()
+            return
+        }
+        if frame.awaitingPaddleReturn {
+            guard !paddleCuedThisShot else { return }
+            paddleCuedThisShot = true
+            showPaddleReturnCue = true
+            paddleCueResetTask?.cancel()
+            paddleCueResetTask = Task { [weak self] in
+                try? await Task.sleep(nanoseconds: 5_000_000_000)
+                guard !Task.isCancelled else { return }
+                self?.showPaddleReturnCue = false
+            }
+        } else if showPaddleReturnCue {
+            showPaddleReturnCue = false           // paddle returned — clear immediately
+            paddleCueResetTask?.cancel()
+        }
+    }
 
     private func applyConfig(uuid: CBUUID, data: Data?) {
         guard let data else { return }

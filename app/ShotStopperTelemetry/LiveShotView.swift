@@ -45,6 +45,7 @@ struct LiveShotView: View {
     var body: some View {
         VStack(spacing: DS.Space.xl) {
             statusRow
+            if client.showPaddleReturnCue { paddleReturnBanner }
             if recorder.saveFailed { saveFailedBanner }
             if state == .idle && !presets.isEmpty { recipeBar }
             heroBlock
@@ -61,7 +62,30 @@ struct LiveShotView: View {
         .padding(.bottom, DS.Space.l) // breathing room above the tab bar (shrinks the flexible chart)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(DS.canvas)
+        .sensoryFeedback(trigger: client.showPaddleReturnCue) { _, now in now ? .warning : nil }
         .onAppear { model.start() }
+    }
+
+    /// Latching machines (Micra/Linea) hand control to the firmware mid-shot; this is
+    /// the unmissable visual + haptic cue to flip the brew paddle back to home — so a
+    /// missed scale beep doesn't leave the machine pouring. Shown only when the device
+    /// reports a latching trigger (`momentary == false`); see `awaitingPaddleReturn`.
+    private var paddleReturnBanner: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "arrow.uturn.down.circle.fill")
+                .font(.system(size: 24, weight: .semibold)).foregroundStyle(.white)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Return the paddle to home").font(.system(size: 16, weight: .bold)).foregroundStyle(.white)
+                Text("ShotStopper has the shot — flip the brew paddle back.")
+                    .font(.system(size: 12, weight: .medium)).foregroundStyle(.white.opacity(0.92))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+            PulsingDot(color: .white, size: 9)
+        }
+        .padding(.horizontal, 16).padding(.vertical, 14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(DS.orange, in: RoundedRectangle(cornerRadius: DS.R.inner, style: .continuous))
     }
 
     // MARK: Status
