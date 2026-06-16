@@ -60,6 +60,14 @@ public final class FirmwareUploader: NSObject {
         }
     }
 
+    /// Upload progress as a 0...1 fraction, or `nil` when the total size is
+    /// unknown (so callers can ignore the update). Pure + nonisolated so it is
+    /// testable without a live `URLSession`.
+    nonisolated static func progressFraction(totalBytesSent: Int64, totalBytesExpectedToSend: Int64) -> Double? {
+        guard totalBytesExpectedToSend > 0 else { return nil }
+        return Double(totalBytesSent) / Double(totalBytesExpectedToSend)
+    }
+
     /// Build a `multipart/form-data` body for a single file field. Pure + testable.
     public nonisolated static func multipartBody(boundary: String, fieldName: String, fileName: String, fileData: Data) -> Data {
         var body = Data()
@@ -80,10 +88,15 @@ extension FirmwareUploader: URLSessionTaskDelegate {
         totalBytesSent: Int64,
         totalBytesExpectedToSend: Int64
     ) {
-        guard totalBytesExpectedToSend > 0 else { return }
-        let fraction = Double(totalBytesSent) / Double(totalBytesExpectedToSend)
-        MainActor.assumeIsolated {
-            if case .uploading = status { status = .uploading(fraction) }
+        // `URLSession.shared` delivers this on a background delegate queue, NOT the
+        // main actor — so we must hop explicitly. Calling `MainActor.assumeIsolated`
+        // here traps ("Incorrect actor executor assumption") during real uploads.
+        guard let fraction = Self.progressFraction(
+            totalBytesSent: totalBytesSent,
+            totalBytesExpectedToSend: totalBytesExpectedToSend) else { return }
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            if case .uploading = self.status { self.status = .uploading(fraction) }
         }
     }
 }
