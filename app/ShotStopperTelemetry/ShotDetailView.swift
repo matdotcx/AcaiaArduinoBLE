@@ -198,7 +198,7 @@ struct ShotDetailView: View {
         save()
     }
 
-    private func save() { try? context.save() }
+    private func save() { context.saveLogging() }
 
     // MARK: Summary / metrics
 
@@ -288,7 +288,7 @@ struct ShotDetailView: View {
 
     private func deleteShot() {
         context.delete(shot)
-        try? context.save()
+        context.saveLogging()
         dismiss()
     }
 

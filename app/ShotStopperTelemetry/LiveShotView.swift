@@ -45,6 +45,7 @@ struct LiveShotView: View {
     var body: some View {
         VStack(spacing: DS.Space.xl) {
             statusRow
+            if recorder.saveFailed { saveFailedBanner }
             if state == .idle && !presets.isEmpty { recipeBar }
             heroBlock
             progressBlock
@@ -76,6 +77,29 @@ struct LiveShotView: View {
             Spacer()
             StatusPill(state: state)
         }
+    }
+
+    /// Shown when the just-completed shot couldn't be persisted, so a save failure
+    /// isn't silently dropped. Dismissable; also clears on the next shot.
+    private var saveFailedBanner: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.system(size: 15, weight: .semibold)).foregroundStyle(DS.orange)
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Shot not saved").font(.system(size: 14, weight: .bold)).foregroundStyle(DS.ink)
+                Text("Couldn't write the last shot to your library.")
+                    .font(.system(size: 11)).foregroundStyle(DS.inkMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer()
+            Button { recorder.acknowledgeSaveFailure() } label: {
+                Image(systemName: "xmark").font(.system(size: 12, weight: .bold)).foregroundStyle(DS.inkMuted)
+            }
+        }
+        .padding(.horizontal, 14).padding(.vertical, 10)
+        .background(DS.orange.opacity(0.08), in: RoundedRectangle(cornerRadius: DS.R.inner, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DS.R.inner, style: .continuous)
+            .strokeBorder(DS.orange.opacity(0.25), lineWidth: 1))
     }
 
     // MARK: Recipe picker (idle, before the pull)

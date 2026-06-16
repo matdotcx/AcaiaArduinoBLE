@@ -286,7 +286,7 @@ struct SettingsView: View {
                                   minShotDurationS: 5, maxShotDurationS: 50, dripDelayS: drip,
                                   colorIndex: DS.styleIndex(forName: name), iconName: DS.defaultIcon(forName: name)))
         }
-        try? context.save()
+        context.saveLogging()
     }
 #endif
 }

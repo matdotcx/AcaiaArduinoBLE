@@ -45,4 +45,27 @@ final class ShotModelTests: XCTestCase {
         try context.save()
         XCTAssertEqual(try context.fetchCount(FetchDescriptor<Shot>()), 1)
     }
+
+    /// F-003 regression: a clean shot persists, `lastCompletedShot` is set, and the
+    /// `saveFailed` flag stays false on the success path.
+    @MainActor
+    func testRecorderPersistsCompletedShotWithoutFailureFlag() throws {
+        let container = try ModelContainer(for: Shot.self, ShotSample.self, Preset.self,
+                                           configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let recorder = ShotRecorder(context: container.mainContext)
+
+        func frame(_ tMs: UInt32, _ weightG: Float, _ state: TelemetryFrame.State) -> TelemetryFrame {
+            TelemetryFrame(TelemetryFrame.encode(tMs: tMs, weightG: weightG, flowGps: 0, state: state,
+                                                 scaleConnected: true, setpointReached: false, setpointG: 36))!
+        }
+        for timeMs in stride(from: UInt32(0), through: 2000, by: 500) {
+            recorder.ingest(frame(timeMs, Float(timeMs) / 80, .brew))
+        }
+        recorder.ingest(frame(2500, 25, .done))
+
+        XCTAssertFalse(recorder.isRecording)
+        XCTAssertFalse(recorder.saveFailed)
+        XCTAssertEqual(recorder.lastCompletedShot?.finalWeightG, 25)
+        XCTAssertEqual(try container.mainContext.fetchCount(FetchDescriptor<Shot>()), 1)
+    }
 }

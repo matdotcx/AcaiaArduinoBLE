@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import os
 import ShotTelemetryKit
 
 /// Consumes telemetry frames, delimits shots with `ShotSegmenter`, and persists
@@ -17,6 +18,10 @@ public final class ShotRecorder {
     /// The just-finished shot, held so Live can show its Done state (Save / Discard).
     /// Cleared when a new shot starts or the user dismisses/discards it.
     public private(set) var lastCompletedShot: Shot?
+    /// Set when a just-completed shot could NOT be persisted, so the UI can surface
+    /// a "couldn't save" state instead of silently dropping it. Cleared on the next
+    /// shot or via `acknowledgeSaveFailure()`.
+    public private(set) var saveFailed = false
 
     public var machineName: String?
 
@@ -47,10 +52,11 @@ public final class ShotRecorder {
                 isRecording = true
                 liveFrames = []
                 lastCompletedShot = nil
+                saveFailed = false
                 startedAt = Date()
                 setpointG = frame.setpointG
-            case .sample(let s):
-                liveFrames.append(s)
+            case .sample(let sample):
+                liveFrames.append(sample)
             case .ended:
                 finalize()
             }
@@ -80,16 +86,47 @@ public final class ShotRecorder {
         shot.doseG = Float(activeDoseG) // autofilled from the active recipe (0 = none)
 
         context.insert(shot) // cascades to samples via the relationship
-        try? context.save()
-        lastCompletedShot = shot
+        if context.saveLogging("ShotRecorder.finalize") {
+            lastCompletedShot = shot
+            saveFailed = false
+        } else {
+            // Don't claim success: drop the unsaved object and flag the failure so
+            // the UI can tell the user the shot wasn't recorded.
+            context.delete(shot)
+            lastCompletedShot = nil
+            saveFailed = true
+        }
     }
 
     /// Dismiss the Done state, keeping the saved shot.
     public func keepLastCompleted() { lastCompletedShot = nil }
 
+    /// Acknowledge and clear a surfaced save failure.
+    public func acknowledgeSaveFailure() { saveFailed = false }
+
     /// Delete the just-saved shot and dismiss the Done state.
     public func discardLastCompleted() {
-        if let shot = lastCompletedShot { context.delete(shot); try? context.save() }
+        if let shot = lastCompletedShot {
+            context.delete(shot)
+            context.saveLogging("ShotRecorder.discard")
+        }
         lastCompletedShot = nil
+    }
+}
+
+extension ModelContext {
+    /// Save pending changes, logging any error instead of silently discarding it
+    /// with `try?`. Returns whether the save succeeded so callers can react to
+    /// failure rather than assuming success.
+    @discardableResult
+    func saveLogging(_ site: StaticString = #function) -> Bool {
+        do {
+            try save()
+            return true
+        } catch {
+            Logger(subsystem: "org.iaconelli.ShotStopperTelemetry", category: "store")
+                .error("SwiftData save failed at \(site, privacy: .public): \(error)")
+            return false
+        }
     }
 }

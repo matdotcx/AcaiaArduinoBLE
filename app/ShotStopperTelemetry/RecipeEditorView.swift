@@ -174,12 +174,12 @@ struct RecipeEditorView: View {
                                   maxShotDurationS: Int(defaults.maxShotDurationS), dripDelayS: dripDelay,
                                   doseG: dose, colorIndex: colorIndex, iconName: icon))
         }
-        try? context.save()
+        context.saveLogging()
         dismiss()
     }
 
     private func delete() {
-        if let e = existing { context.delete(e); try? context.save() }
+        if let e = existing { context.delete(e); context.saveLogging() }
         dismiss()
     }
 }

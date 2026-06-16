@@ -84,7 +84,7 @@ enum ShotSimulator {
             shot.ratingStars = ratings[i % ratings.count]
             context.insert(shot)
         }
-        try? context.save()
+        context.saveLogging()
     }
 }
 #endif

@@ -205,7 +205,7 @@ struct ShotHistoryView: View {
 
     private func delete(_ shot: Shot) {
         context.delete(shot) // cascades to its samples
-        try? context.save()
+        context.saveLogging()
     }
 
     private func regenerateBulkExports() {
