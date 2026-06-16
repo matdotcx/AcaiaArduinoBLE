@@ -197,6 +197,18 @@ test-action failure, which is evaluated before the destination.
   intentional scoping — flagged for a product decision, not a bug.
 - **Confidence:** high (observation); intent unknown.
 
+### F-014: Config writes are fire-and-forget + optimistic — no confirmation they landed
+- **Status:** ✅ fixed in a93dd22 (post-audit, found while debugging auto-tare on a real Micra).
+  Every `.withResponse` byte write is now read back and compared; `syncState` resolves to `.synced`
+  only when the device echoes the value, `.mismatch` ("Not applied") otherwise, and `settings` is
+  updated from the read-back so the UI reflects the device's true state.
+- **Where:** `ShotStopperClient.setAutoTare`/`writeByte` etc. — `settings.X` was set optimistically
+  before the write acked, and nothing verified the firmware accepted it.
+- **Observed (on hardware):** auto-tare appeared ON in the app but the device never tared a shot —
+  consistent with the `autoTare` flag never landing/persisting on the device, with no app feedback.
+- **Confidence:** high. (Firmware-side note: a momentary switch without a reed switch also gets no
+  tare in `shotStopper.ino` — separate, out of app scope.)
+
 ---
 
 ## Not Verified — Requires Hardware
