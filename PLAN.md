@@ -65,8 +65,8 @@ Approach: add an app test target (even a thin one that exercises `Shot.statusTag
 wire it into the scheme's Test action.
 Verification: `xcodebuild -project app/ShotStopperTelemetry.xcodeproj -scheme ShotStopperTelemetry -destination 'platform=iOS Simulator,name=iPhone 16' build test` exits 0.
 
-## W5: Cleanups  —  est. S
-Fixes: F-008, F-009, F-010, F-011
+## W5: Cleanups  —  est. S  —  ✅ done (F-009/F-010/F-011 0063dd2 · F-008/F-013 f8ffa1f)
+Fixes: F-008 (fixed), F-009 (fixed), F-010 (fixed), F-011 (fixed); also resolved F-013 (lint config)
 Rationale: Low-risk hygiene, batched last so they don't churn the diffs that matter.
 Approach: split `DesignSystem.swift` into Tokens/Components/Charts (<400 each); either consume or
 drop the `scaleStatus`/`shotStatus` subscriptions; add dedup + recipe identity to DEBUG
@@ -78,11 +78,8 @@ Verification: both build commands; `swift test` for any touched package code.
 ## Out of scope for automated fix (need a human decision)
 
 - **F-007 (SwiftLint not installed):** ✅ resolved — installed via MacPorts during W4.
-- **F-013 (259 pre-existing `swiftlint --strict` violations):** project-style decision. Either add a
-  `.swiftlint.yml` encoding the established swift-format style (disable `trailing_comma`, allow the
-  `DS`/`R` token type names, set `line_length`) or schedule a bulk style-fix pass. Until then the
-  repo-wide `swiftlint --strict` gate fails on pre-existing debt; each waypoint's own changed code is
-  kept lint-clean. Question: config-to-match-style, or bulk-reformat to SwiftLint defaults?
+- **F-013 (259 pre-existing `swiftlint --strict` violations):** ✅ resolved in W5 (f8ffa1f) via a
+  style-matching `.swiftlint.yml` — `swiftlint --strict` now reports 0 violations.
 - **F-012 (`momentary` / `reedSwitch` / `dripDelay` UI):** product decision — are these meant to be
   user-facing in Settings, or intentionally hidden? Answer determines whether to add UI or remove the
   unused setters. Question: which device toggles should the app expose vs. leave to the firmware/recipe?

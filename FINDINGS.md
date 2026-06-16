@@ -134,6 +134,10 @@ test-action failure, which is evaluated before the destination.
 - **Confidence:** high.
 
 ### F-013: `swiftlint --strict` reveals 259 pre-existing violations across 36 files
+- **Status:** ✅ fixed in f8ffa1f (W5). Added a `.swiftlint.yml` aligned to the project's swift-format
+  style (disables `trailing_comma`/`opening_brace`, SwiftUI/GATT-realistic thresholds) while keeping
+  `file_length` 400 and `function_body_length` at the CLAUDE.md bar; combined with the F-008 split,
+  `swiftlint --strict` now reports **0 violations across 34 files**.
 - **Where:** repo-wide; concentrated in `app/AppShared/DesignSystem.swift` and the iOS views.
 - **Observed:** With SwiftLint now installed (F-007) and **no `.swiftlint.yml`** in the repo, the
   default ruleset flags 259 serious violations under `--strict`: `line_length`, `opening_brace`
@@ -150,6 +154,8 @@ test-action failure, which is evaluated before the destination.
   is a project-style decision, not an automated bug fix — see PLAN "Out of scope".
 
 ### F-008: `DesignSystem.swift` is 515 lines — exceeds the <400-line file guideline
+- **Status:** ✅ fixed in f8ffa1f (W5). Charts extracted to `DesignCharts.swift`; DesignSystem.swift
+  is now 375 lines (under 400). `fileprivate`→`private` on the Archivo loader.
 - **Where:** `app/AppShared/DesignSystem.swift` (515 lines). All other files are ≤321.
 - **Observed:** Mixes color tokens, the Archivo variable-font loader, recipe palette, and ~10
   reusable components + two Swift Charts views. Splitting (Tokens / Components / Charts) would meet
@@ -157,6 +163,8 @@ test-action failure, which is evaluated before the destination.
 - **Confidence:** high.
 
 ### F-009: Subscribed-but-ignored BLE notifications (`scaleStatus` FF19, `shotStatus` FF20)
+- **Status:** ✅ fixed in 0063dd2 (W5). Dropped `scaleStatus`/`shotStatus` from `TelemetryGATT.notifying`
+  (the telemetry frame already carries that state).
 - **Where:** `ShotStopperClient.applyConfig` (`:280`) vs. `TelemetryGATT.notifying` (`:53`).
 - **Observed:** The client subscribes to `scaleStatus` and `shotStatus` notifications, but
   `applyConfig`'s switch has no cases for them → they hit `default: break` and are silently dropped.
@@ -164,6 +172,7 @@ test-action failure, which is evaluated before the destination.
 - **Confidence:** high.
 
 ### F-010: DEBUG `seedHistory` has no dedup and omits recipe identity
+- **Status:** ✅ fixed in 0063dd2 (W5). Seeds only an empty store; stamps recipe colour/icon identity.
 - **Where:** `app/AppShared/ShotSimulator.swift:46`
 - **Observed:** Each invocation inserts another 6 shots into the persistent local store (History grew
   to 18 across launches during this audit), and it sets `presetName` but not `recipeColorIndex`/
@@ -171,6 +180,8 @@ test-action failure, which is evaluated before the destination.
 - **Confidence:** high.
 
 ### F-011: Export temp-file name collisions for shots in the same minute
+- **Status:** ✅ fixed in 0063dd2 (W5). Detail exports now write into a per-shot temp subdirectory
+  keyed by the shot UUID, keeping a clean user-facing filename without collisions.
 - **Where:** `ShotExporter.suggestedName` (`ShotExport.swift:70`, format `yyyy-MM-dd-HHmm`) used by
   `ShotDetailView.generateExports` (`:299`).
 - **Observed:** Two shots started in the same minute produce the same `shot-….csv`/`.json` temp path
