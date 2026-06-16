@@ -49,6 +49,9 @@ public enum TelemetryGATT {
         otaModeRequested, wifiSSID, wifiIP,
     ]
 
-    /// Characteristics the client subscribes to for notifications.
-    static let notifying: [CBUUID] = [telemetry, scaleStatus, shotStatus, wifiIP]
+    /// Characteristics the client subscribes to for notifications. `scaleStatus`
+    /// and `shotStatus` are intentionally omitted: the telemetry frame already
+    /// carries scale-connected + shot state, so subscribing to them produced
+    /// notifications the client only dropped.
+    static let notifying: [CBUUID] = [telemetry, wifiIP]
 }

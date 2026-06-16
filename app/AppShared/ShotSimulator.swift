@@ -44,6 +44,9 @@ enum ShotSimulator {
     /// Inserts several completed, backdated shots straight into the store so the
     /// History / detail / export screens have data to show.
     static func seedHistory(into context: ModelContext, count: Int = 6) {
+        // Only seed an empty store, so repeated launch-arg / button seeding doesn't
+        // pile up duplicate demo shots.
+        guard ((try? context.fetchCount(FetchDescriptor<Shot>())) ?? 0) == 0 else { return }
         let setpoints: [Float] = [36, 40, 18, 30, 36, 22]
         // Loosely pair setpoints with recipe names (some shots have no recipe).
         let recipes: [String?] = ["House Espresso", "Ethiopia Light", "Ristretto", nil, "House Espresso", "Ristretto"]
@@ -60,7 +63,12 @@ enum ShotSimulator {
             let dur = Double.random(in: 22...32) * (reason == 1 ? 0.72 : 1.0)
             let started = Date().addingTimeInterval(-(Double(i) * 86_400 + Double.random(in: 0...40_000)))
             let shot = Shot(startedAt: started, setpointG: goal)
-            shot.presetName = recipes[i % recipes.count]
+            let recipeName = recipes[i % recipes.count]
+            shot.presetName = recipeName
+            if let recipeName {
+                shot.recipeColorIndex = DS.styleIndex(forName: recipeName)
+                shot.recipeIcon = DS.defaultIcon(forName: recipeName)
+            }
 
             let dt = 0.2
             let steps = Int(dur / dt)

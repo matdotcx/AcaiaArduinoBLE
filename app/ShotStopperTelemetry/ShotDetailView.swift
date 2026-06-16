@@ -295,7 +295,11 @@ struct ShotDetailView: View {
     private func generateExports() {
         let export = ShotExport(shot)
         let stem = ShotExporter.suggestedName(export)
-        let dir = FileManager.default.temporaryDirectory
+        // Per-shot subdirectory keyed by the stable id, so two shots pulled in the
+        // same minute (same `stem`) don't overwrite each other's temp files while
+        // keeping the user-facing filename clean.
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(shot.id.uuidString, isDirectory: true)
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         let csv = dir.appendingPathComponent("\(stem).csv")
         if (try? Data(ShotExporter.csv(export).utf8).write(to: csv)) != nil { csvURL = csv }
         let json = dir.appendingPathComponent("\(stem).json")
