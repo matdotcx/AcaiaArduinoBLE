@@ -1,0 +1,52 @@
+# SwiftLint configuration aligned to this project's swift-format conventions.
+# See CLAUDE.md: "Match existing swift-format style", "Functions <~50 lines, files <400 lines".
+#
+# Two kinds of tuning below, neither of which hides real defects:
+#  1. disabled_rules — genuine, intentional conflicts with swift-format (which this
+#     codebase follows).
+#  2. realistic thresholds for metrics SwiftLint defaults too tightly for SwiftUI /
+#     a BLE GATT layer. file_length (400) and function_body_length stay at the
+#     CLAUDE.md quality bar.
+
+disabled_rules:
+  - trailing_comma                  # swift-format emits trailing commas in multiline literals
+  - opening_brace                   # conflicts with swift-format brace placement in compact decls
+  - optional_data_string_conversion # String(decoding:as:) is valid, intentional modern Swift
+
+line_length:
+  warning: 180                      # dense single-line SwiftUI modifier chains
+  error: 250
+  ignores_comments: true
+  ignores_urls: true
+
+identifier_name:
+  min_length: 1                     # idiomatic short names (f, s, p, t, dt) in SwiftUI/closures
+  max_length: 60
+
+type_name:
+  min_length: 1                     # DS / R design-token enums
+  max_length: 50
+
+function_body_length:
+  warning: 55                       # CLAUDE bar is "<~50"; allow the tilde
+  error: 100
+
+type_body_length:
+  warning: 350                      # SwiftUI view structs run long; default 250 is too strict
+  error: 450
+
+function_parameter_count:
+  warning: 8                        # builder/config funcs (frame encode, brew steppers)
+  error: 10
+
+cyclomatic_complexity:
+  warning: 15                       # large GATT/config switches inflate this metric
+
+large_tuple:
+  warning: 4                         # local DEBUG seed/config data tuples
+
+excluded:
+  - "**/.build"
+  - app/ShotTelemetryKit/.build
+  - app/ShotTelemetryKit/Smoke      # dev smoke harness, not shipping code
+  - app/.tools
