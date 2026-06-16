@@ -29,6 +29,7 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: DS.Space.xl) {
                     Text("Settings").font(DS.title(32)).foregroundStyle(DS.ink).padding(.top, DS.Space.s)
                     connectionCard
+                    if client.syncState == .mismatch { syncBanner }
                     recipesSection
                     brewSection
                     displaySection
@@ -72,6 +73,27 @@ struct SettingsView: View {
             }
             .padding(16)
         }
+    }
+
+    /// Shown when the last config change didn't read back matching what we sent —
+    /// i.e. the machine didn't accept/persist it (see ShotStopperClient read-back).
+    private var syncBanner: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.system(size: 15, weight: .semibold)).foregroundStyle(DS.orange)
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Change didn't apply").font(.system(size: 14, weight: .bold)).foregroundStyle(DS.ink)
+                Text("The machine didn't confirm the last setting. Make sure it's connected and try again.")
+                    .font(.system(size: 11)).foregroundStyle(DS.inkMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(DS.orange.opacity(0.08), in: RoundedRectangle(cornerRadius: DS.R.inner, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DS.R.inner, style: .continuous)
+            .strokeBorder(DS.orange.opacity(0.25), lineWidth: 1))
     }
 
     private func badge(_ text: String, color: Color) -> some View {
