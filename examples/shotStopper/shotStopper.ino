@@ -166,6 +166,7 @@ BLECharacteristic wifiSsidCharacteristic("0xFF22",  BLEWrite | BLERead, 32);
 BLECharacteristic wifiPassCharacteristic("0xFF23",  BLEWrite, 32);
 BLECharacteristic wifiIpCharacteristic("0xFF24",  BLERead | BLENotify, 16);
 BLECharacteristic telemetryCharacteristic("0xFF25",  BLERead | BLENotify, 16); // 16-byte live shot frame, see docs/GATT_DESIGN.md
+BLECharacteristic debugLogCharacteristic("0xFF26",  BLERead | BLENotify, 80); // short firmware log lines for the app (no USB cable needed)
 
 
 enum ScaleStatus {
@@ -208,6 +209,15 @@ void sendTelemetryFrame(uint8_t state) {
   memcpy(&buf[14], &setpoint_cg, 2);
 
   telemetryCharacteristic.writeValue(buf, 16);
+}
+
+// Mirror a short log line to BLE (0xFF26) so the app can show the firmware's event
+// timeline live, without a USB serial cable. Still echoes to Serial.
+void bleLog(const char* msg) {
+  Serial.println(msg);
+  size_t len = strlen(msg);
+  if (len > 79) len = 79;
+  debugLogCharacteristic.writeValue((const uint8_t*)msg, (int)len);
 }
 
 uint8_t lastScaleStatus = 255; // Invalid initial value to force first update
@@ -326,6 +336,7 @@ void initializeBLE() {
   shotStopperService.addCharacteristic(wifiPassCharacteristic);
   shotStopperService.addCharacteristic(wifiIpCharacteristic);
   shotStopperService.addCharacteristic(telemetryCharacteristic);
+  shotStopperService.addCharacteristic(debugLogCharacteristic);
   BLE.addService(shotStopperService);
   enabledCharacteristic.writeValue(enabled ? 1 : 0);
   weightCharacteristic.writeValue(goalWeight);
@@ -384,6 +395,7 @@ void pollAndReadBLE() {
     autoTare = autoTareCharacteristic.value() != 0;
     EEPROM.write(AUTOTARE_ADDR, autoTare ? 1 : 0);
     updated = true;
+    bleLog(autoTare ? "cfg: autoTare ON (from app)" : "cfg: autoTare OFF (from app)");
   }
   if (minShotDurationSCharacteristic.written()) {
     minShotDurationS = minShotDurationSCharacteristic.value();
@@ -523,7 +535,7 @@ void loop() {
         shot.expected_end_s = maxShotDurationS;
         currentWeight = 0;
         sendTelemetryFrame(TELEM_BREW); // re-mark t=0 for clients
-        Serial.println("first drop detected - tared, measuring from here");
+        bleLog("first drop detected - tared");
       }
       shot.time_s[shot.datapoints] = seconds_f()-shot.start_timestamp_s;
       shot.weight[shot.datapoints] = currentWeight;
@@ -586,7 +598,7 @@ void loop() {
 
   //button just pressed (and released)
   if(newButtonState && buttonPressed == false && !requireRelease ){
-    Serial.println("ButtonPressed");
+    bleLog("ButtonPressed");
     buttonPressed = true;
     if(!momentary || reedSwitch){
       shot.brewing = true;
@@ -602,7 +614,7 @@ void loop() {
   && (shot.shotTimer > minShotDurationS) 
   ){
     buttonLatched = true;
-    Serial.println("Button Latched");
+    bleLog("Button Latched (firmware took over)");
     digitalWrite(OUT,HIGH); Serial.println("wrote high");
     // Tare moved to first-drop detection (see weight loop above) so the beep/zero
     // coincides with actual flow rather than a fixed timer.
@@ -682,7 +694,7 @@ void loop() {
 
 void setBrewingState(bool brewing){
   if(brewing){
-    Serial.println("shot started");
+    bleLog("shot started");
     shot.start_timestamp_s = seconds_f();
     shot.shotTimer = 0;
     shot.datapoints = 0;
@@ -692,27 +704,18 @@ void setBrewingState(bool brewing){
     scale.startTimer();
     if(autoTare){
       scale.tare();
+      bleLog("brew-start tare sent");
+    } else {
+      bleLog("brew start: autoTare OFF, no tare");
     }
     sendTelemetryFrame(TELEM_BREW); // mark shot boundary at t=0 for clients
-    Serial.println("Weight Timer End");
   }else{
-    Serial.print("ShotEnded by ");
     switch (shot.end) {
-      case ENDTYPE::TIME:
-        Serial.println("time");
-        break;
-      case ENDTYPE::WEIGHT:
-        Serial.println("weight");
-        break;
-      case ENDTYPE::BUTTON:
-        Serial.println("button");
-        break;
-      case ENDTYPE::DISCONNECT:
-        Serial.println("disconnect");
-        break;
-      case ENDTYPE::UNDEF:
-        Serial.println("undef");
-        break;
+      case ENDTYPE::TIME:       bleLog("shot ended: time");       break;
+      case ENDTYPE::WEIGHT:     bleLog("shot ended: weight");     break;
+      case ENDTYPE::BUTTON:     bleLog("shot ended: button");     break;
+      case ENDTYPE::DISCONNECT: bleLog("shot ended: disconnect"); break;
+      case ENDTYPE::UNDEF:      bleLog("shot ended: undef");      break;
     }
 
     shot.end_s = seconds_f() - shot.start_timestamp_s;
