@@ -199,6 +199,9 @@ void sendTelemetryFrame(uint8_t state) {
   // means "not reported" (legacy / non-done frames): 1=BUTTON 2=WEIGHT 3=TIME
   // 4=DISCONNECT. shot.end is still valid here (reset to UNDEF afterwards).
   if (state == TELEM_DONE) flags |= (((uint8_t)shot.end + 1) & 0x07) << 2; // bits2-4 endReason
+  // bit5: latching shot has been taken over and the paddle is still raised — the app
+  // shows a "return the paddle to home" cue; clears the moment the paddle is lowered.
+  if (buttonLatched && !momentary && newButtonState) flags |= 0x20;
   uint16_t setpoint_cg = (uint16_t)(goalWeight * 100);
 
   memcpy(&buf[0],  &t_ms,        4);
