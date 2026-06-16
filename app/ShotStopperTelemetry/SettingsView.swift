@@ -288,6 +288,20 @@ struct SettingsView: View {
                     .padding(.horizontal, 16).padding(.vertical, 14).contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+                rowDivider
+                NavigationLink { DebugLogView() } label: {
+                    HStack(spacing: 12) {
+                        Image(systemName: "text.append").font(.system(size: 18)).foregroundStyle(DS.ink)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Machine log").font(.system(size: 15, weight: .semibold)).foregroundStyle(DS.ink)
+                            Text("Live firmware events (button, tare, latch)").font(DS.mono(10)).foregroundStyle(DS.inkMuted)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right").font(.system(size: 13, weight: .semibold)).foregroundStyle(DS.inkFaint)
+                    }
+                    .padding(.horizontal, 16).padding(.vertical, 14).contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
             }
         }
     }

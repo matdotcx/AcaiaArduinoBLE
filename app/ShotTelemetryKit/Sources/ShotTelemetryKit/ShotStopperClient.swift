@@ -21,9 +21,21 @@ public final class ShotStopperClient: NSObject {
         case connected
     }
 
+    /// One firmware log line received over BLE (`0xFF26`).
+    public struct DeviceLogLine: Identifiable, Equatable, Sendable {
+        public let id: Int
+        public let at: Date
+        public let text: String
+    }
+
     public private(set) var state: State = .idle
     public private(set) var latestFrame: TelemetryFrame?
     public private(set) var deviceName: String?
+
+    /// Live firmware log lines (newest last), streamed from the device's debug-log
+    /// characteristic. Capped to the most recent 300. Empty on firmware without it.
+    public private(set) var logLines: [DeviceLogLine] = []
+    @ObservationIgnored private var logCounter = 0
 
     /// The device's configuration, populated on connect and updated on write.
     public private(set) var settings = DeviceSettings()
@@ -296,11 +308,27 @@ extension ShotStopperClient: CBCentralManagerDelegate, CBPeripheralDelegate {
             }
             return
         }
+        if uuid == TelemetryGATT.debugLog, let data {
+            let text = String(decoding: data, as: UTF8.self)
+            MainActor.assumeIsolated { appendLog(text) }
+            return
+        }
         MainActor.assumeIsolated {
             applyConfig(uuid: uuid, data: data)
             confirmReadBack(uuid: uuid, data: data)
         }
     }
+
+    private func appendLog(_ text: String) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        logCounter += 1
+        logLines.append(DeviceLogLine(id: logCounter, at: Date(), text: trimmed))
+        if logLines.count > 300 { logLines.removeFirst(logLines.count - 300) }
+    }
+
+    /// Clear the captured firmware log (e.g. before pulling a fresh shot).
+    public func clearLog() { logLines.removeAll() }
 
     private func applyConfig(uuid: CBUUID, data: Data?) {
         guard let data else { return }

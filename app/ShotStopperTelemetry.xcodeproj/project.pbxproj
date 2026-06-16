@@ -24,6 +24,7 @@
 		B0000000000000000000042 /* ShotTelemetryKit in Frameworks */ = {isa = PBXBuildFile; productRef = A0000000000000000000041 /* ShotTelemetryKit */; };
 		B0000000000000000000050 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000050 /* SettingsView.swift */; };
 		B0000000000000000000051 /* OTAView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000051 /* OTAView.swift */; };
+		B0000000000000000000120 /* DebugLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000120 /* DebugLogView.swift */; };
 		B0000000000000000000053 /* RecipeEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000053 /* RecipeEditorView.swift */; };
 		B0000000000000000000069 /* ShotTelemetryKit in Frameworks */ = {isa = PBXBuildFile; productRef = A0000000000000000000068 /* ShotTelemetryKit */; };
 		B0000000000000000000201 /* WatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000070 /* WatchApp.swift */; };
@@ -79,6 +80,7 @@
 		F0000000000000000000031 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F0000000000000000000050 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		F0000000000000000000051 /* OTAView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTAView.swift; sourceTree = "<group>"; };
+		F0000000000000000000120 /* DebugLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLogView.swift; sourceTree = "<group>"; };
 		F0000000000000000000053 /* RecipeEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeEditorView.swift; sourceTree = "<group>"; };
 		F0000000000000000000052 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F0000000000000000000070 /* WatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchApp.swift; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 				F0000000000000000000006 /* ShotDetailView.swift */,
 				F0000000000000000000050 /* SettingsView.swift */,
 				F0000000000000000000051 /* OTAView.swift */,
+				F0000000000000000000120 /* DebugLogView.swift */,
 				F0000000000000000000053 /* RecipeEditorView.swift */,
 				F0000000000000000000052 /* Info.plist */,
 				F0000000000000000000020 /* ShotStopperTelemetry.entitlements */,
@@ -351,6 +354,7 @@
 				B0000000000000000000006 /* ShotDetailView.swift in Sources */,
 				B0000000000000000000050 /* SettingsView.swift in Sources */,
 				B0000000000000000000051 /* OTAView.swift in Sources */,
+				B0000000000000000000120 /* DebugLogView.swift in Sources */,
 				B0000000000000000000053 /* RecipeEditorView.swift in Sources */,
 				B0000000000000000000007 /* Models.swift in Sources */,
 				B0000000000000000000008 /* ShotRecorder.swift in Sources */,

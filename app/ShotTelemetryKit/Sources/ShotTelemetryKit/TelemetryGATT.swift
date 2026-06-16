@@ -25,6 +25,10 @@ public enum TelemetryGATT {
     /// Live telemetry — 16-byte notify frame.
     public static let telemetry = uuid("FF25")
 
+    /// Short human-readable firmware log lines (notify) — shown in the app's machine
+    /// log so the firmware's event timeline is visible without a USB serial cable.
+    public static let debugLog = uuid("FF26")
+
     // Configuration / control characteristics (all on the same service).
     public static let enabled = uuid("FF10")           // byte, write|read
     public static let setpoint = uuid("FF11")          // goal weight (g), byte, write|read
@@ -53,5 +57,5 @@ public enum TelemetryGATT {
     /// and `shotStatus` are intentionally omitted: the telemetry frame already
     /// carries scale-connected + shot state, so subscribing to them produced
     /// notifications the client only dropped.
-    static let notifying: [CBUUID] = [telemetry, wifiIP]
+    static let notifying: [CBUUID] = [telemetry, debugLog, wifiIP]
 }
