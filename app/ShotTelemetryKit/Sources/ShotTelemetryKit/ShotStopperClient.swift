@@ -51,8 +51,17 @@ public final class ShotStopperClient: NSObject {
     }
 
     /// Begin scanning and stay connected (reconnecting on drop) until `stop()`.
+    ///
+    /// Idempotent: safe to call from multiple `.onAppear` hooks (ContentView's
+    /// tabs and LiveShotView both call it). If a connection is already live or in
+    /// progress — or a scan is already running — this is a no-op. Without this
+    /// guard, a re-appear (tab switch, or the Live layout shifting at shot start)
+    /// would re-enter `beginScan()` and reset `state` to `.scanning`, flipping the
+    /// UI to "Not connected" while telemetry frames were still streaming in on the
+    /// existing connection.
     public func start() {
         wantConnection = true
+        guard state != .connected, state != .connecting, state != .scanning else { return }
         if central.state == .poweredOn { beginScan() }
     }
 

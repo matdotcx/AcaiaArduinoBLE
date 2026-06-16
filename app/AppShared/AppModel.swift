@@ -41,6 +41,7 @@ public final class AppModel {
         recorder.activePresetName = p.name
         recorder.activeRecipeColorIndex = p.colorIndex
         recorder.activeRecipeIcon = p.iconName
+        recorder.activeDoseG = p.doseG
     }
 
     /// A manual settings change means the live config no longer matches a recipe.
@@ -49,6 +50,7 @@ public final class AppModel {
         recorder.activePresetName = nil
         recorder.activeRecipeColorIndex = nil
         recorder.activeRecipeIcon = nil
+        recorder.activeDoseG = 0
     }
 
     public var activeRecipeID: UUID? { recorder.activePresetID }

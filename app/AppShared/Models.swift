@@ -34,6 +34,14 @@ public final class Shot {
     public var recipeColorIndex: Int?
     public var recipeIcon: String?
 
+    /// Grind dose in grams (input weight). 0 = unknown. Autofilled from the active
+    /// recipe when one is applied; otherwise entered by hand on the shot.
+    public var doseG: Float = 0
+    /// Taste rating, 1...5 stars. 0 = unrated.
+    public var ratingStars: Int = 0
+    /// Free-form tasting / dial-in notes.
+    public var notes: String = ""
+
     @Relationship(deleteRule: .cascade, inverse: \ShotSample.shot)
     public var samples: [ShotSample]? = []
 
@@ -60,6 +68,10 @@ public struct ShotStatusTag {
 
 extension Shot {
     public var weightDelta: Float { finalWeightG - setpointG }
+
+    /// Brew ratio as yield ÷ dose (e.g. 2.0 for an 18 g → 36 g shot). nil when no
+    /// dose was recorded for this shot.
+    public var brewRatio: Double? { doseG > 0 ? Double(finalWeightG) / Double(doseG) : nil }
 
     /// Status derived from the firmware end-reason (when present) plus the weight
     /// delta. Shots recorded before the firmware sent a reason (`endReasonRaw == 0`)
@@ -94,6 +106,9 @@ public final class Preset {
     public var minShotDurationS: Int = 0
     public var maxShotDurationS: Int = 50
     public var dripDelayS: Int = 3
+    /// Grind dose in grams for this recipe; autofilled onto each shot pulled with
+    /// it (and used for brew-ratio coaching). 0 = unset.
+    public var doseG: Double = 0
     /// Recipe identity (customizable): palette color index + SF Symbol name.
     public var colorIndex: Int = 0
     public var iconName: String = "cup.and.saucer.fill"
@@ -109,6 +124,7 @@ public final class Preset {
         minShotDurationS: Int,
         maxShotDurationS: Int,
         dripDelayS: Int,
+        doseG: Double = 0,
         colorIndex: Int = 0,
         iconName: String = "cup.and.saucer.fill"
     ) {
@@ -120,6 +136,7 @@ public final class Preset {
         self.minShotDurationS = minShotDurationS
         self.maxShotDurationS = maxShotDurationS
         self.dripDelayS = dripDelayS
+        self.doseG = doseG
         self.colorIndex = colorIndex
         self.iconName = iconName
     }

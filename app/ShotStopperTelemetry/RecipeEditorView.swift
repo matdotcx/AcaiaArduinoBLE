@@ -16,6 +16,7 @@ struct RecipeEditorView: View {
     @State private var goalWeight = 36
     @State private var autoTare = true
     @State private var dripDelay = 3
+    @State private var dose = 18.0
     @State private var loaded = false
 
     private var style: RecipeStyle { DS.recipeStyle(colorIndex: colorIndex, icon: icon) }
@@ -58,6 +59,12 @@ struct RecipeEditorView: View {
                     }
                     section("BREW") {
                         VStack(spacing: 0) {
+                            paramRow("Dose (grind)") {
+                                stepperControl(display: String(format: "%.1f g", dose),
+                                               dec: { dose = max(0, dose - 0.5) },
+                                               inc: { dose = min(40, dose + 0.5) })
+                            }
+                            divider
                             paramRow("Target weight") {
                                 stepper(goalWeight, "g", dec: { goalWeight = max(0, goalWeight - 1) }, inc: { goalWeight = min(100, goalWeight + 1) })
                             }
@@ -123,8 +130,12 @@ struct RecipeEditorView: View {
     }
 
     private func stepper(_ value: Int, _ unit: String, dec: @escaping () -> Void, inc: @escaping () -> Void) -> some View {
+        stepperControl(display: "\(value) \(unit)", dec: dec, inc: inc)
+    }
+
+    private func stepperControl(display: String, dec: @escaping () -> Void, inc: @escaping () -> Void) -> some View {
         HStack(spacing: 12) {
-            Text("\(value) \(unit)").font(DS.numeral(16, .bold)).monospacedDigit().foregroundStyle(DS.ink)
+            Text(display).font(DS.numeral(16, .bold)).monospacedDigit().foregroundStyle(DS.ink)
             HStack(spacing: 0) {
                 Button(action: dec) { Image(systemName: "minus").font(.system(size: 15, weight: .semibold)).foregroundStyle(DS.inkSecondary).frame(width: 44, height: 34) }
                 Rectangle().fill(DS.hairline).frame(width: 1, height: 22)
@@ -143,6 +154,7 @@ struct RecipeEditorView: View {
         if let e = existing {
             name = e.name; colorIndex = e.colorIndex; icon = e.iconName
             goalWeight = e.goalWeightG; autoTare = e.autoTare; dripDelay = e.dripDelayS
+            dose = e.doseG > 0 ? e.doseG : 18
         } else {
             goalWeight = Int(defaults.goalWeightG); autoTare = defaults.autoTare; dripDelay = Int(defaults.dripDelayS)
             colorIndex = Int.random(in: 0..<DS.recipeColorPairs.count)
@@ -155,11 +167,12 @@ struct RecipeEditorView: View {
         if let e = existing {
             e.name = trimmed; e.colorIndex = colorIndex; e.iconName = icon
             e.goalWeightG = goalWeight; e.autoTare = autoTare; e.dripDelayS = dripDelay
+            e.doseG = dose
         } else {
             context.insert(Preset(name: trimmed, createdAt: .now, goalWeightG: goalWeight,
                                   autoTare: autoTare, minShotDurationS: Int(defaults.minShotDurationS),
                                   maxShotDurationS: Int(defaults.maxShotDurationS), dripDelayS: dripDelay,
-                                  colorIndex: colorIndex, iconName: icon))
+                                  doseG: dose, colorIndex: colorIndex, iconName: icon))
         }
         try? context.save()
         dismiss()

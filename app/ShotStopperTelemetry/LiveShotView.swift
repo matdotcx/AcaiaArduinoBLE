@@ -50,7 +50,10 @@ struct LiveShotView: View {
             progressBlock
             statsCard
             chartArea
-            if state == .done { doneButtons }
+            if state == .done {
+                if let advice = doneAdvice { coachingLine(advice) }
+                doneButtons
+            }
         }
         .padding(.horizontal, DS.Space.xl)
         .padding(.top, DS.Space.m)
@@ -269,6 +272,43 @@ struct LiveShotView: View {
     }
 
     // MARK: Done
+
+    // MARK: Coaching (done state)
+
+    /// Quick extraction read for the just-finished shot. Dose comes from the active
+    /// recipe (autofilled) so the ratio is right when a recipe was applied.
+    private var doneAdvice: ExtractionAdvice? {
+        guard state == .done, let shot = recorder.lastCompletedShot else { return nil }
+        let dose = shot.doseG > 0 ? Double(shot.doseG) : nil
+        return ShotAnalyzer.analyse(ShotExport(shot).samples, doseG: dose).1
+    }
+
+    private func coachingLine(_ advice: ExtractionAdvice) -> some View {
+        let color: Color = advice.verdict == .ideal ? DS.green
+            : (advice.verdict == .insufficientData ? DS.idle : DS.orange)
+        let icon: String = {
+            switch advice.verdict {
+            case .ideal: return "checkmark.seal.fill"
+            case .fast: return "hare.fill"
+            case .slow: return "tortoise.fill"
+            case .uneven: return "waveform.path.ecg"
+            case .insufficientData: return "questionmark.circle"
+            }
+        }()
+        return HStack(spacing: 10) {
+            Image(systemName: icon).font(.system(size: 16, weight: .semibold)).foregroundStyle(color)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(advice.title).font(.system(size: 14, weight: .bold)).foregroundStyle(DS.ink)
+                if let tip = advice.tips.first {
+                    Text(tip).font(.system(size: 11)).foregroundStyle(DS.inkMuted).lineLimit(1)
+                }
+            }
+            Spacer()
+        }
+        .padding(.horizontal, 14).padding(.vertical, 10)
+        .background(color.opacity(0.08), in: RoundedRectangle(cornerRadius: DS.R.inner, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: DS.R.inner, style: .continuous).strokeBorder(color.opacity(0.25), lineWidth: 1))
+    }
 
     private var doneButtons: some View {
         HStack(spacing: 12) {

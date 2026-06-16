@@ -137,6 +137,11 @@ struct ShotHistoryView: View {
                 ForEach(Array(filteredShots.enumerated()), id: \.element.id) { idx, shot in
                     NavigationLink { ShotDetailView(shot: shot) } label: { row(shot) }
                         .buttonStyle(.plain)
+                        .contextMenu {
+                            Button(role: .destructive) { delete(shot) } label: {
+                                Label("Delete shot", systemImage: "trash")
+                            }
+                        }
                     if idx < filteredShots.count - 1 {
                         Rectangle().fill(DS.hairline).frame(height: 1).padding(.leading, 64)
                     }
@@ -196,6 +201,11 @@ struct ShotHistoryView: View {
                 .font(.system(size: 13)).foregroundStyle(DS.inkMuted)
         }
         .frame(maxWidth: .infinity).padding(.vertical, 60)
+    }
+
+    private func delete(_ shot: Shot) {
+        context.delete(shot) // cascades to its samples
+        try? context.save()
     }
 
     private func regenerateBulkExports() {

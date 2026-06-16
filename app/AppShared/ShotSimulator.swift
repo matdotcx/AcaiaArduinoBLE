@@ -50,6 +50,9 @@ enum ShotSimulator {
         // End reasons (TelemetryFrame.EndReason raw) so History shows the full set:
         // 2=weight (ON TARGET), 3=time (OVERRUN), 1=button (CUT SHORT).
         let endReasons: [Int] = [2, 3, 1, 2, 3, 1]
+        // Dose (grind) + taste rating so the dial-in log + brew ratio show in demos.
+        let doses: [Float] = [18, 19, 16, 0, 18, 16]
+        let ratings: [Int] = [5, 3, 4, 0, 4, 2]
         for i in 0..<count {
             let goal = setpoints[i % setpoints.count]
             let reason = endReasons[i % endReasons.count]
@@ -77,6 +80,8 @@ enum ShotSimulator {
             shot.durationS = dur
             shot.endStateRaw = 4
             shot.endReasonRaw = reason
+            shot.doseG = doses[i % doses.count]
+            shot.ratingStars = ratings[i % ratings.count]
             context.insert(shot)
         }
         try? context.save()

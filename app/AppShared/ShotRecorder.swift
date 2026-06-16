@@ -26,6 +26,8 @@ public final class ShotRecorder {
     public var activePresetName: String?
     public var activeRecipeColorIndex: Int?
     public var activeRecipeIcon: String?
+    /// Dose (g) from the active recipe, stamped onto each shot. 0 = none.
+    public var activeDoseG: Double = 0
 
     @ObservationIgnored private let context: ModelContext
     @ObservationIgnored private var segmenter = ShotSegmenter()
@@ -75,6 +77,7 @@ public final class ShotRecorder {
         shot.presetID = activePresetID
         shot.recipeColorIndex = activeRecipeColorIndex
         shot.recipeIcon = activeRecipeIcon
+        shot.doseG = Float(activeDoseG) // autofilled from the active recipe (0 = none)
 
         context.insert(shot) // cascades to samples via the relationship
         try? context.save()
