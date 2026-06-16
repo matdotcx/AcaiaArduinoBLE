@@ -39,6 +39,7 @@
 		B0000000000000000000080 /* Archivo-Variable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000080 /* Archivo-Variable.ttf */; };
 		B0000000000000000000081 /* Archivo-Variable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000080 /* Archivo-Variable.ttf */; };
 		B0000000000000000000090 /* ShotStopperTelemetryWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = A0000000000000000000061 /* ShotStopperTelemetryWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B0000000000000000000100 /* ShotModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000100 /* ShotModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -83,6 +84,8 @@
 		F0000000000000000000073 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F0000000000000000000074 /* ShotStopperTelemetryWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShotStopperTelemetryWatch.entitlements; sourceTree = "<group>"; };
 		F0000000000000000000080 /* Archivo-Variable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Archivo-Variable.ttf"; sourceTree = "<group>"; };
+		A0000000000000000000108 /* ShotStopperTelemetryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShotStopperTelemetryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0000000000000000000100 /* ShotModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShotModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +95,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = A0000000000000000000060;
 			remoteInfo = ShotStopperTelemetryWatch;
+		};
+		A0000000000000000000107 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A0000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A0000000000000000000010;
+			remoteInfo = ShotStopperTelemetry;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -112,6 +122,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A0000000000000000000105 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -121,6 +138,7 @@
 				A0000000000000000000030 /* ShotStopperTelemetry */,
 				A0000000000000000000032 /* ShotStopperTelemetryWatch */,
 				A0000000000000000000031 /* AppShared */,
+				A0000000000000000000109 /* ShotStopperTelemetryTests */,
 				A0000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -130,8 +148,17 @@
 			children = (
 				A0000000000000000000011 /* ShotStopperTelemetry.app */,
 				A0000000000000000000061 /* ShotStopperTelemetryWatch.app */,
+				A0000000000000000000108 /* ShotStopperTelemetryTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A0000000000000000000109 /* ShotStopperTelemetryTests */ = {
+			isa = PBXGroup;
+			children = (
+				F0000000000000000000100 /* ShotModelTests.swift */,
+			);
+			path = ShotStopperTelemetryTests;
 			sourceTree = "<group>";
 		};
 		A0000000000000000000030 /* ShotStopperTelemetry */ = {
@@ -225,6 +252,23 @@
 			productReference = A0000000000000000000061 /* ShotStopperTelemetryWatch.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A0000000000000000000100 /* ShotStopperTelemetryTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A0000000000000000000101 /* Build configuration list for PBXNativeTarget "ShotStopperTelemetryTests" */;
+			buildPhases = (
+				A0000000000000000000104 /* Sources */,
+				A0000000000000000000105 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A0000000000000000000106 /* PBXTargetDependency */,
+			);
+			name = ShotStopperTelemetryTests;
+			productName = ShotStopperTelemetryTests;
+			productReference = A0000000000000000000108 /* ShotStopperTelemetryTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -240,6 +284,10 @@
 					};
 					A0000000000000000000060 = {
 						CreatedOnToolsVersion = 26.5;
+					};
+					A0000000000000000000100 = {
+						CreatedOnToolsVersion = 26.5;
+						TestTargetID = A0000000000000000000010;
 					};
 				};
 			};
@@ -261,6 +309,7 @@
 			targets = (
 				A0000000000000000000010 /* ShotStopperTelemetry */,
 				A0000000000000000000060 /* ShotStopperTelemetryWatch */,
+				A0000000000000000000100 /* ShotStopperTelemetryTests */,
 			);
 		};
 /* End PBXProject section */
@@ -326,6 +375,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A0000000000000000000104 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B0000000000000000000100 /* ShotModelTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -333,6 +390,11 @@
 			isa = PBXTargetDependency;
 			target = A0000000000000000000060 /* ShotStopperTelemetryWatch */;
 			targetProxy = A0000000000000000000093 /* PBXContainerItemProxy */;
+		};
+		A0000000000000000000106 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A0000000000000000000010 /* ShotStopperTelemetry */;
+			targetProxy = A0000000000000000000107 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -494,6 +556,44 @@
 			};
 			name = Release;
 		};
+		A0000000000000000000102 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = org.iaconelli.ShotStopperTelemetryTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShotStopperTelemetry.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ShotStopperTelemetry";
+			};
+			name = Debug;
+		};
+		A0000000000000000000103 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = org.iaconelli.ShotStopperTelemetryTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShotStopperTelemetry.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ShotStopperTelemetry";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -520,6 +620,15 @@
 			buildConfigurations = (
 				A0000000000000000000066 /* Debug */,
 				A0000000000000000000067 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A0000000000000000000101 /* Build configuration list for PBXNativeTarget "ShotStopperTelemetryTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A0000000000000000000102 /* Debug */,
+				A0000000000000000000103 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
