@@ -67,7 +67,9 @@ struct WatchKioskView: View {
                     .frame(height: 40)
             }
             Spacer(minLength: 0)
-            if state == .idle && !dimmed { startPill }
+#if DEBUG
+            if state == .idle && !dimmed { simulatePill }
+#endif
         }
         .padding(.horizontal, 6)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -106,13 +108,16 @@ struct WatchKioskView: View {
         .foregroundStyle(labelColor)
     }
 
-    private var startPill: some View {
-        Label("Start", systemImage: "play.fill")
+#if DEBUG
+    /// DEBUG-only: trigger the pour simulator so the kiosk can be demoed without
+    /// hardware. Not shown in Release — the watch is a read-only display and can't
+    /// start a shot itself, so a tappable "Start" there would be a dead control.
+    private var simulatePill: some View {
+        Label("Simulate", systemImage: "play.fill")
             .font(.system(size: 13, weight: .semibold)).foregroundStyle(.white)
             .padding(.horizontal, 16).padding(.vertical, 7)
             .background(DS.orange, in: Capsule())
-#if DEBUG
             .onTapGesture { model.simulateShot() }
-#endif
     }
+#endif
 }
