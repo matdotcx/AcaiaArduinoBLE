@@ -132,8 +132,8 @@ struct LiveShotView: View {
     }
 
     /// Shows write progress when a recipe's values are being sent to the ShotStopper:
-    /// spinner while in flight, a brief "Sent" once the machine acknowledges, then the
-    /// usual menu chevron. Driven by the client's `.withResponse` write acks.
+    /// spinner while in flight, "Sent" once the machine echoes the value back, "Not
+    /// applied" if the read-back didn't match, else the usual menu chevron.
     @ViewBuilder private var recipeSyncIndicator: some View {
         switch client.syncState {
         case .writing:
@@ -145,6 +145,11 @@ struct LiveShotView: View {
             HStack(spacing: 5) {
                 Image(systemName: "checkmark.circle.fill").font(.system(size: 12, weight: .semibold)).foregroundStyle(DS.green)
                 Text("Sent").font(.system(size: 12, weight: .semibold)).foregroundStyle(DS.green)
+            }
+        case .mismatch:
+            HStack(spacing: 5) {
+                Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 12, weight: .semibold)).foregroundStyle(DS.orange)
+                Text("Not applied").font(.system(size: 12, weight: .semibold)).foregroundStyle(DS.orange)
             }
         case .idle:
             Image(systemName: "chevron.up.chevron.down").font(.system(size: 11, weight: .semibold)).foregroundStyle(DS.inkFaint)

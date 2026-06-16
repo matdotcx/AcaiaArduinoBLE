@@ -29,12 +29,19 @@ public final class ShotStopperClient: NSObject {
     public private(set) var settings = DeviceSettings()
     public var isConnected: Bool { state == .connected }
 
-    /// Whether config writes (e.g. applying a recipe) are in flight or just landed.
-    /// Drives the Live screen's "Sending… / Sent" indicator. `.synced` auto-resets
-    /// to `.idle` shortly after the last write is acknowledged.
-    public enum SyncState: Equatable { case idle, writing, synced }
+    /// Whether config writes (e.g. applying a recipe) are in flight, confirmed, or
+    /// rejected. Drives the Live screen's indicator. After a `.withResponse` write
+    /// acks, the byte is **read back** and compared to what we sent: `.synced` only
+    /// when the device echoes the written value, `.mismatch` if it does not (e.g. the
+    /// firmware didn't accept/persist it). `.synced` auto-resets to `.idle`;
+    /// `.mismatch` persists until the next write so the user sees it didn't take.
+    public enum SyncState: Equatable { case idle, writing, synced, mismatch }
     public private(set) var syncState: SyncState = .idle
     @ObservationIgnored private var writesInFlight = 0
+    @ObservationIgnored private var verifiesInFlight = 0
+    /// Char → the byte value we last wrote, awaiting read-back confirmation.
+    @ObservationIgnored private var pendingVerify: [CBUUID: UInt8] = [:]
+    @ObservationIgnored private var verifyFailed = false
     @ObservationIgnored private var syncResetTask: Task<Void, Never>?
 
     /// Called for every decoded frame (on the main actor). Wire to `ShotRecorder.ingest`.
@@ -108,6 +115,7 @@ public final class ShotStopperClient: NSObject {
 
     private func writeByte(_ value: UInt8, _ uuid: CBUUID) {
         guard let ch = chars[uuid], let peripheral else { return }
+        pendingVerify[uuid] = value
         markWriting()
         peripheral.writeValue(Data([value]), for: ch, type: .withResponse)
     }
@@ -120,9 +128,24 @@ public final class ShotStopperClient: NSObject {
 
     /// Count an outgoing `.withResponse` write; cleared in `didWriteValueFor`.
     private func markWriting() {
+        if syncState != .writing { verifyFailed = false } // reset at the start of a batch
         writesInFlight += 1
         syncResetTask?.cancel()
         syncState = .writing
+    }
+
+    /// Once all writes have acked and all read-backs are in, resolve the sync state:
+    /// `.mismatch` if any value didn't echo what we wrote, else `.synced` (auto-clears).
+    private func settleSyncIfDone() {
+        guard writesInFlight == 0, verifiesInFlight == 0 else { return }
+        syncState = verifyFailed ? .mismatch : .synced
+        syncResetTask?.cancel()
+        guard syncState == .synced else { return } // leave .mismatch up until the next write
+        syncResetTask = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: 1_500_000_000)
+            guard !Task.isCancelled else { return }
+            self?.syncState = .idle
+        }
     }
 
 #if DEBUG
@@ -193,6 +216,9 @@ extension ShotStopperClient: CBCentralManagerDelegate, CBPeripheralDelegate {
             chars = [:]
             self.peripheral = nil
             writesInFlight = 0
+            verifiesInFlight = 0
+            pendingVerify = [:]
+            verifyFailed = false
             syncResetTask?.cancel()
             syncState = .idle
             if wantConnection { beginScan() } else { state = .idle }
@@ -206,15 +232,16 @@ extension ShotStopperClient: CBCentralManagerDelegate, CBPeripheralDelegate {
     ) {
         MainActor.assumeIsolated {
             writesInFlight = max(0, writesInFlight - 1)
-            guard writesInFlight == 0 else { return }
-            // All queued writes acknowledged. Flash "synced", then settle to idle.
-            syncState = .synced
-            syncResetTask?.cancel()
-            syncResetTask = Task { [weak self] in
-                try? await Task.sleep(nanoseconds: 1_500_000_000)
-                guard !Task.isCancelled else { return }
-                self?.syncState = .idle
+            if error != nil {
+                verifyFailed = true                       // the write itself failed
+            } else if pendingVerify[characteristic.uuid] != nil {
+                // Read the value back to confirm the firmware actually took it
+                // (handled/compared in `applyConfig`). This is the GATT-level proof
+                // the config landed, not just that the write was queued.
+                verifiesInFlight += 1
+                peripheral.readValue(for: characteristic)
             }
+            settleSyncIfDone()
         }
     }
 
@@ -269,7 +296,10 @@ extension ShotStopperClient: CBCentralManagerDelegate, CBPeripheralDelegate {
             }
             return
         }
-        MainActor.assumeIsolated { applyConfig(uuid: uuid, data: data) }
+        MainActor.assumeIsolated {
+            applyConfig(uuid: uuid, data: data)
+            confirmReadBack(uuid: uuid, data: data)
+        }
     }
 
     private func applyConfig(uuid: CBUUID, data: Data?) {
@@ -292,5 +322,16 @@ extension ShotStopperClient: CBCentralManagerDelegate, CBPeripheralDelegate {
         case TelemetryGATT.wifiIP:           settings.wifiIP = str
         default: break
         }
+    }
+
+    /// If `uuid`'s value arrived as the read-back of a pending write, confirm it
+    /// matches what we sent. `applyConfig` has already updated `settings` to the
+    /// device's reported value, so a mismatch means the device didn't take the write.
+    private func confirmReadBack(uuid: CBUUID, data: Data?) {
+        guard let expected = pendingVerify[uuid] else { return }
+        pendingVerify.removeValue(forKey: uuid)
+        verifiesInFlight = max(0, verifiesInFlight - 1)
+        if (data?.first ?? 0) != expected { verifyFailed = true }
+        settleSyncIfDone()
     }
 }
