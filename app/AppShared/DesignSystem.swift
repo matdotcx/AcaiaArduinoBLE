@@ -111,11 +111,26 @@ private enum Archivo {
         return 500
     }
 
+    /// Cache key for a resolved font instance: the axis values + size fully
+    /// determine the `Font`, so identical requests can share one.
+    private struct Key: Hashable { let size: CGFloat; let weight: CGFloat; let width: CGFloat }
+    private static let cacheLock = NSLock()
+    private static var cache: [Key: Font] = [:]
+
     static func font(_ size: CGFloat, weight: CGFloat, width: CGFloat) -> Font {
         guard let base else {
             // Font missing from the bundle — keep the original SF substitution.
             return .system(size: size, weight: .regular).width(.expanded)
         }
+        // Instancing a variable font (descriptor copy + CTFont creation on the
+        // wght/wdth axes) is expensive enough to stall the main thread when SwiftUI
+        // re-evaluates a body full of `DS.title`/`numeral` calls. The result is a
+        // pure function of (size, weight, width), so build each once and reuse it.
+        let key = Key(size: size, weight: weight, width: width)
+        cacheLock.lock()
+        defer { cacheLock.unlock() }
+        if let cached = cache[key] { return cached }
+
         let variations: [NSNumber: NSNumber] = [
             NSNumber(value: wghtAxis): NSNumber(value: Double(weight)),
             NSNumber(value: wdthAxis): NSNumber(value: Double(width)),
@@ -130,7 +145,9 @@ private enum Archivo {
             kCTFontFeatureSettingsAttribute: [tnum],
         ]
         let desc = CTFontDescriptorCreateCopyWithAttributes(base, attrs as CFDictionary)
-        return Font(CTFontCreateWithFontDescriptor(desc, size, nil))
+        let font = Font(CTFontCreateWithFontDescriptor(desc, size, nil))
+        cache[key] = font
+        return font
     }
 }
 
