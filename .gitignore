@@ -3,3 +3,11 @@
 
 # Local Arduino compile output (release binaries under build/ are tracked deliberately)
 examples/shotStopper/build/esp32.esp32.esp32c3/
+
+# Local-only working artifacts (Claude config, audit output, design handoff, scratch docs)
+.claude/
+.audit/
+design_handoff_shotstopper/
+ShotStopper.zip
+shotstopper-claude-code-setup.md
+verify.md
