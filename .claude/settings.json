@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(swift build*)",
+      "Bash(swift test*)",
+      "Bash(xcodebuild*)",
+      "Bash(swiftlint*)",
+      "Bash(swift-format*)",
+      "Bash(xcrun simctl*)",
+      "Bash(git checkout*)",
+      "Bash(git branch*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git push*)",
+      "Bash(git diff*)",
+      "Bash(git status*)"
+    ],
+    "deny": [
+      "Bash(rm -rf*)",
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.swift) command -v swiftlint >/dev/null 2>&1 && swiftlint --strict --quiet \"$f\"; command -v swift-format >/dev/null 2>&1 && swift-format --in-place \"$f\";; esac"
+          }
+        ]
+      }
+    ]
+  }
+}

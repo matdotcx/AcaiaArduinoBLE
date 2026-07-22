@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #D8D8DC; font-family: Archivo, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  @keyframes recpulse { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; background: #D8D8DC; padding: 56px 56px 96px; color: #111110;">
+
+  <!-- ============== HEADER ============== -->
+  <div style="max-width: 1000px; margin: 0 auto 64px;">
+    <div style="font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; color: #E84B29; margin-bottom: 14px;">ShotStopper · Visual System v1</div>
+    <div style="font-family: Archivo,system-ui,sans-serif; font-weight: 560; font-stretch: 118%; font-size: 56px; line-height: 1.05; letter-spacing: -1.2px; max-width: 18ch;">A calm instrument for brew&#8209;by&#8209;weight espresso.</div>
+    <div style="margin-top: 22px; font-size: 17px; line-height: 1.55; color: #4A463F; max-width: 64ch;">One cohesive system applied across the phone and the watch kiosk. Glanceable, wet&#8209;handed, read from across the counter. The bones are untouched — Live / History / Settings stay where they are. This pass elevates the visual layer: a numeric hierarchy with live weight as the hero, a parseable extraction curve, intentional light &amp; dark, and a state language of <b>grey idle → orange brewing → green done</b>.</div>
+  </div>
+
+  <!-- ============== SECTION: FOUNDATIONS ============== -->
+  <div style="max-width: 1000px; margin: 0 auto 30px; border-top: 1.5px solid rgba(17,17,16,0.18); padding-top: 14px; display: flex; align-items: baseline; justify-content: space-between;">
+    <div style="font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 3px; text-transform: uppercase;">01 — Foundations</div>
+    <div style="font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 1px; color: #6E6A62;">color · type · state · chart anatomy</div>
+  </div>
+
+  <div style="max-width: 1000px; margin: 0 auto 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+
+    <!-- Color: light -->
+    <div style="background: #FBFAF4; border: 1px solid rgba(17,17,16,0.10); border-radius: 18px; padding: 26px;">
+      <div style="font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #6E6A62; margin-bottom: 16px;">Palette · Light</div>
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">
+        <div><div style="height: 56px; border-radius: 10px; background: #E9E7E0; border: 1px solid rgba(17,17,16,0.10);"></div><div style="margin-top:7px; font-size: 11px; font-weight:700;">Cream</div><div style="font-family:'Space Mono',monospace; font-size:10px; color:#6E6A62;">E9E7E0</div></div>
+        <div><div style="height: 56px; border-radius: 10px; background: #FBFAF4; border: 1px solid rgba(17,17,16,0.10);"></div><div style="margin-top:7px; font-size: 11px; font-weight:700;">Surface</div><div style="font-family:'Space Mono',monospace; font-size:10px; color:#6E6A62;">FBFAF4</div></div>
+        <div><div style="height: 56px; border-radius: 10px; background: #111110;"></div><div style="margin-top:7px; font-size: 11px; font-weight:700;">Ink</div><div style="font-family:'Space Mono',monospace; font-size:10px; color:#6E6A62;">111110</div></div>
+        <div><div style="height: 56px; border-radius: 10px; background: #E84B29;"></div><div style="margin-top:7px; font-size: 11px; font-weight:700;">Orange</div><div style="font-family:'Space Mono',monospace; font-size:10px; color:#6E6A62;">E84B29</div></div>
+        <div><div style="height: 56px; border-radius: 10px; background: #1F6B4A;"></div><div style="margin-top:7px; font-size: 11px; font-weight:700;">Green</div><div style="font-family:'Space Mono',monospace; font-size:10px; color:#6E6A62;">1F6B4A</div></div>
+      </div>
+    </div>
+
+    <!-- Color: dark -->
+    <div style="background: #1E1C18; border: 1px solid rgba(241,239,232,0.12); border-radius: 18px; padding: 26px;">
+      <div style="font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #918C82; margin-bottom: 16px;">Palette · Dark</div>
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">
+        <div><div style="height: 56px; border-radius: 10px; background: #121110; border: 1px solid rgba(241,239,232,0.14);"></div><div style="margin-top:7px; font-size: 11px; font-weight:700; color:#F1EFE8;">Base</div><div style="font-family:'Space Mono',monospace; font-size:10px; color:#918C82;">121110</div></div>
+        <div><div style="height: 56px; border-radius: 10px; background: #26231E; border: 1px solid rgba(241,239,232,0.10);"></div><div style="margin-top:7px; font-size: 11px; font-weight:700; color:#F1EFE8;">Surface</div><div style="font-family:'Space Mono',monospace; font-size:10px; color:#918C82;">26231E</div></div>
+        <div><div style="height: 56px; border-radius: 10px; background: #F1EFE8;"></div><div style="margin-top:7px; font-size: 11px; font-weight:700; color:#F1EFE8;">Ink</div><div style="font-family:'Space Mono',monospace; font-size:10px; color:#918C82;">F1EFE8</div></div>
+        <div><div style="height: 56px; border-radius: 10px; background: #FB5A35;"></div><div style="margin-top:7px; font-size: 11px; font-weight:700; color:#F1EFE8;">Orange</div><div style="font-family:'Space Mono',monospace; font-size:10px; color:#918C82;">FB5A35</div></div>
+        <div><div style="height: 56px; border-radius: 10px; background: #43B585;"></div><div style="margin-top:7px; font-size: 11px; font-weight:700; color:#F1EFE8;">Green</div><div style="font-family:'Space Mono',monospace; font-size:10px; color:#918C82;">43B585</div></div>
+      </div>
+    </div>
+
+    <!-- Type -->
+    <div style="background: #FBFAF4; border: 1px solid rgba(17,17,16,0.10); border-radius: 18px; padding: 26px;">
+      <div style="font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #6E6A62; margin-bottom: 18px;">Type · Archivo + Space Mono</div>
+      <div style="display:flex; align-items:baseline; gap:8px; border-bottom: 1px solid rgba(17,17,16,0.08); padding-bottom: 14px;">
+        <span style="font-family: Archivo,system-ui,sans-serif; font-weight: 480; font-stretch: 120%; font-size: 64px; line-height: 0.9; letter-spacing: -1px; font-feature-settings: 'tnum';">36.0</span>
+        <span style="font-family: Archivo,system-ui,sans-serif; font-weight: 600; font-size: 22px; color: #6E6A62;">g</span>
+        <span style="margin-left:auto; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1px; color:#6E6A62; text-align:right;">READOUT<br>Archivo Book · wdth 118 · tnum</span>
+      </div>
+      <div style="padding: 14px 0 12px; border-bottom: 1px solid rgba(17,17,16,0.08);">
+        <div style="font-family: Archivo,system-ui,sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.3px;">Live weight vs time</div>
+        <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1px; color:#6E6A62; margin-top:4px;">TITLE · Archivo 700 · 22px</div>
+      </div>
+      <div style="padding-top: 12px;">
+        <div style="font-family:'Space Mono',monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color:#6E6A62;">Weight · g/s · target</div>
+        <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1px; color:#A6A299; margin-top:6px;">LABEL · Space Mono · tracked caps</div>
+      </div>
+    </div>
+
+    <!-- State language -->
+    <div style="background: #FBFAF4; border: 1px solid rgba(17,17,16,0.10); border-radius: 18px; padding: 26px;">
+      <div style="font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #6E6A62; margin-bottom: 18px;">State language</div>
+      <div style="display:flex; flex-direction: column; gap: 14px;">
+        <div style="display:flex; align-items:center; gap: 14px;">
+          <span style="width: 14px; height: 14px; border-radius: 50%; background: #A6A299; flex-shrink:0;"></span>
+          <span style="font-weight: 700; font-size: 16px; width: 78px;">Idle</span>
+          <span style="font-size: 13px; color: #6E6A62;">Muted grey. Disconnected, waiting, dimmed.</span>
+        </div>
+        <div style="display:flex; align-items:center; gap: 14px;">
+          <span style="width: 14px; height: 14px; border-radius: 50%; background: #E84B29; flex-shrink:0;"></span>
+          <span style="font-weight: 700; font-size: 16px; width: 78px;">Brewing</span>
+          <span style="font-size: 13px; color: #6E6A62;">Espresso orange. Recording, pouring, primary actions.</span>
+        </div>
+        <div style="display:flex; align-items:center; gap: 14px;">
+          <span style="width: 14px; height: 14px; border-radius: 50%; background: #1F6B4A; flex-shrink:0;"></span>
+          <span style="font-weight: 700; font-size: 16px; width: 78px;">Done</span>
+          <span style="font-size: 13px; color: #6E6A62;">Deep espresso green. On target, shot complete.</span>
+        </div>
+        <div style="margin-top: 6px; padding-top: 14px; border-top: 1px solid rgba(17,17,16,0.08); font-size: 12.5px; color: #6E6A62; line-height:1.5;">Orange never doubles as the target line — the dashed <b>target</b> stays neutral ink so the two readings never compete.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============== SECTION: APP ICON ============== -->
+  <div style="max-width: 1000px; margin: 0 auto 30px; border-top: 1.5px solid rgba(17,17,16,0.18); padding-top: 14px; display: flex; align-items: baseline; justify-content: space-between;">
+    <div style="font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 3px; text-transform: uppercase;">02 — App icon</div>
+    <div style="font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 1px; color: #6E6A62;">three directions · replacing the placeholder</div>
+  </div>
+
+  <div style="max-width: 1000px; margin: 0 auto 80px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+
+    <!-- Icon A: extraction curve -->
+    <div style="display:flex; flex-direction: column; align-items:center; gap: 16px;">
+      <div style="width: 160px; height: 160px; border-radius: 38px; background: #E9E7E0; box-shadow: 0 12px 30px rgba(17,17,16,0.18), inset 0 0 0 1px rgba(17,17,16,0.06); overflow:hidden; position:relative;">
+        <svg viewBox="0 0 160 160" width="160" height="160">
+          <line x1="22" y1="50" x2="138" y2="50" stroke="#111110" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round" opacity="0.5"/>
+          <path d="M22 132 C 46 130, 60 124, 76 96 C 92 66, 104 56, 138 52" fill="none" stroke="#E84B29" stroke-width="9" stroke-linecap="round"/>
+          <circle cx="138" cy="52" r="8" fill="#E84B29"/>
+        </svg>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-weight: 700; font-size: 15px;">A · Extraction curve</div>
+        <div style="font-size: 12.5px; color: #6E6A62; margin-top: 3px; max-width: 24ch;">The product, literally: a pour climbing to the dashed target.</div>
+      </div>
+    </div>
+
+    <!-- Icon B: stop / droplet meeting line -->
+    <div style="display:flex; flex-direction: column; align-items:center; gap: 16px;">
+      <div style="width: 160px; height: 160px; border-radius: 38px; background: #121110; box-shadow: 0 12px 30px rgba(17,17,16,0.28), inset 0 0 0 1px rgba(255,255,255,0.05); overflow:hidden; position:relative;">
+        <svg viewBox="0 0 160 160" width="160" height="160">
+          <line x1="30" y1="104" x2="130" y2="104" stroke="#E84B29" stroke-width="8" stroke-linecap="round"/>
+          <path d="M80 36 C 80 36, 104 74, 104 90 a 24 24 0 1 1 -48 0 C 56 74, 80 36, 80 36 Z" fill="#FBFAF4"/>
+        </svg>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-weight: 700; font-size: 15px;">B · The stop</div>
+        <div style="font-size: 12.5px; color: #6E6A62; margin-top: 3px; max-width: 24ch;">A drop meeting the cutoff line — the moment the brew stops.</div>
+      </div>
+    </div>
+
+    <!-- Icon C: S monogram from curve -->
+    <div style="display:flex; flex-direction: column; align-items:center; gap: 16px;">
+      <div style="width: 160px; height: 160px; border-radius: 38px; background: #E84B29; box-shadow: 0 12px 30px rgba(232,75,41,0.34), inset 0 0 0 1px rgba(0,0,0,0.06); overflow:hidden; position:relative;">
+        <svg viewBox="0 0 160 160" width="160" height="160">
+          <path d="M112 52 C 104 40, 60 36, 56 60 C 52 84, 108 76, 104 100 C 100 124, 56 120, 48 108" fill="none" stroke="#FBFAF4" stroke-width="13" stroke-linecap="round"/>
+          <line x1="44" y1="128" x2="116" y2="128" stroke="#FBFAF4" stroke-width="6" stroke-dasharray="1.5 11" stroke-linecap="round" opacity="0.85"/>
+        </svg>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-weight: 700; font-size: 15px;">C · Monogram</div>
+        <div style="font-size: 12.5px; color: #6E6A62; margin-top: 3px; max-width: 24ch;">An “S” drawn as the extraction curve, on full brand orange.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============== SECTION: LIVE HERO ============== -->
+  <div style="max-width: 1240px; margin: 0 auto 30px; border-top: 1.5px solid rgba(17,17,16,0.18); padding-top: 14px; display: flex; align-items: baseline; justify-content: space-between;">
+    <div style="font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 3px; text-transform: uppercase;">03 — Live · the hero</div>
+    <div style="font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 1px; color: #6E6A62;">live weight is the biggest thing on screen</div>
+  </div>
+
+  <div style="max-width: 1240px; margin: 0 auto 56px; display: flex; gap: 44px; flex-wrap: wrap; justify-content: center; align-items: flex-start;">
+
+    <!-- ===== PHONE: LIVE BREWING (light) ===== -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62;">Live · Brewing · Light</div>
+      <div style="width:340px; height:716px; border-radius:46px; background:#E9E7E0; box-shadow:0 30px 60px rgba(17,17,16,0.18), 0 0 0 1px rgba(17,17,16,0.10); position:relative; overflow:hidden; display:flex; flex-direction:column;">
+        <div style="position:absolute; top:11px; left:50%; transform:translateX(-50%); width:118px; height:34px; border-radius:20px; background:#111110; z-index:20;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:15px 28px 4px; flex-shrink:0;">
+          <span style="font-weight:700; font-size:15px; font-feature-settings:'tnum';">16:27</span>
+          <div style="display:flex; align-items:center; gap:7px;">
+            <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill="#111110"/><path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill="#111110"/><circle cx="8.5" cy="10.5" r="1.5" fill="#111110"/></svg>
+            <svg width="25" height="12" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke="#111110" stroke-opacity="0.35" fill="none"/><rect x="2" y="2" width="20" height="9" rx="2" fill="#111110"/><path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill="#111110" fill-opacity="0.4"/></svg>
+          </div>
+        </div>
+
+        <!-- status row -->
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 0;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="width:9px; height:9px; border-radius:50%; background:#E84B29;"></span>
+            <span style="font-weight:600; font-size:14px; color:#4A463F;">ShotStopper</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:7px; background:rgba(232,75,41,0.12); padding:5px 11px; border-radius:999px;">
+            <span style="width:8px; height:8px; border-radius:50%; background:#E84B29; animation:recpulse 1.4s ease-in-out infinite;"></span>
+            <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; letter-spacing:1.5px; color:#E84B29;">REC</span>
+          </div>
+        </div>
+
+        <!-- HERO weight -->
+        <div style="padding:8px 24px 0;">
+          <div style="display:flex; align-items:baseline; gap:6px;">
+            <span style="font-family:Archivo,system-ui,sans-serif; font-weight:480; font-stretch:118%; font-size:104px; line-height:0.86; letter-spacing:-2.5px; color:#111110; font-feature-settings:'tnum';">16.4</span>
+            <span style="font-family:Archivo,system-ui,sans-serif; font-weight:600; font-size:30px; color:#6E6A62;">g</span>
+          </div>
+          <!-- progress to target -->
+          <div style="margin-top:12px; height:8px; border-radius:999px; background:rgba(17,17,16,0.08); overflow:hidden;">
+            <div style="width:46%; height:100%; border-radius:999px; background:#E84B29;"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-top:7px; font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:#A6A299;">
+            <span>Weight</span><span>46% · target 36 g</span>
+          </div>
+        </div>
+
+        <!-- secondary stats -->
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; margin:18px 24px 0; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:16px; overflow:hidden;">
+          <div style="padding:13px 14px; text-align:center;">
+            <div style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-size:22px; font-feature-settings:'tnum';">12.6<span style="font-size:13px; color:#6E6A62; font-weight:600;">s</span></div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:#A6A299; margin-top:3px;">Time</div>
+          </div>
+          <div style="padding:13px 14px; text-align:center; border-left:1px solid rgba(17,17,16,0.08); border-right:1px solid rgba(17,17,16,0.08);">
+            <div style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-size:22px; font-feature-settings:'tnum';">1.8<span style="font-size:13px; color:#6E6A62; font-weight:600;"> g/s</span></div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:#A6A299; margin-top:3px;">Flow</div>
+          </div>
+          <div style="padding:13px 14px; text-align:center;">
+            <div style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-size:22px; font-feature-settings:'tnum';">36<span style="font-size:13px; color:#6E6A62; font-weight:600;">g</span></div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:#A6A299; margin-top:3px;">Target</div>
+          </div>
+        </div>
+
+        <!-- chart -->
+        <div style="flex:1; margin:16px 18px 0; position:relative;">
+          <svg viewBox="0 0 300 220" width="100%" height="100%" preserveAspectRatio="none" style="overflow:visible;">
+            <defs>
+              <linearGradient id="fillBrew" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#E84B29" stop-opacity="0.20"/>
+                <stop offset="100%" stop-color="#E84B29" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <line x1="8" y1="149" x2="292" y2="149" stroke="#111110" stroke-opacity="0.07" stroke-width="1"/>
+            <line x1="8" y1="102" x2="292" y2="102" stroke="#111110" stroke-opacity="0.07" stroke-width="1"/>
+            <line x1="8" y1="55" x2="292" y2="55" stroke="#111110" stroke-opacity="0.07" stroke-width="1"/>
+            <line x1="8" y1="196" x2="292" y2="196" stroke="#111110" stroke-opacity="0.14" stroke-width="1.2"/>
+            <line x1="8" y1="27" x2="292" y2="27" stroke="#111110" stroke-opacity="0.42" stroke-width="1.6" stroke-dasharray="2 7" stroke-linecap="round"/>
+            <path d="M8 196 C 36 192, 60 187, 92 175 C 120 165, 138 150, 158 132 L 158 196 Z" fill="url(#fillBrew)"/>
+            <path d="M8 196 C 36 192, 60 187, 92 175 C 120 165, 138 150, 158 132" fill="none" stroke="#E84B29" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="158" cy="132" r="5.5" fill="#E84B29" stroke="#E9E7E0" stroke-width="2.5"/>
+          </svg>
+          <div style="position:absolute; top:14px; left:0; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1px; color:#6E6A62; background:#E9E7E0; padding:0 4px;">target 36 g</div>
+          <div style="position:absolute; right:-2px; top:8px; font-family:'Space Mono',monospace; font-size:10px; color:#A6A299;">g</div>
+        </div>
+
+        <!-- tab bar -->
+        <div style="padding:10px 0 22px; display:flex; justify-content:center;">
+          <div style="display:flex; gap:6px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:999px; padding:6px; box-shadow:0 6px 18px rgba(17,17,16,0.10);">
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 18px; border-radius:999px; background:#E84B29;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 3 5-8 4 5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span style="font-size:13px; font-weight:700; color:#fff;">Live</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#6E6A62" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#6E6A62" stroke-width="2" stroke-linecap="round"/></svg>
+              <span style="font-size:13px; font-weight:600; color:#6E6A62;">History</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#6E6A62" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="#6E6A62" stroke-width="2" stroke-linecap="round"/></svg>
+              <span style="font-size:13px; font-weight:600; color:#6E6A62;">Settings</span>
+            </div>
+          </div>
+        </div>
+        <div style="position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:128px; height:5px; border-radius:100px; background:rgba(17,17,16,0.25);"></div>
+      </div>
+    </div>
+
+    <!-- ===== PHONE: LIVE IDLE (light) ===== -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62;">Live · Idle · Light</div>
+      <div style="width:340px; height:716px; border-radius:46px; background:#E9E7E0; box-shadow:0 30px 60px rgba(17,17,16,0.18), 0 0 0 1px rgba(17,17,16,0.10); position:relative; overflow:hidden; display:flex; flex-direction:column;">
+        <div style="position:absolute; top:11px; left:50%; transform:translateX(-50%); width:118px; height:34px; border-radius:20px; background:#111110; z-index:20;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:15px 28px 4px; flex-shrink:0;">
+          <span style="font-weight:700; font-size:15px; font-feature-settings:'tnum';">16:23</span>
+          <div style="display:flex; align-items:center; gap:7px;">
+            <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill="#111110"/><path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill="#111110"/><circle cx="8.5" cy="10.5" r="1.5" fill="#111110"/></svg>
+            <svg width="25" height="12" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke="#111110" stroke-opacity="0.35" fill="none"/><rect x="2" y="2" width="20" height="9" rx="2" fill="#111110"/><path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill="#111110" fill-opacity="0.4"/></svg>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 0;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="width:9px; height:9px; border-radius:50%; background:#A6A299;"></span>
+            <span style="font-weight:600; font-size:14px; color:#6E6A62;">Not connected</span>
+          </div>
+        </div>
+
+        <div style="padding:8px 24px 0;">
+          <div style="display:flex; align-items:baseline; gap:6px;">
+            <span style="font-family:Archivo,system-ui,sans-serif; font-weight:480; font-stretch:118%; font-size:104px; line-height:0.86; letter-spacing:-2.5px; color:#C9C5BC; font-feature-settings:'tnum';">0.0</span>
+            <span style="font-family:Archivo,system-ui,sans-serif; font-weight:600; font-size:30px; color:#C9C5BC;">g</span>
+          </div>
+          <div style="margin-top:12px; height:8px; border-radius:999px; background:rgba(17,17,16,0.06);"></div>
+          <div style="display:flex; justify-content:space-between; margin-top:7px; font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:#A6A299;">
+            <span>Weight</span><span>target 36 g</span>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; margin:18px 24px 0; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:16px; overflow:hidden;">
+          <div style="padding:13px 14px; text-align:center;">
+            <div style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-size:22px; color:#C9C5BC;">—</div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:#A6A299; margin-top:3px;">Time</div>
+          </div>
+          <div style="padding:13px 14px; text-align:center; border-left:1px solid rgba(17,17,16,0.08); border-right:1px solid rgba(17,17,16,0.08);">
+            <div style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-size:22px; color:#C9C5BC;">—</div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:#A6A299; margin-top:3px;">Flow</div>
+          </div>
+          <div style="padding:13px 14px; text-align:center;">
+            <div style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-size:22px; font-feature-settings:'tnum';">36<span style="font-size:13px; color:#6E6A62; font-weight:600;">g</span></div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:#A6A299; margin-top:3px;">Target</div>
+          </div>
+        </div>
+
+        <!-- empty state -->
+        <div style="flex:1; margin:16px 24px 0; border:1.5px dashed rgba(17,17,16,0.16); border-radius:18px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 26px;">
+          <svg width="40" height="40" viewBox="0 0 48 48" fill="none" style="margin-bottom:14px;"><path d="M6 38 C 14 36, 19 33, 24 24 C 29 15, 34 12, 42 11" stroke="#C9C5BC" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><line x1="6" y1="13" x2="42" y2="13" stroke="#C9C5BC" stroke-width="2.4" stroke-dasharray="1.5 7" stroke-linecap="round"/></svg>
+          <div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:17px; color:#4A463F;">Place a cup to begin</div>
+          <div style="font-size:13px; color:#A6A299; margin-top:6px; line-height:1.5;">Connect to the machine and start a shot. The curve draws here in real time.</div>
+          <div style="margin-top:18px; display:flex; align-items:center; gap:8px; background:#E84B29; padding:11px 20px; border-radius:999px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+            <span style="font-size:14px; font-weight:700; color:#fff;">Simulate shot</span>
+          </div>
+        </div>
+
+        <div style="padding:10px 0 22px; display:flex; justify-content:center;">
+          <div style="display:flex; gap:6px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:999px; padding:6px; box-shadow:0 6px 18px rgba(17,17,16,0.10);">
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 18px; border-radius:999px; background:#E84B29;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 3 5-8 4 5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span style="font-size:13px; font-weight:700; color:#fff;">Live</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#6E6A62" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#6E6A62" stroke-width="2" stroke-linecap="round"/></svg>
+              <span style="font-size:13px; font-weight:600; color:#6E6A62;">History</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#6E6A62" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="#6E6A62" stroke-width="2" stroke-linecap="round"/></svg>
+              <span style="font-size:13px; font-weight:600; color:#6E6A62;">Settings</span>
+            </div>
+          </div>
+        </div>
+        <div style="position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:128px; height:5px; border-radius:100px; background:rgba(17,17,16,0.25);"></div>
+      </div>
+    </div>
+
+    <!-- ===== PHONE: LIVE DONE (light) ===== -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62;">Live · Done · Light</div>
+      <div style="width:340px; height:716px; border-radius:46px; background:#E9E7E0; box-shadow:0 30px 60px rgba(17,17,16,0.18), 0 0 0 1px rgba(17,17,16,0.10); position:relative; overflow:hidden; display:flex; flex-direction:column;">
+        <div style="position:absolute; top:11px; left:50%; transform:translateX(-50%); width:118px; height:34px; border-radius:20px; background:#111110; z-index:20;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:15px 28px 4px; flex-shrink:0;">
+          <span style="font-weight:700; font-size:15px; font-feature-settings:'tnum';">16:30</span>
+          <div style="display:flex; align-items:center; gap:7px;">
+            <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill="#111110"/><path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill="#111110"/><circle cx="8.5" cy="10.5" r="1.5" fill="#111110"/></svg>
+            <svg width="25" height="12" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke="#111110" stroke-opacity="0.35" fill="none"/><rect x="2" y="2" width="20" height="9" rx="2" fill="#111110"/><path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill="#111110" fill-opacity="0.4"/></svg>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 0;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="width:9px; height:9px; border-radius:50%; background:#1F6B4A;"></span>
+            <span style="font-weight:600; font-size:14px; color:#4A463F;">ShotStopper</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:7px; background:rgba(31,107,74,0.12); padding:5px 11px; border-radius:999px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#1F6B4A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; letter-spacing:1.5px; color:#1F6B4A;">DONE</span>
+          </div>
+        </div>
+
+        <div style="padding:8px 24px 0;">
+          <div style="display:flex; align-items:baseline; gap:6px;">
+            <span style="font-family:Archivo,system-ui,sans-serif; font-weight:480; font-stretch:118%; font-size:104px; line-height:0.86; letter-spacing:-2.5px; color:#1F6B4A; font-feature-settings:'tnum';">36.0</span>
+            <span style="font-family:Archivo,system-ui,sans-serif; font-weight:600; font-size:30px; color:#6E6A62;">g</span>
+          </div>
+          <div style="margin-top:12px; height:8px; border-radius:999px; background:rgba(31,107,74,0.15); overflow:hidden;">
+            <div style="width:100%; height:100%; border-radius:999px; background:#1F6B4A;"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-top:7px; font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:#A6A299;">
+            <span>On target</span><span>+0.0 g · 24.0 s</span>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; margin:18px 24px 0; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:16px; overflow:hidden;">
+          <div style="padding:13px 14px; text-align:center;">
+            <div style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-size:22px; font-feature-settings:'tnum';">24.0<span style="font-size:13px; color:#6E6A62; font-weight:600;">s</span></div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:#A6A299; margin-top:3px;">Time</div>
+          </div>
+          <div style="padding:13px 14px; text-align:center; border-left:1px solid rgba(17,17,16,0.08); border-right:1px solid rgba(17,17,16,0.08);">
+            <div style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-size:22px; font-feature-settings:'tnum';">1.5<span style="font-size:13px; color:#6E6A62; font-weight:600;"> g/s</span></div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:#A6A299; margin-top:3px;">Avg flow</div>
+          </div>
+          <div style="padding:13px 14px; text-align:center;">
+            <div style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-size:22px; font-feature-settings:'tnum';">36<span style="font-size:13px; color:#6E6A62; font-weight:600;">g</span></div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:#A6A299; margin-top:3px;">Target</div>
+          </div>
+        </div>
+
+        <div style="flex:1; margin:16px 18px 0; position:relative;">
+          <svg viewBox="0 0 300 220" width="100%" height="100%" preserveAspectRatio="none" style="overflow:visible;">
+            <defs>
+              <linearGradient id="fillDone" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1F6B4A" stop-opacity="0.18"/>
+                <stop offset="100%" stop-color="#1F6B4A" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <line x1="8" y1="149" x2="292" y2="149" stroke="#111110" stroke-opacity="0.07" stroke-width="1"/>
+            <line x1="8" y1="102" x2="292" y2="102" stroke="#111110" stroke-opacity="0.07" stroke-width="1"/>
+            <line x1="8" y1="55" x2="292" y2="55" stroke="#111110" stroke-opacity="0.07" stroke-width="1"/>
+            <line x1="8" y1="196" x2="292" y2="196" stroke="#111110" stroke-opacity="0.14" stroke-width="1.2"/>
+            <line x1="8" y1="27" x2="292" y2="27" stroke="#111110" stroke-opacity="0.42" stroke-width="1.6" stroke-dasharray="2 7" stroke-linecap="round"/>
+            <path d="M8 194 C 50 192, 80 188, 110 150 C 140 110, 160 50, 200 33 C 240 24, 280 27, 292 27 L 292 196 L 8 196 Z" fill="url(#fillDone)"/>
+            <path d="M8 194 C 50 192, 80 188, 110 150 C 140 110, 160 50, 200 33 C 240 24, 280 27, 292 27" fill="none" stroke="#1F6B4A" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="292" cy="27" r="5.5" fill="#1F6B4A" stroke="#E9E7E0" stroke-width="2.5"/>
+          </svg>
+          <div style="position:absolute; top:14px; left:0; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1px; color:#6E6A62; background:#E9E7E0; padding:0 4px;">target 36 g</div>
+        </div>
+
+        <div style="padding:8px 24px 0; display:flex; gap:10px;">
+          <div style="flex:1; text-align:center; padding:13px; border-radius:999px; background:#111110; color:#FBFAF4; font-weight:700; font-size:15px;">Save shot</div>
+          <div style="flex:1; text-align:center; padding:13px; border-radius:999px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.12); color:#4A463F; font-weight:600; font-size:15px;">Discard</div>
+        </div>
+
+        <div style="padding:10px 0 22px; display:flex; justify-content:center;">
+          <div style="display:flex; gap:6px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:999px; padding:6px; box-shadow:0 6px 18px rgba(17,17,16,0.10);">
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 18px; border-radius:999px; background:#E84B29;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 3 5-8 4 5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span style="font-size:13px; font-weight:700; color:#fff;">Live</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#6E6A62" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#6E6A62" stroke-width="2" stroke-linecap="round"/></svg>
+              <span style="font-size:13px; font-weight:600; color:#6E6A62;">History</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#6E6A62" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="#6E6A62" stroke-width="2" stroke-linecap="round"/></svg>
+              <span style="font-size:13px; font-weight:600; color:#6E6A62;">Settings</span>
+            </div>
+          </div>
+        </div>
+        <div style="position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:128px; height:5px; border-radius:100px; background:rgba(17,17,16,0.25);"></div>
+      </div>
+    </div>
+
+    <!-- ===== PHONE: LIVE BREWING (dark) ===== -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62;">Live · Brewing · Dark</div>
+      <div style="width:340px; height:716px; border-radius:46px; background:#121110; box-shadow:0 30px 60px rgba(17,17,16,0.30), 0 0 0 1px rgba(17,17,16,0.5); position:relative; overflow:hidden; display:flex; flex-direction:column;">
+        <div style="position:absolute; top:11px; left:50%; transform:translateX(-50%); width:118px; height:34px; border-radius:20px; background:#000; z-index:20;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:15px 28px 4px; flex-shrink:0;">
+          <span style="font-weight:700; font-size:15px; color:#F1EFE8; font-feature-settings:'tnum';">16:27</span>
+          <div style="display:flex; align-items:center; gap:7px;">
+            <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill="#F1EFE8"/><path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill="#F1EFE8"/><circle cx="8.5" cy="10.5" r="1.5" fill="#F1EFE8"/></svg>
+            <svg width="25" height="12" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke="#F1EFE8" stroke-opacity="0.35" fill="none"/><rect x="2" y="2" width="20" height="9" rx="2" fill="#F1EFE8"/><path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill="#F1EFE8" fill-opacity="0.4"/></svg>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 0;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="width:9px; height:9px; border-radius:50%; background:#FB5A35;"></span>
+            <span style="font-weight:600; font-size:14px; color:#918C82;">ShotStopper</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:7px; background:rgba(251,90,53,0.16); padding:5px 11px; border-radius:999px;">
+            <span style="width:8px; height:8px; border-radius:50%; background:#FB5A35; animation:recpulse 1.4s ease-in-out infinite;"></span>
+            <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; letter-spacing:1.5px; color:#FB5A35;">REC</span>
+          </div>
+        </div>
+
+        <div style="padding:8px 24px 0;">
+          <div style="display:flex; align-items:baseline; gap:6px;">
+            <span style="font-family:Archivo,system-ui,sans-serif; font-weight:480; font-stretch:118%; font-size:104px; line-height:0.86; letter-spacing:-2.5px; color:#F1EFE8; font-feature-settings:'tnum';">16.4</span>
+            <span style="font-family:Archivo,system-ui,sans-serif; font-weight:600; font-size:30px; color:#918C82;">g</span>
+          </div>
+          <div style="margin-top:12px; height:8px; border-radius:999px; background:rgba(241,239,232,0.10); overflow:hidden;">
+            <div style="width:46%; height:100%; border-radius:999px; background:#FB5A35;"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-top:7px; font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:#6E6A62;">
+            <span>Weight</span><span>46% · target 36 g</span>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; margin:18px 24px 0; background:#1E1C18; border:1px solid rgba(241,239,232,0.08); border-radius:16px; overflow:hidden;">
+          <div style="padding:13px 14px; text-align:center;">
+            <div style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-size:22px; color:#F1EFE8; font-feature-settings:'tnum';">12.6<span style="font-size:13px; color:#918C82; font-weight:600;">s</span></div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:#6E6A62; margin-top:3px;">Time</div>
+          </div>
+          <div style="padding:13px 14px; text-align:center; border-left:1px solid rgba(241,239,232,0.08); border-right:1px solid rgba(241,239,232,0.08);">
+            <div style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-size:22px; color:#F1EFE8; font-feature-settings:'tnum';">1.8<span style="font-size:13px; color:#918C82; font-weight:600;"> g/s</span></div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:#6E6A62; margin-top:3px;">Flow</div>
+          </div>
+          <div style="padding:13px 14px; text-align:center;">
+            <div style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-size:22px; color:#F1EFE8; font-feature-settings:'tnum';">36<span style="font-size:13px; color:#918C82; font-weight:600;">g</span></div>
+            <div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:#6E6A62; margin-top:3px;">Target</div>
+          </div>
+        </div>
+
+        <div style="flex:1; margin:16px 18px 0; position:relative;">
+          <svg viewBox="0 0 300 220" width="100%" height="100%" preserveAspectRatio="none" style="overflow:visible;">
+            <defs>
+              <linearGradient id="fillBrewD" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#FB5A35" stop-opacity="0.26"/>
+                <stop offset="100%" stop-color="#FB5A35" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <line x1="8" y1="149" x2="292" y2="149" stroke="#F1EFE8" stroke-opacity="0.07" stroke-width="1"/>
+            <line x1="8" y1="102" x2="292" y2="102" stroke="#F1EFE8" stroke-opacity="0.07" stroke-width="1"/>
+            <line x1="8" y1="55" x2="292" y2="55" stroke="#F1EFE8" stroke-opacity="0.07" stroke-width="1"/>
+            <line x1="8" y1="196" x2="292" y2="196" stroke="#F1EFE8" stroke-opacity="0.16" stroke-width="1.2"/>
+            <line x1="8" y1="27" x2="292" y2="27" stroke="#F1EFE8" stroke-opacity="0.40" stroke-width="1.6" stroke-dasharray="2 7" stroke-linecap="round"/>
+            <path d="M8 196 C 36 192, 60 187, 92 175 C 120 165, 138 150, 158 132 L 158 196 Z" fill="url(#fillBrewD)"/>
+            <path d="M8 196 C 36 192, 60 187, 92 175 C 120 165, 138 150, 158 132" fill="none" stroke="#FB5A35" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="158" cy="132" r="5.5" fill="#FB5A35" stroke="#121110" stroke-width="2.5"/>
+          </svg>
+          <div style="position:absolute; top:14px; left:0; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1px; color:#918C82; background:#121110; padding:0 4px;">target 36 g</div>
+        </div>
+
+        <div style="padding:10px 0 22px; display:flex; justify-content:center;">
+          <div style="display:flex; gap:6px; background:#1E1C18; border:1px solid rgba(241,239,232,0.10); border-radius:999px; padding:6px; box-shadow:0 6px 18px rgba(0,0,0,0.4);">
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 18px; border-radius:999px; background:#FB5A35;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 3 5-8 4 5" stroke="#121110" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span style="font-size:13px; font-weight:700; color:#121110;">Live</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#918C82" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#918C82" stroke-width="2" stroke-linecap="round"/></svg>
+              <span style="font-size:13px; font-weight:600; color:#918C82;">History</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#918C82" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="#918C82" stroke-width="2" stroke-linecap="round"/></svg>
+              <span style="font-size:13px; font-weight:600; color:#918C82;">Settings</span>
+            </div>
+          </div>
+        </div>
+        <div style="position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:128px; height:5px; border-radius:100px; background:rgba(241,239,232,0.6);"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============== SECTION: WATCH KIOSK ============== -->
+  <div style="max-width: 1240px; margin: 0 auto 30px; border-top: 1.5px solid rgba(17,17,16,0.18); padding-top: 14px; display: flex; align-items: baseline; justify-content: space-between;">
+    <div style="font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 3px; text-transform: uppercase;">04 — Watch kiosk</div>
+    <div style="font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 1px; color: #6E6A62;">strapless · read from across the counter · always-on</div>
+  </div>
+
+  <div style="max-width: 1240px; margin: 0 auto 40px; display: flex; gap: 48px; flex-wrap: wrap; justify-content: center; align-items: flex-start;">
+
+    <!-- Watch: Idle -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62;">Idle</div>
+      <div style="width:198px; height:242px; border-radius:52px; background:#000; box-shadow:0 22px 44px rgba(17,17,16,0.28), inset 0 0 0 7px #1a1a1c, 0 0 0 2px #2a2a2c; position:relative; overflow:hidden;">
+        <div style="position:absolute; inset:7px; border-radius:46px; background:#000; padding:18px 18px 14px; display:flex; flex-direction:column;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:6px;"><span style="width:7px; height:7px; border-radius:50%; background:#8A8A8E;"></span><span style="font-size:11px; font-weight:600; color:#8A8A8E;">Idle</span></div>
+            <span style="font-size:12px; font-weight:700; color:#8A8A8E; font-feature-settings:'tnum';">16:23</span>
+          </div>
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <div style="font-family:Archivo,system-ui,sans-serif; font-weight:520; font-stretch:115%; font-size:58px; line-height:0.9; color:#5A5A5E; font-feature-settings:'tnum';">—</div>
+            <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1.5px; color:#5A5A5E; margin-top:8px; text-align:center;">WAITING FOR SHOT</div>
+            <div style="margin-top:14px; display:flex; align-items:center; gap:6px; background:#FB5A35; padding:7px 14px; border-radius:999px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#000"><path d="M8 5v14l11-7z"/></svg><span style="font-size:12px; font-weight:700; color:#000;">Start</span></div>
+          </div>
+        </div>
+        <div style="position:absolute; right:-2px; top:84px; width:5px; height:34px; border-radius:3px; background:#2a2a2c;"></div>
+      </div>
+    </div>
+
+    <!-- Watch: Pouring -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62;">Pouring</div>
+      <div style="width:198px; height:242px; border-radius:52px; background:#000; box-shadow:0 22px 44px rgba(17,17,16,0.28), inset 0 0 0 7px #1a1a1c, 0 0 0 2px #2a2a2c; position:relative; overflow:hidden;">
+        <div style="position:absolute; inset:7px; border-radius:46px; background:#000; padding:16px 16px 12px; display:flex; flex-direction:column;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:6px;"><span style="width:7px; height:7px; border-radius:50%; background:#FB5A35; animation:recpulse 1.4s ease-in-out infinite;"></span><span style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:1px; color:#FB5A35;">REC</span></div>
+            <span style="font-size:11px; font-weight:700; color:#8A8A8E; font-feature-settings:'tnum'; white-space:nowrap;">→ 36 g</span>
+          </div>
+          <div style="text-align:center; margin-top:2px;">
+            <span style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-stretch:112%; font-size:74px; line-height:0.86; color:#F4F2EB; font-feature-settings:'tnum';">23.4</span>
+          </div>
+          <div style="display:flex; justify-content:center; gap:14px; margin-top:2px; font-family:'Space Mono',monospace; font-size:11px; color:#8A8A8E; font-feature-settings:'tnum';">
+            <span><b style="color:#C9C7C0;">12.6</b>s</span><span><b style="color:#C9C7C0;">1.8</b> g/s</span>
+          </div>
+          <div style="flex:1; margin-top:8px; position:relative;">
+            <svg viewBox="0 0 176 86" width="100%" height="100%" preserveAspectRatio="none">
+              <line x1="4" y1="14" x2="172" y2="14" stroke="#F4F2EB" stroke-opacity="0.45" stroke-width="1.4" stroke-dasharray="2 6" stroke-linecap="round"/>
+              <line x1="4" y1="82" x2="172" y2="82" stroke="#F4F2EB" stroke-opacity="0.14" stroke-width="1"/>
+              <path d="M4 82 C 24 80, 40 74, 64 60 C 86 48, 104 42, 122 36" fill="none" stroke="#FB5A35" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="122" cy="36" r="5" fill="#FB5A35"/>
+            </svg>
+          </div>
+        </div>
+        <div style="position:absolute; right:-2px; top:84px; width:5px; height:34px; border-radius:3px; background:#2a2a2c;"></div>
+      </div>
+    </div>
+
+    <!-- Watch: Done -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62;">Done</div>
+      <div style="width:198px; height:242px; border-radius:52px; background:#000; box-shadow:0 22px 44px rgba(17,17,16,0.28), inset 0 0 0 7px #1a1a1c, 0 0 0 2px #2a2a2c; position:relative; overflow:hidden;">
+        <div style="position:absolute; inset:7px; border-radius:46px; background:#000; padding:16px 16px 12px; display:flex; flex-direction:column;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#34C98A" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:1px; color:#34C98A;">DONE</span></div>
+            <span style="font-size:11px; font-weight:700; color:#8A8A8E; font-feature-settings:'tnum';">24.0 s</span>
+          </div>
+          <div style="text-align:center; margin-top:2px;">
+            <span style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-stretch:112%; font-size:74px; line-height:0.86; color:#34C98A; font-feature-settings:'tnum';">36.0</span>
+          </div>
+          <div style="text-align:center; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1px; color:#8A8A8E;">ON TARGET · 36 g</div>
+          <div style="flex:1; margin-top:6px; position:relative;">
+            <svg viewBox="0 0 176 86" width="100%" height="100%" preserveAspectRatio="none">
+              <line x1="4" y1="14" x2="172" y2="14" stroke="#F4F2EB" stroke-opacity="0.45" stroke-width="1.4" stroke-dasharray="2 6" stroke-linecap="round"/>
+              <line x1="4" y1="82" x2="172" y2="82" stroke="#F4F2EB" stroke-opacity="0.14" stroke-width="1"/>
+              <path d="M4 82 C 28 80, 44 72, 66 48 C 90 24, 130 17, 172 15" fill="none" stroke="#34C98A" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="172" cy="15" r="5" fill="#34C98A"/>
+            </svg>
+          </div>
+        </div>
+        <div style="position:absolute; right:-2px; top:84px; width:5px; height:34px; border-radius:3px; background:#2a2a2c;"></div>
+      </div>
+    </div>
+
+    <!-- Watch: Always-On dimmed -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62;">Always-On · dimmed</div>
+      <div style="width:198px; height:242px; border-radius:52px; background:#000; box-shadow:0 22px 44px rgba(17,17,16,0.28), inset 0 0 0 7px #141416, 0 0 0 2px #1f1f21; position:relative; overflow:hidden;">
+        <div style="position:absolute; inset:7px; border-radius:46px; background:#000; padding:16px 16px 12px; display:flex; flex-direction:column;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:6px;"><span style="width:6px; height:6px; border-radius:50%; background:#7a4030;"></span><span style="font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:1px; color:#6a6a6e;">REC</span></div>
+            <span style="font-size:11px; font-weight:600; color:#5A5A5E; font-feature-settings:'tnum'; white-space:nowrap;">→ 36 g</span>
+          </div>
+          <div style="text-align:center; margin-top:2px;">
+            <span style="font-family:Archivo,system-ui,sans-serif; font-weight:520; font-stretch:112%; font-size:74px; line-height:0.86; color:#9a9a9e; font-feature-settings:'tnum';">23.4</span>
+          </div>
+          <div style="display:flex; justify-content:center; gap:14px; margin-top:2px; font-family:'Space Mono',monospace; font-size:11px; color:#5A5A5E; font-feature-settings:'tnum';">
+            <span>12.6 s</span><span>1.8 g/s</span>
+          </div>
+          <div style="flex:1; margin-top:8px; position:relative;">
+            <svg viewBox="0 0 176 86" width="100%" height="100%" preserveAspectRatio="none">
+              <line x1="4" y1="14" x2="172" y2="14" stroke="#5A5A5E" stroke-opacity="0.5" stroke-width="1.2" stroke-dasharray="2 6" stroke-linecap="round"/>
+              <path d="M4 82 C 24 80, 40 74, 64 60 C 86 48, 104 42, 122 36" fill="none" stroke="#7a7a7e" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div style="position:absolute; right:-2px; top:84px; width:5px; height:34px; border-radius:3px; background:#1f1f21;"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="max-width:1240px; margin:0 auto 80px; display:flex; justify-content:center;">
+    <div style="max-width:64ch; text-align:center; font-size:13.5px; color:#6E6A62; line-height:1.6;">The kiosk runs <b>true-black</b> for the OLED and burn-in safety. Live state pops in orange; the dimmed Always-On state drops all chroma to greys, thins the curve, and removes the gradient fill — the weight number stays legible from across the counter without lighting the room.</div>
+  </div>
+
+  <!-- ============== SECTION: SUPPORTING SCREENS ============== -->
+  <div style="max-width: 1240px; margin: 0 auto 30px; border-top: 1.5px solid rgba(17,17,16,0.18); padding-top: 14px; display: flex; align-items: baseline; justify-content: space-between;">
+    <div style="font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 3px; text-transform: uppercase;">05 — Supporting screens</div>
+    <div style="font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 1px; color: #6E6A62;">history · detail · settings · firmware · the same system</div>
+  </div>
+
+  <div style="max-width: 1240px; margin: 0 auto 56px; display: flex; gap: 44px; flex-wrap: wrap; justify-content: center; align-items: flex-start;">
+
+    <!-- ===== HISTORY (light) ===== -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62;">History · Light</div>
+      <div style="width:340px; height:716px; border-radius:46px; background:#E9E7E0; box-shadow:0 30px 60px rgba(17,17,16,0.18), 0 0 0 1px rgba(17,17,16,0.10); position:relative; overflow:hidden; display:flex; flex-direction:column;">
+        <div style="position:absolute; top:11px; left:50%; transform:translateX(-50%); width:118px; height:34px; border-radius:20px; background:#111110; z-index:20;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:15px 28px 4px; flex-shrink:0;">
+          <span style="font-weight:700; font-size:15px; font-feature-settings:'tnum';">16:31</span>
+          <div style="display:flex; align-items:center; gap:7px;">
+            <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill="#111110"/><path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill="#111110"/><circle cx="8.5" cy="10.5" r="1.5" fill="#111110"/></svg>
+            <svg width="25" height="12" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke="#111110" stroke-opacity="0.35" fill="none"/><rect x="2" y="2" width="20" height="9" rx="2" fill="#111110"/><path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill="#111110" fill-opacity="0.4"/></svg>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 24px 14px;">
+          <div style="font-family:Archivo,system-ui,sans-serif; font-weight:600; font-stretch:110%; font-size:32px; letter-spacing:-0.9px;">History</div>
+          <div style="display:flex; align-items:center; gap:7px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.10); padding:8px 12px; border-radius:999px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 15V4M12 4l-4 4M12 4l4 4" stroke="#4A463F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 14v4a2 2 0 002 2h10a2 2 0 002-2v-4" stroke="#4A463F" stroke-width="2" stroke-linecap="round"/></svg>
+            <span style="font-size:13px; font-weight:600; color:#4A463F;">Export</span>
+          </div>
+        </div>
+        <div style="padding:0 16px 12px; display:flex; gap:8px; overflow:hidden;">
+          <div style="display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:999px; background:#111110; flex-shrink:0;"><span style="font-size:12.5px; font-weight:700; white-space:nowrap; color:#FBFAF4;">All</span><span style="font-family:'Space Mono',monospace; font-size:10px; color:rgba(251,250,244,0.55);">38</span></div>
+          <div style="display:flex; align-items:center; gap:7px; padding:7px 13px; border-radius:999px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.12); flex-shrink:0;"><span style="width:8px;height:8px;border-radius:50%;background:#7A4E2E;"></span><span style="font-size:12.5px; font-weight:600; white-space:nowrap; color:#4A463F;">House Espresso</span></div>
+          <div style="display:flex; align-items:center; gap:7px; padding:7px 13px; border-radius:999px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.12); flex-shrink:0;"><span style="width:8px;height:8px;border-radius:50%;background:#C28A1E;"></span><span style="font-size:12.5px; font-weight:600; white-space:nowrap; color:#4A463F;">Ethiopia Light</span></div>
+          <div style="display:flex; align-items:center; gap:7px; padding:7px 13px; border-radius:999px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.12); flex-shrink:0;"><span style="width:8px;height:8px;border-radius:50%;background:#A32E3C;"></span><span style="font-size:12.5px; font-weight:600; white-space:nowrap; color:#4A463F;">Ristretto</span></div>
+        </div>
+        <div style="flex:1; overflow:hidden; margin:0 16px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:18px;">
+          <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; border-bottom:1px solid rgba(17,17,16,0.07);">
+            <svg width="46" height="26" viewBox="0 0 60 34"><path d="M2 31 C 12 30, 18 26, 26 16 C 34 7, 42 5, 58 4" fill="none" stroke="#1F6B4A" stroke-width="2.4" stroke-linecap="round"/></svg>
+            <div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:15px;">Today · 16:27</div><div style="display:flex; align-items:center; gap:7px; margin-top:5px;"><span style="display:inline-flex; align-items:center; gap:5px; background:rgba(122,78,46,0.13); padding:2px 8px; border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#7A4E2E;"></span><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#7A4E2E;">House Espresso</span></span><span style="font-family:'Space Mono',monospace; font-size:10px; color:#A6A299;">24.0 s</span></div></div>
+            <div style="text-align:right;"><div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:19px; font-feature-settings:'tnum;';">36.0<span style="font-size:12px; color:#6E6A62;">g</span></div><div style="display:inline-flex; align-items:center; gap:4px; margin-top:2px;"><span style="width:6px; height:6px; border-radius:50%; background:#1F6B4A;"></span><span style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.5px; color:#1F6B4A;">ON TARGET</span></div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; border-bottom:1px solid rgba(17,17,16,0.07);">
+            <svg width="46" height="26" viewBox="0 0 60 34"><path d="M2 31 C 12 30, 18 27, 26 18 C 34 9, 42 7, 58 8" fill="none" stroke="#1F6B4A" stroke-width="2.4" stroke-linecap="round"/></svg>
+            <div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:15px;">Today · 09:14</div><div style="display:flex; align-items:center; gap:7px; margin-top:5px;"><span style="display:inline-flex; align-items:center; gap:5px; border:1px solid rgba(17,17,16,0.16); padding:2px 9px; border-radius:999px;"><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#A6A299;">No recipe</span></span><span style="font-family:'Space Mono',monospace; font-size:10px; color:#A6A299;">22.4 s</span></div></div>
+            <div style="text-align:right;"><div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:19px; font-feature-settings:'tnum';">35.4<span style="font-size:12px; color:#6E6A62;">g</span></div><div style="display:inline-flex; align-items:center; gap:4px; margin-top:2px;"><span style="width:6px; height:6px; border-radius:50%; background:#A6A299;"></span><span style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.5px; color:#A6A299;">−0.6 g</span></div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; border-bottom:1px solid rgba(17,17,16,0.07);">
+            <svg width="46" height="26" viewBox="0 0 60 34"><path d="M2 31 C 12 30, 20 28, 28 19 C 36 10, 44 6, 58 5" fill="none" stroke="#1F6B4A" stroke-width="2.4" stroke-linecap="round"/></svg>
+            <div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:15px;">Yesterday · 18:02</div><div style="display:flex; align-items:center; gap:7px; margin-top:5px;"><span style="display:inline-flex; align-items:center; gap:5px; background:rgba(194,138,30,0.15); padding:2px 8px; border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#C28A1E;"></span><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#8A6310;">Ethiopia Light</span></span><span style="font-family:'Space Mono',monospace; font-size:10px; color:#A6A299;">25.1 s</span></div></div>
+            <div style="text-align:right;"><div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:19px; font-feature-settings:'tnum';">40.0<span style="font-size:12px; color:#6E6A62;">g</span></div><div style="display:inline-flex; align-items:center; gap:4px; margin-top:2px;"><span style="width:6px; height:6px; border-radius:50%; background:#1F6B4A;"></span><span style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.5px; color:#1F6B4A;">ON TARGET</span></div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px; padding:14px 16px;">
+            <svg width="46" height="26" viewBox="0 0 60 34"><path d="M2 31 C 12 30, 18 27, 26 17 C 34 8, 42 6, 58 6" fill="none" stroke="#A6A299" stroke-width="2.4" stroke-linecap="round"/></svg>
+            <div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:15px;">Yesterday · 08:40</div><div style="display:flex; align-items:center; gap:7px; margin-top:5px;"><span style="display:inline-flex; align-items:center; gap:5px; background:rgba(163,46,60,0.12); padding:2px 8px; border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#A32E3C;"></span><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#A32E3C;">Ristretto</span></span><span style="font-family:'Space Mono',monospace; font-size:10px; color:#A6A299;">19.8 s</span></div></div>
+            <div style="text-align:right;"><div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:19px; font-feature-settings:'tnum';">22.3<span style="font-size:12px; color:#6E6A62;">g</span></div><div style="display:inline-flex; align-items:center; gap:4px; margin-top:2px;"><span style="width:6px; height:6px; border-radius:50%; background:#A6A299;"></span><span style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.5px; color:#A6A299;">+0.3 g</span></div></div>
+          </div>
+        </div>
+        <div style="padding:12px 0 22px; display:flex; justify-content:center;">
+          <div style="display:flex; gap:6px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:999px; padding:6px; box-shadow:0 6px 18px rgba(17,17,16,0.10);">
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 3 5-8 4 5" stroke="#6E6A62" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span style="font-size:13px; font-weight:600; color:#6E6A62;">Live</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 18px; border-radius:999px; background:#E84B29;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+              <span style="font-size:13px; font-weight:700; color:#fff;">History</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#6E6A62" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="#6E6A62" stroke-width="2" stroke-linecap="round"/></svg>
+              <span style="font-size:13px; font-weight:600; color:#6E6A62;">Settings</span>
+            </div>
+          </div>
+        </div>
+        <div style="position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:128px; height:5px; border-radius:100px; background:rgba(17,17,16,0.25);"></div>
+      </div>
+    </div>
+
+    <!-- ===== SHOT DETAIL (light) ===== -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62;">Shot detail · Light</div>
+      <div style="width:340px; height:716px; border-radius:46px; background:#E9E7E0; box-shadow:0 30px 60px rgba(17,17,16,0.18), 0 0 0 1px rgba(17,17,16,0.10); position:relative; overflow:hidden; display:flex; flex-direction:column;">
+        <div style="position:absolute; top:11px; left:50%; transform:translateX(-50%); width:118px; height:34px; border-radius:20px; background:#111110; z-index:20;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:15px 28px 4px; flex-shrink:0;">
+          <span style="font-weight:700; font-size:15px; font-feature-settings:'tnum';">16:33</span>
+          <div style="display:flex; align-items:center; gap:7px;">
+            <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill="#111110"/><path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill="#111110"/><circle cx="8.5" cy="10.5" r="1.5" fill="#111110"/></svg>
+            <svg width="25" height="12" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke="#111110" stroke-opacity="0.35" fill="none"/><rect x="2" y="2" width="20" height="9" rx="2" fill="#111110"/><path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill="#111110" fill-opacity="0.4"/></svg>
+          </div>
+        </div>
+        <div style="padding:8px 24px 6px;">
+          <div style="font-family:Archivo,system-ui,sans-serif; font-weight:600; font-stretch:110%; font-size:32px; letter-spacing:-0.9px;">Shot detail</div>
+          <div style="display:inline-flex; align-items:center; gap:6px; margin-top:5px;"><span style="width:7px; height:7px; border-radius:50%; background:#1F6B4A;"></span><span style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1px; color:#1F6B4A;">14 JUN · 16:27 · ON TARGET</span></div>
+        </div>
+        <div style="height:240px; margin:6px 14px 0; position:relative;">
+          <div style="position:absolute; top:0; right:8px; font-family:'Space Mono',monospace; font-size:10px; color:#A6A299;">grams</div>
+          <svg viewBox="0 0 300 220" width="100%" height="100%" preserveAspectRatio="none" style="overflow:visible;">
+            <defs><linearGradient id="fillDet" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1F6B4A" stop-opacity="0.16"/><stop offset="100%" stop-color="#1F6B4A" stop-opacity="0"/></linearGradient></defs>
+            <line x1="8" y1="149" x2="292" y2="149" stroke="#111110" stroke-opacity="0.07" stroke-width="1"/>
+            <line x1="8" y1="102" x2="292" y2="102" stroke="#111110" stroke-opacity="0.07" stroke-width="1"/>
+            <line x1="8" y1="55" x2="292" y2="55" stroke="#111110" stroke-opacity="0.07" stroke-width="1"/>
+            <line x1="8" y1="196" x2="292" y2="196" stroke="#111110" stroke-opacity="0.14" stroke-width="1.2"/>
+            <line x1="8" y1="27" x2="292" y2="27" stroke="#111110" stroke-opacity="0.42" stroke-width="1.6" stroke-dasharray="2 7" stroke-linecap="round"/>
+            <path d="M8 194 C 50 192, 80 188, 110 150 C 140 110, 160 50, 200 33 C 240 24, 280 27, 292 27 L 292 196 L 8 196 Z" fill="url(#fillDet)"/>
+            <path d="M8 194 C 50 192, 80 188, 110 150 C 140 110, 160 50, 200 33 C 240 24, 280 27, 292 27" fill="none" stroke="#1F6B4A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div style="position:absolute; top:14px; left:2px; font-family:'Space Mono',monospace; font-size:10px; color:#6E6A62; background:#E9E7E0; padding:0 4px;">target 36 g</div>
+          <div style="position:absolute; bottom:-4px; left:8px; right:8px; display:flex; justify-content:space-between; font-family:'Space Mono',monospace; font-size:10px; color:#A6A299;"><span>0</span><span>10</span><span>20 s</span></div>
+        </div>
+        <div style="margin:18px 24px 0; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:16px; overflow:hidden;">
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid rgba(17,17,16,0.07);"><span style="font-size:14px; color:#6E6A62;">Recipe</span><span style="display:inline-flex; align-items:center; gap:7px;"><span style="width:20px;height:20px;border-radius:6px;background:#7A4E2E;display:flex;align-items:center;justify-content:center;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="6" ry="9" transform="rotate(30 12 12)" stroke="#fff" stroke-width="2.4"/><path d="M9.2 6C11 9 11 15 9.4 18" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></span><span style="font-weight:700; font-size:15px; white-space:nowrap;">House Espresso</span></span></div>
+          <div style="display:flex; justify-content:space-between; padding:12px 16px; border-bottom:1px solid rgba(17,17,16,0.07);"><span style="font-size:14px; color:#6E6A62;">Final weight</span><span style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:15px; font-feature-settings:'tnum';">36.0 g</span></div>
+          <div style="display:flex; justify-content:space-between; padding:12px 16px; border-bottom:1px solid rgba(17,17,16,0.07);"><span style="font-size:14px; color:#6E6A62;">Peak weight</span><span style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:15px; font-feature-settings:'tnum';">36.2 g</span></div>
+          <div style="display:flex; justify-content:space-between; padding:12px 16px; border-bottom:1px solid rgba(17,17,16,0.07);"><span style="font-size:14px; color:#6E6A62;">Duration</span><span style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:15px; font-feature-settings:'tnum';">24.0 s</span></div>
+          <div style="display:flex; justify-content:space-between; padding:12px 16px;"><span style="font-size:14px; color:#6E6A62;">Samples</span><span style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:15px; font-feature-settings:'tnum';">242</span></div>
+        </div>
+        <div style="padding:16px 24px 0; display:flex; gap:10px;">
+          <div style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:13px; border-radius:999px; background:#E84B29; color:#fff; font-weight:700; font-size:14px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 15V4M12 4l-4 4M12 4l4 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 14v4a2 2 0 002 2h10a2 2 0 002-2v-4" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>Export CSV</div>
+          <div style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:13px; border-radius:999px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.12); color:#4A463F; font-weight:600; font-size:14px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 15V4M12 4l-4 4M12 4l4 4" stroke="#4A463F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 14v4a2 2 0 002 2h10a2 2 0 002-2v-4" stroke="#4A463F" stroke-width="2" stroke-linecap="round"/></svg>Export JSON</div>
+        </div>
+        <div style="margin-top:auto; padding:12px 24px 26px;"><div style="display:inline-flex; align-items:center; gap:8px; padding:11px 18px; border-radius:999px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.12);"><svg width="9" height="16" viewBox="0 0 12 20" fill="none"><path d="M10 2L2 10l8 8" stroke="#4A463F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-weight:600; font-size:15px; color:#4A463F;">Back</span></div></div>
+        <div style="position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:128px; height:5px; border-radius:100px; background:rgba(17,17,16,0.25);"></div>
+      </div>
+    </div>
+
+    <!-- ===== SETTINGS (light) ===== -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62;">Settings · Light</div>
+      <div style="width:340px; height:716px; border-radius:46px; background:#E9E7E0; box-shadow:0 30px 60px rgba(17,17,16,0.18), 0 0 0 1px rgba(17,17,16,0.10); position:relative; overflow:hidden; display:flex; flex-direction:column;">
+        <div style="position:absolute; top:11px; left:50%; transform:translateX(-50%); width:118px; height:34px; border-radius:20px; background:#111110; z-index:20;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:15px 28px 4px; flex-shrink:0;">
+          <span style="font-weight:700; font-size:15px; font-feature-settings:'tnum';">17:12</span>
+          <div style="display:flex; align-items:center; gap:7px;">
+            <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill="#111110"/><path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill="#111110"/><circle cx="8.5" cy="10.5" r="1.5" fill="#111110"/></svg>
+            <svg width="25" height="12" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke="#111110" stroke-opacity="0.35" fill="none"/><rect x="2" y="2" width="20" height="9" rx="2" fill="#111110"/><path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill="#111110" fill-opacity="0.4"/></svg>
+          </div>
+        </div>
+        <div style="padding:8px 24px 12px;">
+          <div style="font-family:Archivo,system-ui,sans-serif; font-weight:600; font-stretch:110%; font-size:32px; letter-spacing:-0.9px;">Settings</div>
+        </div>
+        <div style="flex:1; overflow:hidden; padding:0 16px;">
+          <div style="display:flex; align-items:center; gap:10px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:14px; padding:12px 16px; margin-bottom:18px;">
+            <span style="width:9px; height:9px; border-radius:50%; background:#1F6B4A; flex-shrink:0;"></span>
+            <div style="flex:1;">
+              <div style="font-weight:600; font-size:15px;">ShotStopper</div>
+              <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.5px; color:#6E6A62; margin-top:2px;">Reading data from the connected scale · firmware v2</div>
+            </div>
+            <span style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1px; color:#1F6B4A;">CONNECTED</span>
+          </div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#A6A299; padding:0 8px 8px;">Recipes</div>
+          <div style="background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:16px; overflow:hidden; margin-bottom:18px;">
+            <div style="display:flex; align-items:center; gap:12px; padding:11px 16px; border-bottom:1px solid rgba(17,17,16,0.07);"><span style="width:30px;height:30px;border-radius:8px;background:#7A4E2E;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="6" ry="9" transform="rotate(30 12 12)" stroke="#fff" stroke-width="2.2"/><path d="M9.2 6C11 9 11 15 9.4 18" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></span><div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:15px;">House Espresso</div><div style="font-family:'Space Mono',monospace; font-size:10px; color:#6E6A62; margin-top:2px;">36 g · 3 s drip · auto-tare</div></div><span style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:0.8px; color:#1F6B4A; background:rgba(31,107,74,0.13); padding:3px 7px; border-radius:999px; flex-shrink:0;">APPLIED</span></div>
+            <div style="display:flex; align-items:center; gap:12px; padding:11px 16px; border-bottom:1px solid rgba(17,17,16,0.07);"><span style="width:30px;height:30px;border-radius:8px;background:#C28A1E;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 19C5 11 11 5 19 5C19 13 13 19 5 19Z" stroke="#fff" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M7 17L14.5 9.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span><div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:15px;">Ethiopia Light</div><div style="font-family:'Space Mono',monospace; font-size:10px; color:#6E6A62; margin-top:2px;">40 g · 4 s drip · auto-tare</div></div></div>
+            <div style="display:flex; align-items:center; gap:12px; padding:11px 16px; border-bottom:1px solid rgba(17,17,16,0.07);"><span style="width:30px;height:30px;border-radius:8px;background:#A32E3C;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 4C15 8.5 17 11.5 17 14A5 5 0 017 14C7 11.5 9 8.5 12 4Z" fill="#fff"/></svg></span><div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:15px;">Ristretto</div><div style="font-family:'Space Mono',monospace; font-size:10px; color:#6E6A62; margin-top:2px;">22 g · 2 s drip</div></div></div>
+            <div style="display:flex; align-items:center; gap:10px; padding:12px 16px; color:#E84B29; font-weight:600; font-size:15px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#E84B29" stroke-width="2.2" stroke-linecap="round"/></svg>Save current as recipe…</div>
+          </div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#A6A299; padding:0 8px 8px;">Brew</div>
+          <div style="background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:16px; overflow:hidden;">
+            <div style="display:flex; align-items:center; padding:11px 16px; border-bottom:1px solid rgba(17,17,16,0.07);">
+              <span style="flex:1; font-size:15px;">Target weight</span>
+              <span style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:16px; font-feature-settings:'tnum'; margin-right:12px;">36 g</span>
+              <div style="display:flex; align-items:center; background:#E9E7E0; border-radius:10px; overflow:hidden;"><div style="padding:6px 13px; font-size:18px; font-weight:600; color:#4A463F;">−</div><div style="width:1px; height:22px; background:rgba(17,17,16,0.12);"></div><div style="padding:6px 13px; font-size:18px; font-weight:600; color:#E84B29;">+</div></div>
+            </div>
+            <div style="display:flex; align-items:center; padding:13px 16px; border-bottom:1px solid rgba(17,17,16,0.07);">
+              <span style="flex:1; font-size:15px;">Brew by weight</span>
+              <div style="width:46px; height:28px; border-radius:999px; background:#E84B29; position:relative;"><div style="position:absolute; top:2px; right:2px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div></div>
+            </div>
+            <div style="display:flex; align-items:center; padding:13px 16px;">
+              <span style="flex:1; font-size:15px;">Auto-tare</span>
+              <div style="width:46px; height:28px; border-radius:999px; background:#E84B29; position:relative;"><div style="position:absolute; top:2px; right:2px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div></div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:12px 0 22px; display:flex; justify-content:center;">
+          <div style="display:flex; gap:6px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:999px; padding:6px; box-shadow:0 6px 18px rgba(17,17,16,0.10);">
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 3 5-8 4 5" stroke="#6E6A62" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:13px; font-weight:600; color:#6E6A62;">Live</span></div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#6E6A62" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#6E6A62" stroke-width="2" stroke-linecap="round"/></svg><span style="font-size:13px; font-weight:600; color:#6E6A62;">History</span></div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 18px; border-radius:999px; background:#E84B29;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#fff" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span style="font-size:13px; font-weight:700; color:#fff;">Settings</span></div>
+          </div>
+        </div>
+        <div style="position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:128px; height:5px; border-radius:100px; background:rgba(17,17,16,0.25);"></div>
+      </div>
+    </div>
+
+    <!-- ===== FIRMWARE OTA (light) ===== -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62;">Firmware OTA · uploading</div>
+      <div style="width:340px; height:716px; border-radius:46px; background:#E9E7E0; box-shadow:0 30px 60px rgba(17,17,16,0.18), 0 0 0 1px rgba(17,17,16,0.10); position:relative; overflow:hidden; display:flex; flex-direction:column;">
+        <div style="position:absolute; top:11px; left:50%; transform:translateX(-50%); width:118px; height:34px; border-radius:20px; background:#111110; z-index:20;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:15px 28px 4px; flex-shrink:0;">
+          <span style="font-weight:700; font-size:15px; font-feature-settings:'tnum';">16:54</span>
+          <div style="display:flex; align-items:center; gap:7px;">
+            <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill="#111110"/><path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill="#111110"/><circle cx="8.5" cy="10.5" r="1.5" fill="#111110"/></svg>
+            <svg width="25" height="12" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke="#111110" stroke-opacity="0.35" fill="none"/><rect x="2" y="2" width="20" height="9" rx="2" fill="#111110"/><path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill="#111110" fill-opacity="0.4"/></svg>
+          </div>
+        </div>
+        <div style="padding:8px 24px 8px;">
+          <div style="font-family:Archivo,system-ui,sans-serif; font-weight:600; font-stretch:110%; font-size:32px; letter-spacing:-0.9px;">Firmware OTA</div>
+        </div>
+        <div style="flex:1; overflow:hidden; padding:0 24px;">
+          <div style="background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:16px; padding:18px; text-align:center;">
+            <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:14px;"><span style="width:8px; height:8px; border-radius:50%; background:#E84B29; animation:recpulse 1.4s ease-in-out infinite;"></span><span style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:1.5px; color:#E84B29;">UPLOADING · 192.168.1.42</span></div>
+            <div style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-stretch:115%; font-size:46px; letter-spacing:-1px; font-feature-settings:'tnum';">64<span style="font-size:24px; color:#6E6A62;">%</span></div>
+            <div style="margin-top:14px; height:10px; border-radius:999px; background:rgba(17,17,16,0.08); overflow:hidden;"><div style="width:64%; height:100%; border-radius:999px; background:#E84B29;"></div></div>
+            <div style="margin-top:10px; font-family:'Space Mono',monospace; font-size:10.5px; color:#A6A299;">firmware_v3.bin · 1.2 MB · keep app open</div>
+          </div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#A6A299; padding:18px 8px 8px;">Wi-Fi</div>
+          <div style="background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:16px; overflow:hidden;">
+            <div style="display:flex; align-items:center; padding:13px 16px; border-bottom:1px solid rgba(17,17,16,0.07);"><span style="flex:1; font-size:15px;">Network</span><span style="font-weight:600; font-size:15px; color:#4A463F;">Kitchen</span></div>
+            <div style="display:flex; align-items:center; padding:13px 16px;"><span style="flex:1; font-size:15px;">Password</span><span style="font-size:15px; color:#A6A299; letter-spacing:2px;">••••••••</span></div>
+          </div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#A6A299; padding:18px 8px 8px;">Device</div>
+          <div style="background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:16px; overflow:hidden;">
+            <div style="display:flex; align-items:center; padding:13px 16px; border-bottom:1px solid rgba(17,17,16,0.07);"><span style="flex:1; font-size:15px;">Current firmware</span><span style="font-family:'Space Mono',monospace; font-size:13px; color:#6E6A62;">v2 → v3</span></div>
+            <div style="padding:13px 16px; color:#A6A299; font-size:15px;">Choose firmware (.bin)…</div>
+          </div>
+        </div>
+        <div style="padding:12px 24px 26px;"><div style="display:inline-flex; align-items:center; gap:8px; padding:11px 18px; border-radius:999px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.12);"><svg width="9" height="16" viewBox="0 0 12 20" fill="none"><path d="M10 2L2 10l8 8" stroke="#4A463F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-weight:600; font-size:15px; color:#4A463F;">Back</span></div></div>
+        <div style="position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:128px; height:5px; border-radius:100px; background:rgba(17,17,16,0.25);"></div>
+      </div>
+    </div>
+
+    <!-- ===== HISTORY (dark) ===== -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62;">History · Dark</div>
+      <div style="width:340px; height:716px; border-radius:46px; background:#121110; box-shadow:0 30px 60px rgba(17,17,16,0.30), 0 0 0 1px rgba(17,17,16,0.5); position:relative; overflow:hidden; display:flex; flex-direction:column;">
+        <div style="position:absolute; top:11px; left:50%; transform:translateX(-50%); width:118px; height:34px; border-radius:20px; background:#000; z-index:20;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:15px 28px 4px; flex-shrink:0;">
+          <span style="font-weight:700; font-size:15px; color:#F1EFE8; font-feature-settings:'tnum';">21:08</span>
+          <div style="display:flex; align-items:center; gap:7px;">
+            <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill="#F1EFE8"/><path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill="#F1EFE8"/><circle cx="8.5" cy="10.5" r="1.5" fill="#F1EFE8"/></svg>
+            <svg width="25" height="12" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke="#F1EFE8" stroke-opacity="0.35" fill="none"/><rect x="2" y="2" width="20" height="9" rx="2" fill="#F1EFE8"/><path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill="#F1EFE8" fill-opacity="0.4"/></svg>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 24px 14px;">
+          <div style="font-family:Archivo,system-ui,sans-serif; font-weight:600; font-stretch:110%; font-size:32px; letter-spacing:-0.9px; color:#F1EFE8;">History</div>
+          <div style="display:flex; align-items:center; gap:7px; background:#1E1C18; border:1px solid rgba(241,239,232,0.12); padding:8px 12px; border-radius:999px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 15V4M12 4l-4 4M12 4l4 4" stroke="#C9C7C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 14v4a2 2 0 002 2h10a2 2 0 002-2v-4" stroke="#C9C7C0" stroke-width="2" stroke-linecap="round"/></svg><span style="font-size:13px; font-weight:600; color:#C9C7C0;">Export</span></div>
+        </div>
+        <div style="padding:0 16px 12px; display:flex; gap:8px; overflow:hidden;">
+          <div style="display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:999px; background:#F1EFE8; flex-shrink:0;"><span style="font-size:12.5px; font-weight:700; white-space:nowrap; color:#121110;">All</span><span style="font-family:'Space Mono',monospace; font-size:10px; color:rgba(18,17,16,0.5);">38</span></div>
+          <div style="display:flex; align-items:center; gap:7px; padding:7px 13px; border-radius:999px; background:#1E1C18; border:1px solid rgba(241,239,232,0.14); flex-shrink:0;"><span style="width:8px;height:8px;border-radius:50%;background:#C08A5E;"></span><span style="font-size:12.5px; font-weight:600; white-space:nowrap; color:#C9C7C0;">House Espresso</span></div>
+          <div style="display:flex; align-items:center; gap:7px; padding:7px 13px; border-radius:999px; background:#1E1C18; border:1px solid rgba(241,239,232,0.14); flex-shrink:0;"><span style="width:8px;height:8px;border-radius:50%;background:#E0B24E;"></span><span style="font-size:12.5px; font-weight:600; white-space:nowrap; color:#C9C7C0;">Ethiopia Light</span></div>
+          <div style="display:flex; align-items:center; gap:7px; padding:7px 13px; border-radius:999px; background:#1E1C18; border:1px solid rgba(241,239,232,0.14); flex-shrink:0;"><span style="width:8px;height:8px;border-radius:50%;background:#E0788A;"></span><span style="font-size:12.5px; font-weight:600; white-space:nowrap; color:#C9C7C0;">Ristretto</span></div>
+        </div>
+        <div style="flex:1; overflow:hidden; margin:0 16px; background:#1E1C18; border:1px solid rgba(241,239,232,0.08); border-radius:18px;">
+          <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; border-bottom:1px solid rgba(241,239,232,0.07);">
+            <svg width="46" height="26" viewBox="0 0 60 34"><path d="M2 31 C 12 30, 18 26, 26 16 C 34 7, 42 5, 58 4" fill="none" stroke="#43B585" stroke-width="2.4" stroke-linecap="round"/></svg>
+            <div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:15px; color:#F1EFE8;">Today · 16:27</div><div style="display:flex; align-items:center; gap:7px; margin-top:5px;"><span style="display:inline-flex; align-items:center; gap:5px; background:rgba(192,138,94,0.18); padding:2px 8px; border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#C08A5E;"></span><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#D6A87E;">House Espresso</span></span><span style="font-family:'Space Mono',monospace; font-size:10px; color:#918C82;">24.0 s</span></div></div>
+            <div style="text-align:right;"><div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:19px; color:#F1EFE8; font-feature-settings:'tnum';">36.0<span style="font-size:12px; color:#918C82;">g</span></div><div style="display:inline-flex; align-items:center; gap:4px; margin-top:2px;"><span style="width:6px; height:6px; border-radius:50%; background:#43B585;"></span><span style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.5px; color:#43B585;">ON TARGET</span></div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; border-bottom:1px solid rgba(241,239,232,0.07);">
+            <svg width="46" height="26" viewBox="0 0 60 34"><path d="M2 31 C 12 30, 18 27, 26 18 C 34 9, 42 7, 58 8" fill="none" stroke="#43B585" stroke-width="2.4" stroke-linecap="round"/></svg>
+            <div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:15px; color:#F1EFE8;">Today · 09:14</div><div style="display:flex; align-items:center; gap:7px; margin-top:5px;"><span style="display:inline-flex; align-items:center; gap:5px; border:1px solid rgba(241,239,232,0.16); padding:2px 9px; border-radius:999px;"><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#918C82;">No recipe</span></span><span style="font-family:'Space Mono',monospace; font-size:10px; color:#918C82;">22.4 s</span></div></div>
+            <div style="text-align:right;"><div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:19px; color:#F1EFE8; font-feature-settings:'tnum';">35.4<span style="font-size:12px; color:#918C82;">g</span></div><div style="display:inline-flex; align-items:center; gap:4px; margin-top:2px;"><span style="width:6px; height:6px; border-radius:50%; background:#918C82;"></span><span style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.5px; color:#918C82;">−0.6 g</span></div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; border-bottom:1px solid rgba(241,239,232,0.07);">
+            <svg width="46" height="26" viewBox="0 0 60 34"><path d="M2 31 C 12 30, 20 28, 28 19 C 36 10, 44 6, 58 5" fill="none" stroke="#43B585" stroke-width="2.4" stroke-linecap="round"/></svg>
+            <div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:15px; color:#F1EFE8;">Yesterday · 18:02</div><div style="display:flex; align-items:center; gap:7px; margin-top:5px;"><span style="display:inline-flex; align-items:center; gap:5px; background:rgba(224,178,78,0.16); padding:2px 8px; border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#E0B24E;"></span><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#E6BE64;">Ethiopia Light</span></span><span style="font-family:'Space Mono',monospace; font-size:10px; color:#918C82;">25.1 s</span></div></div>
+            <div style="text-align:right;"><div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:19px; color:#F1EFE8; font-feature-settings:'tnum';">40.0<span style="font-size:12px; color:#918C82;">g</span></div><div style="display:inline-flex; align-items:center; gap:4px; margin-top:2px;"><span style="width:6px; height:6px; border-radius:50%; background:#43B585;"></span><span style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.5px; color:#43B585;">ON TARGET</span></div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px; padding:14px 16px;">
+            <svg width="46" height="26" viewBox="0 0 60 34"><path d="M2 31 C 12 30, 18 27, 26 17 C 34 8, 42 6, 58 6" fill="none" stroke="#918C82" stroke-width="2.4" stroke-linecap="round"/></svg>
+            <div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:15px; color:#F1EFE8;">Yesterday · 08:40</div><div style="display:flex; align-items:center; gap:7px; margin-top:5px;"><span style="display:inline-flex; align-items:center; gap:5px; background:rgba(224,120,138,0.16); padding:2px 8px; border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#E0788A;"></span><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#E89AA6;">Ristretto</span></span><span style="font-family:'Space Mono',monospace; font-size:10px; color:#918C82;">19.8 s</span></div></div>
+            <div style="text-align:right;"><div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:19px; color:#F1EFE8; font-feature-settings:'tnum';">22.3<span style="font-size:12px; color:#918C82;">g</span></div><div style="display:inline-flex; align-items:center; gap:4px; margin-top:2px;"><span style="width:6px; height:6px; border-radius:50%; background:#918C82;"></span><span style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.5px; color:#918C82;">+0.3 g</span></div></div>
+          </div>
+        </div>
+        <div style="padding:12px 0 22px; display:flex; justify-content:center;">
+          <div style="display:flex; gap:6px; background:#1E1C18; border:1px solid rgba(241,239,232,0.10); border-radius:999px; padding:6px; box-shadow:0 6px 18px rgba(0,0,0,0.4);">
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 3 5-8 4 5" stroke="#918C82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:13px; font-weight:600; color:#918C82;">Live</span></div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 18px; border-radius:999px; background:#FB5A35;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#121110" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#121110" stroke-width="2" stroke-linecap="round"/></svg><span style="font-size:13px; font-weight:700; color:#121110;">History</span></div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#918C82" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="#918C82" stroke-width="2" stroke-linecap="round"/></svg><span style="font-size:13px; font-weight:600; color:#918C82;">Settings</span></div>
+          </div>
+        </div>
+        <div style="position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:128px; height:5px; border-radius:100px; background:rgba(241,239,232,0.6);"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============== SECTION: TRANSITIONAL STATES ============== -->
+  <div style="max-width: 1000px; margin: 0 auto 30px; border-top: 1.5px solid rgba(17,17,16,0.18); padding-top: 14px; display: flex; align-items: baseline; justify-content: space-between;">
+    <div style="font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 3px; text-transform: uppercase;">06 — Empty &amp; transitional states</div>
+    <div style="font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 1px; color: #6E6A62;">calm, instructive, never a dead end</div>
+  </div>
+
+  <div style="max-width: 1000px; margin: 0 auto 60px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+
+    <!-- Not connected -->
+    <div style="background:#E9E7E0; border:1px solid rgba(17,17,16,0.10); border-radius:24px; padding:34px 28px; display:flex; flex-direction:column; align-items:center; text-align:center; box-shadow:0 10px 30px rgba(17,17,16,0.08);">
+      <div style="width:56px; height:56px; border-radius:16px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); display:flex; align-items:center; justify-content:center; margin-bottom:18px;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 12.5a10 10 0 0114 0M8 16a5.5 5.5 0 018 0" stroke="#A6A299" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="19.5" r="1.5" fill="#A6A299"/><line x1="3" y1="3" x2="21" y2="21" stroke="#A6A299" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:19px;">Not connected</div>
+      <div style="font-size:13.5px; color:#6E6A62; margin-top:6px; line-height:1.5; max-width:30ch;">Bring your phone near the machine. ShotStopper reconnects to it on its own.</div>
+      <div style="margin-top:18px; display:flex; align-items:center; gap:8px; background:#111110; color:#FBFAF4; padding:10px 18px; border-radius:999px; font-weight:600; font-size:14px;">Scan for ShotStopper</div>
+    </div>
+
+    <!-- Connecting -->
+    <div style="background:#E9E7E0; border:1px solid rgba(17,17,16,0.10); border-radius:24px; padding:34px 28px; display:flex; flex-direction:column; align-items:center; text-align:center; box-shadow:0 10px 30px rgba(17,17,16,0.08);">
+      <div style="width:56px; height:56px; border-radius:16px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); display:flex; align-items:center; justify-content:center; margin-bottom:18px; position:relative;">
+        <svg width="28" height="28" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="none" stroke="rgba(232,75,41,0.18)" stroke-width="5"/><path d="M25 5 a20 20 0 0 1 20 20" fill="none" stroke="#E84B29" stroke-width="5" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.9s" repeatCount="indefinite"/></path></svg>
+      </div>
+      <div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:19px;">Connecting…</div>
+      <div style="font-size:13.5px; color:#6E6A62; margin-top:6px; line-height:1.5; max-width:30ch;">Pairing with the ShotStopper in your machine over Bluetooth.</div>
+      <div style="margin-top:18px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:1.5px; color:#E84B29;">HANDSHAKE · 2 OF 3</div>
+    </div>
+
+    <!-- No shots yet -->
+    <div style="background:#E9E7E0; border:1px solid rgba(17,17,16,0.10); border-radius:24px; padding:34px 28px; display:flex; flex-direction:column; align-items:center; text-align:center; box-shadow:0 10px 30px rgba(17,17,16,0.08);">
+      <div style="width:56px; height:56px; border-radius:16px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); display:flex; align-items:center; justify-content:center; margin-bottom:18px;">
+        <svg width="30" height="22" viewBox="0 0 48 34"><path d="M4 30 C 14 28, 19 25, 24 15 C 29 6, 34 4, 44 3" stroke="#A6A299" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><line x1="4" y1="6" x2="44" y2="6" stroke="#A6A299" stroke-width="2.4" stroke-dasharray="1.5 7" stroke-linecap="round"/></svg>
+      </div>
+      <div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:19px;">No shots yet</div>
+      <div style="font-size:13.5px; color:#6E6A62; margin-top:6px; line-height:1.5; max-width:30ch;">Pull your first shot and it lands here — curve, weights, and timing, ready to export.</div>
+      <div style="margin-top:18px; display:flex; align-items:center; gap:8px; background:#E84B29; color:#fff; padding:10px 18px; border-radius:999px; font-weight:700; font-size:14px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>Pull a shot</div>
+    </div>
+
+    <!-- Upload progress (mini) -->
+    <div style="background:#121110; border:1px solid rgba(241,239,232,0.10); border-radius:24px; padding:34px 28px; display:flex; flex-direction:column; align-items:center; text-align:center; box-shadow:0 10px 30px rgba(17,17,16,0.18);">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;"><span style="width:8px; height:8px; border-radius:50%; background:#FB5A35; animation:recpulse 1.4s ease-in-out infinite;"></span><span style="font-family:'Space Mono',monospace; font-size:10.5px; letter-spacing:1.5px; color:#FB5A35;">FLASHING FIRMWARE</span></div>
+      <div style="font-family:Archivo,system-ui,sans-serif; font-weight:560; font-stretch:115%; font-size:44px; letter-spacing:-1px; color:#F1EFE8; font-feature-settings:'tnum';">64<span style="font-size:22px; color:#918C82;">%</span></div>
+      <div style="width:100%; max-width:240px; margin-top:14px; height:10px; border-radius:999px; background:rgba(241,239,232,0.10); overflow:hidden;"><div style="width:64%; height:100%; border-radius:999px; background:#FB5A35;"></div></div>
+      <div style="margin-top:10px; font-family:'Space Mono',monospace; font-size:10.5px; color:#918C82;">don't close the app · ~20 s left</div>
+    </div>
+
+  </div>
+
+  <div style="max-width:1000px; margin:0 auto; text-align:center; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#A6A299;">ShotStopper · one system, two surfaces, light &amp; dark</div>
+
+  <!-- ============== SECTION: RECIPES ============== -->
+  <div style="max-width: 1240px; margin: 0 auto 30px; border-top: 1.5px solid rgba(17,17,16,0.18); padding-top: 14px; display: flex; align-items: baseline; justify-content: space-between;">
+    <div style="font-family: 'Space Mono', monospace; font-size: 13px; letter-spacing: 3px; text-transform: uppercase;">07 — Recipes</div>
+    <div style="font-family: 'Space Mono', monospace; font-size: 12px; letter-spacing: 1px; color: #6E6A62;">one identity across settings · history · detail</div>
+  </div>
+
+  <div style="max-width:1000px; margin:0 auto 22px;">
+    <div style="font-size:15px; line-height:1.6; color:#4A463F; max-width:74ch;">A <b>recipe</b> bundles the per-coffee settings we control over BLE — target weight, auto-tare, min/max duration, drip delay. Every shot pulled while it's active is tagged with it, so you can filter History to compare months of one coffee. The single highest-leverage move: give each recipe a <b>color + icon</b> that travels everywhere. <span style="color:#6E6A62;">(Terminology unified to “Recipe” — the old “Presets” label is retired.)</span></div>
+  </div>
+
+  <!-- Identity spec -->
+  <div style="max-width:1000px; margin:0 auto 40px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.10); border-radius:18px; padding:28px;">
+    <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62; margin-bottom:20px;">Per-recipe identity — color + icon</div>
+    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px;">
+      <!-- House -->
+      <div style="border:1px solid rgba(17,17,16,0.08); border-radius:14px; padding:16px; background:#fff;">
+        <div style="display:flex; align-items:center; gap:11px;">
+          <span style="width:38px;height:38px;border-radius:10px;background:#7A4E2E;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="6" ry="9" transform="rotate(30 12 12)" stroke="#fff" stroke-width="2.2"/><path d="M9.2 6C11 9 11 15 9.4 18" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+          <div style="min-width:0;"><div style="font-weight:700; font-size:15px;">House Espresso</div><div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:1px; color:#A6A299;">UMBER · BEAN</div></div>
+        </div>
+        <div style="font-family:'Space Mono',monospace; font-size:10.5px; color:#6E6A62; margin-top:13px;">36 g · 3 s drip · auto-tare</div>
+        <div style="font-family:'Space Mono',monospace; font-size:10.5px; color:#A6A299; margin-top:4px;">12 shots · avg 35.8 g</div>
+        <div style="margin-top:13px;"><span style="display:inline-flex; align-items:center; gap:5px; background:rgba(122,78,46,0.13); padding:3px 9px; border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#7A4E2E;"></span><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#7A4E2E;">House Espresso</span></span></div>
+      </div>
+      <!-- Ethiopia -->
+      <div style="border:1px solid rgba(17,17,16,0.08); border-radius:14px; padding:16px; background:#fff;">
+        <div style="display:flex; align-items:center; gap:11px;">
+          <span style="width:38px;height:38px;border-radius:10px;background:#C28A1E;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 19C5 11 11 5 19 5C19 13 13 19 5 19Z" stroke="#fff" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M7 17L14.5 9.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></span>
+          <div style="min-width:0;"><div style="font-weight:700; font-size:15px;">Ethiopia Light</div><div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:1px; color:#A6A299;">AMBER · LEAF</div></div>
+        </div>
+        <div style="font-family:'Space Mono',monospace; font-size:10.5px; color:#6E6A62; margin-top:13px;">40 g · 4 s drip · auto-tare</div>
+        <div style="font-family:'Space Mono',monospace; font-size:10.5px; color:#A6A299; margin-top:4px;">6 shots · avg 39.7 g</div>
+        <div style="margin-top:13px;"><span style="display:inline-flex; align-items:center; gap:5px; background:rgba(194,138,30,0.15); padding:3px 9px; border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#C28A1E;"></span><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#8A6310;">Ethiopia Light</span></span></div>
+      </div>
+      <!-- Ristretto -->
+      <div style="border:1px solid rgba(17,17,16,0.08); border-radius:14px; padding:16px; background:#fff;">
+        <div style="display:flex; align-items:center; gap:11px;">
+          <span style="width:38px;height:38px;border-radius:10px;background:#A32E3C;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 4C15 8.5 17 11.5 17 14A5 5 0 017 14C7 11.5 9 8.5 12 4Z" fill="#fff"/></svg></span>
+          <div style="min-width:0;"><div style="font-weight:700; font-size:15px;">Ristretto</div><div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:1px; color:#A6A299;">GARNET · DROP</div></div>
+        </div>
+        <div style="font-family:'Space Mono',monospace; font-size:10.5px; color:#6E6A62; margin-top:13px;">22 g · 2 s drip</div>
+        <div style="font-family:'Space Mono',monospace; font-size:10.5px; color:#A6A299; margin-top:4px;">4 shots · avg 22.1 g</div>
+        <div style="margin-top:13px;"><span style="display:inline-flex; align-items:center; gap:5px; background:rgba(163,46,60,0.12); padding:3px 9px; border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#A32E3C;"></span><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#A32E3C;">Ristretto</span></span></div>
+      </div>
+      <!-- Decaf -->
+      <div style="border:1px solid rgba(17,17,16,0.08); border-radius:14px; padding:16px; background:#fff;">
+        <div style="display:flex; align-items:center; gap:11px;">
+          <span style="width:38px;height:38px;border-radius:10px;background:#44617F;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M16.5 4A8.5 8.5 0 1016.5 20A7 7 0 0116.5 4Z" fill="#fff"/></svg></span>
+          <div style="min-width:0;"><div style="font-weight:700; font-size:15px;">Decaf</div><div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:1px; color:#A6A299;">SLATE · MOON</div></div>
+        </div>
+        <div style="font-family:'Space Mono',monospace; font-size:10.5px; color:#6E6A62; margin-top:13px;">34 g · 3 s drip · auto-tare</div>
+        <div style="font-family:'Space Mono',monospace; font-size:10.5px; color:#A6A299; margin-top:4px;">2 shots · avg 33.9 g</div>
+        <div style="margin-top:13px;"><span style="display:inline-flex; align-items:center; gap:5px; background:rgba(68,97,127,0.14); padding:3px 9px; border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#44617F;"></span><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#44617F;">Decaf</span></span></div>
+      </div>
+    </div>
+    <div style="margin-top:20px; padding-top:18px; border-top:1px solid rgba(17,17,16,0.08); font-size:13px; color:#6E6A62; line-height:1.55; max-width:80ch;">The same token shows up as a <b>Settings row</b>, a <b>History capsule</b>, a <b>filter chip</b>, and the <b>Shot-detail Recipe row</b> — recognisable at a glance. “Currently active” is surfaced two ways: the <b>APPLIED</b> badge in Settings and the recipe chip in the Live header. Shots with no recipe (a manual tweak) read as a calm outlined <b>No recipe</b> tag, never an error.</div>
+  </div>
+
+  <!-- Recipe frames: empty state + filtered history -->
+  <div style="max-width:1240px; margin:0 auto 56px; display:flex; gap:44px; flex-wrap:wrap; justify-content:center; align-items:flex-start;">
+
+    <!-- Empty state card -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62;">Recipes · empty</div>
+      <div style="width:340px; background:#E9E7E0; border:1px solid rgba(17,17,16,0.10); border-radius:24px; padding:40px 30px; display:flex; flex-direction:column; align-items:center; text-align:center; box-shadow:0 18px 40px rgba(17,17,16,0.10);">
+        <div style="width:60px; height:60px; border-radius:16px; background:#FBFAF4; border:1.5px dashed rgba(17,17,16,0.2); display:flex; align-items:center; justify-content:center; margin-bottom:20px;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="6" ry="9" transform="rotate(30 12 12)" stroke="#A6A299" stroke-width="2"/><path d="M9.2 6C11 9 11 15 9.4 18" stroke="#A6A299" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:20px;">No recipes yet</div>
+        <div style="font-size:13.5px; color:#6E6A62; margin-top:8px; line-height:1.55; max-width:30ch;">Dial in a shot you like, then save it as a recipe — to re-apply it and to group every shot you pull with it.</div>
+        <div style="margin-top:20px; display:flex; align-items:center; gap:8px; background:#E84B29; color:#fff; padding:11px 20px; border-radius:999px; font-weight:700; font-size:14px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>Save current dial-in</div>
+      </div>
+      <div style="max-width:300px; text-align:center; font-size:12.5px; color:#6E6A62; line-height:1.5;">Shown in the Settings → Recipes section before any recipe is saved.</div>
+    </div>
+
+    <!-- Filtered History phone -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#6E6A62;">History · filtered to one recipe</div>
+      <div style="width:340px; height:716px; border-radius:46px; background:#E9E7E0; box-shadow:0 30px 60px rgba(17,17,16,0.18), 0 0 0 1px rgba(17,17,16,0.10); position:relative; overflow:hidden; display:flex; flex-direction:column;">
+        <div style="position:absolute; top:11px; left:50%; transform:translateX(-50%); width:118px; height:34px; border-radius:20px; background:#111110; z-index:20;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:15px 28px 4px; flex-shrink:0;">
+          <span style="font-weight:700; font-size:15px; font-feature-settings:'tnum';">16:42</span>
+          <div style="display:flex; align-items:center; gap:7px;">
+            <svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill="#111110"/><path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill="#111110"/><circle cx="8.5" cy="10.5" r="1.5" fill="#111110"/></svg>
+            <svg width="25" height="12" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke="#111110" stroke-opacity="0.35" fill="none"/><rect x="2" y="2" width="20" height="9" rx="2" fill="#111110"/><path d="M25 4.5V8.5C25.8 8.2 26.5 7.2 26.5 6.5C26.5 5.8 25.8 4.8 25 4.5Z" fill="#111110" fill-opacity="0.4"/></svg>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 24px 12px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="width:30px;height:30px;border-radius:8px;background:#A32E3C;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 4C15 8.5 17 11.5 17 14A5 5 0 017 14C7 11.5 9 8.5 12 4Z" fill="#fff"/></svg></span>
+            <div><div style="font-family:Archivo,system-ui,sans-serif; font-weight:600; font-stretch:110%; font-size:28px; letter-spacing:-0.8px;">Ristretto</div><div style="font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:1px; color:#A6A299; margin-top:1px;">4 OF 38 SHOTS</div></div>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:999px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.12);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#6E6A62" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+        </div>
+        <div style="padding:0 16px 12px; display:flex; gap:8px; overflow:hidden;">
+          <div style="display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:999px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.12); flex-shrink:0;"><span style="font-size:12.5px; font-weight:600; white-space:nowrap; color:#4A463F;">All</span></div>
+          <div style="display:flex; align-items:center; gap:7px; padding:7px 13px; border-radius:999px; background:#A32E3C; flex-shrink:0;"><span style="width:8px;height:8px;border-radius:50%;background:#fff;"></span><span style="font-size:12.5px; font-weight:700; white-space:nowrap; color:#fff;">Ristretto</span></div>
+          <div style="display:flex; align-items:center; gap:7px; padding:7px 13px; border-radius:999px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.12); flex-shrink:0;"><span style="width:8px;height:8px;border-radius:50%;background:#7A4E2E;"></span><span style="font-size:12.5px; font-weight:600; white-space:nowrap; color:#4A463F;">House Espresso</span></div>
+        </div>
+        <div style="flex:1; overflow:hidden; margin:0 16px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:18px;">
+          <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; border-bottom:1px solid rgba(17,17,16,0.07);">
+            <svg width="46" height="26" viewBox="0 0 60 34"><path d="M2 31 C 12 30, 18 27, 26 17 C 34 8, 42 6, 58 6" fill="none" stroke="#1F6B4A" stroke-width="2.4" stroke-linecap="round"/></svg>
+            <div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:15px;">Today · 16:27</div><div style="display:flex; align-items:center; gap:7px; margin-top:5px;"><span style="display:inline-flex; align-items:center; gap:5px; background:rgba(163,46,60,0.12); padding:2px 8px; border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#A32E3C;"></span><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#A32E3C;">Ristretto</span></span><span style="font-family:'Space Mono',monospace; font-size:10px; color:#A6A299;">18.6 s</span></div></div>
+            <div style="text-align:right;"><div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:19px; font-feature-settings:'tnum';">22.1<span style="font-size:12px; color:#6E6A62;">g</span></div><div style="display:inline-flex; align-items:center; gap:4px; margin-top:2px;"><span style="width:6px; height:6px; border-radius:50%; background:#1F6B4A;"></span><span style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.5px; color:#1F6B4A;">ON TARGET</span></div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; border-bottom:1px solid rgba(17,17,16,0.07);">
+            <svg width="46" height="26" viewBox="0 0 60 34"><path d="M2 31 C 12 30, 18 27, 26 17 C 34 8, 42 6, 58 7" fill="none" stroke="#A6A299" stroke-width="2.4" stroke-linecap="round"/></svg>
+            <div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:15px;">Yesterday · 08:40</div><div style="display:flex; align-items:center; gap:7px; margin-top:5px;"><span style="display:inline-flex; align-items:center; gap:5px; background:rgba(163,46,60,0.12); padding:2px 8px; border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#A32E3C;"></span><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#A32E3C;">Ristretto</span></span><span style="font-family:'Space Mono',monospace; font-size:10px; color:#A6A299;">19.8 s</span></div></div>
+            <div style="text-align:right;"><div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:19px; font-feature-settings:'tnum';">22.3<span style="font-size:12px; color:#6E6A62;">g</span></div><div style="display:inline-flex; align-items:center; gap:4px; margin-top:2px;"><span style="width:6px; height:6px; border-radius:50%; background:#A6A299;"></span><span style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.5px; color:#A6A299;">+0.3 g</span></div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px; padding:14px 16px; border-bottom:1px solid rgba(17,17,16,0.07);">
+            <svg width="46" height="26" viewBox="0 0 60 34"><path d="M2 31 C 12 30, 18 28, 26 18 C 34 9, 42 7, 58 8" fill="none" stroke="#A6A299" stroke-width="2.4" stroke-linecap="round"/></svg>
+            <div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:15px;">12 Jun · 07:50</div><div style="display:flex; align-items:center; gap:7px; margin-top:5px;"><span style="display:inline-flex; align-items:center; gap:5px; background:rgba(163,46,60,0.12); padding:2px 8px; border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#A32E3C;"></span><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#A32E3C;">Ristretto</span></span><span style="font-family:'Space Mono',monospace; font-size:10px; color:#A6A299;">17.9 s</span></div></div>
+            <div style="text-align:right;"><div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:19px; font-feature-settings:'tnum';">21.8<span style="font-size:12px; color:#6E6A62;">g</span></div><div style="display:inline-flex; align-items:center; gap:4px; margin-top:2px;"><span style="width:6px; height:6px; border-radius:50%; background:#A6A299;"></span><span style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.5px; color:#A6A299;">−0.2 g</span></div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:14px; padding:14px 16px;">
+            <svg width="46" height="26" viewBox="0 0 60 34"><path d="M2 31 C 12 30, 18 27, 26 17 C 34 8, 42 6, 58 6" fill="none" stroke="#1F6B4A" stroke-width="2.4" stroke-linecap="round"/></svg>
+            <div style="flex:1; min-width:0;"><div style="font-weight:700; font-size:15px;">10 Jun · 18:20</div><div style="display:flex; align-items:center; gap:7px; margin-top:5px;"><span style="display:inline-flex; align-items:center; gap:5px; background:rgba(163,46,60,0.12); padding:2px 8px; border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:#A32E3C;"></span><span style="font-size:10.5px; font-weight:600; white-space:nowrap; color:#A32E3C;">Ristretto</span></span><span style="font-family:'Space Mono',monospace; font-size:10px; color:#A6A299;">18.4 s</span></div></div>
+            <div style="text-align:right;"><div style="font-family:Archivo,system-ui,sans-serif; font-weight:700; font-size:19px; font-feature-settings:'tnum';">22.0<span style="font-size:12px; color:#6E6A62;">g</span></div><div style="display:inline-flex; align-items:center; gap:4px; margin-top:2px;"><span style="width:6px; height:6px; border-radius:50%; background:#1F6B4A;"></span><span style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.5px; color:#1F6B4A;">ON TARGET</span></div></div>
+          </div>
+        </div>
+        <div style="padding:12px 0 22px; display:flex; justify-content:center;">
+          <div style="display:flex; gap:6px; background:#FBFAF4; border:1px solid rgba(17,17,16,0.08); border-radius:999px; padding:6px; box-shadow:0 6px 18px rgba(17,17,16,0.10);">
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 3 5-8 4 5" stroke="#6E6A62" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:13px; font-weight:600; color:#6E6A62;">Live</span></div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 18px; border-radius:999px; background:#E84B29;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span style="font-size:13px; font-weight:700; color:#fff;">History</span></div>
+            <div style="display:flex; align-items:center; gap:7px; padding:9px 16px; border-radius:999px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#6E6A62" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="#6E6A62" stroke-width="2" stroke-linecap="round"/></svg><span style="font-size:13px; font-weight:600; color:#6E6A62;">Settings</span></div>
+          </div>
+        </div>
+        <div style="position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:128px; height:5px; border-radius:100px; background:rgba(17,17,16,0.25);"></div>
+      </div>
+      <div style="max-width:300px; text-align:center; font-size:12.5px; color:#6E6A62; line-height:1.5;">Tap a chip → the list narrows and the title becomes the recipe name. Comparing one coffee is one tap.</div>
+    </div>
+
+  </div>
+
+  <div data-board-end></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
